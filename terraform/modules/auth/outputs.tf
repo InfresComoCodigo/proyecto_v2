@@ -22,6 +22,7 @@ output "admin_identity_pool_id" {
   value = aws_cognito_identity_pool.administradores.id
 }
 
+# Si estás usando dominios personalizados para Cognito
 output "clientes_login_domain" {
   value = aws_cognito_user_pool_domain.clientes.domain
 }
