@@ -33,3 +33,15 @@ module "security_firewall" {
   env    = var.env
   tags   = var.tags
 }
+
+module "database" {
+  source             = "../../modules/database"
+  project            = "reservas"
+  db_name            = var.db_name
+  db_username        = var.db_username
+  db_password        = var.db_password
+  engine_version     = "8.0"
+  instance_class     = "db.t3.medium"
+  allocated_storage  = 20
+  private_subnet_ids = module.networking_vpc.private_subnets
+}

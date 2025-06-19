@@ -1,4 +1,3 @@
-
 variable "region" {
   description = "AWS region"
   type        = string
@@ -42,4 +41,52 @@ variable "tags" {
     Project = "aws-reservas-platform"
     Env     = "prod"
   }
+}
+
+# Añadir una descripción y tipo a las variables de la base de datos
+variable "db_name" {
+  description = "The name of the database"
+  type        = string
+}
+
+variable "db_username" {
+  description = "The username for the database"
+  type        = string
+}
+
+variable "db_password" {
+  description = "The password for the database"
+  type        = string
+  sensitive   = true
+}
+
+variable "engine_version" {
+  description = "The version of the database engine"
+  type        = string
+  default     = "8.0"
+}
+
+variable "instance_class" {
+  description = "The class of the database instance"
+  type        = string
+  default     = "db.t3.medium"
+}
+
+variable "allocated_storage" {
+  description = "The amount of storage to be allocated for the database"
+  type        = number
+  default     = 20
+}
+
+# Asegúrate de que las subredes privadas estén correctamente definidas
+variable "private_subnet_ids" {
+  description = "IDs of the private subnets"
+  type        = list(string)
+}
+
+# Añadir una descripción y tipo para la variable 'project'
+variable "project" {
+  description = "Project name"
+  type        = string
+  default     = "reservas"
 }
