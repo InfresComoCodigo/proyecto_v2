@@ -1,15 +1,24 @@
-resource "aws_fms_policy" "egress_policy" {
-  name                  = "${var.env}-egress-policy"
-  resource_type         = "AWS::EC2::SecurityGroup"
-  exclude_resource_tags = false
-
-  security_service_policy_data {
-    type                = "WAF"
-    managed_service_data = jsonencode({
-      type          = "WAFV2"
-      defaultAction = "ALLOW"
-    })
+resource "aws_security_group" "ec2_sg" {
+  name        = "${var.env}-ec2-sg"
+  description = "Security group for EC2 instances"
+  vpc_id      = var.vpc_id
+  
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
-  resource_tags = var.tags
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = var.tags
 }
+
+# Solo mantén recursos que estás usando realmente
+# Elimina cualquier referencia a aws_fms_policy si no lo necesitas

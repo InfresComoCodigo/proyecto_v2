@@ -1,9 +1,14 @@
 variable "env" {
-  description = "Deployment environment (dev, prod)"
+  description = "Environment (dev, prod)"
+  type        = string
+}
+
+variable "vpc_id" {
+  description = "VPC ID for security groups"
   type        = string
 }
 
 variable "tags" {
-  description = "Tags to apply to Firewall Manager resources"
+  description = "Common tags for all resources"
   type        = map(string)
 }

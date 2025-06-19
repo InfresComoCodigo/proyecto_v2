@@ -43,3 +43,16 @@ variable "tags" {
     Env     = "prod"
   }
 }
+
+# Variable for VPC CIDR
+variable "vpc_cidr" {
+  description = "CIDR de la VPC"
+  type        = string
+  default     = "172.16.0.0/16"
+}
+
+variable "ami_id" {
+  description = "AMI ID para instancias EC2"
+  type        = string
+  default     = "ami-0f3f13f145e66a0a3"
+}
