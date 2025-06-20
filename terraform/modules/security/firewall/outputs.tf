@@ -1,4 +1,4 @@
-output "fms_policy_id" {
-  description = "ID of the Firewall Manager policy"
-  value       = aws_fms_policy.egress_policy.id
+output "ec2_sg_id" {
+  description = "ID del Security Group para instancias EC2"
+  value       = aws_security_group.ec2_sg.id
 }
