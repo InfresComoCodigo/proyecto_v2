@@ -1,3 +1,16 @@
+# Variables desde feature/camila
+variable "frontend_bucket_name" {
+  description = "El nombre único para el bucket S3 del frontend."
+  type        = string
+}
+
+variable "common_tags" {
+  description = "Etiquetas comunes para aplicar a todos los recursos."
+  type        = map(string)
+  default     = {}
+}
+
+# Variables desde develop
 variable "region" {
   description = "AWS region"
   type        = string
