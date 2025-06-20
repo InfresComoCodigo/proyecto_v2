@@ -16,6 +16,12 @@ variable "cidr_block" {
   default     = "172.16.0.0/16"
 }
 
+variable "vpc_cidr" {
+  description = "CIDR de la VPC"
+  type        = string
+  default     = "172.16.0.0/16"
+}
+
 variable "azs" {
   description = "Availability Zones"
   type        = list(string)
@@ -43,7 +49,7 @@ variable "tags" {
   }
 }
 
-# Añadir una descripción y tipo a las variables de la base de datos
+# Variables de base de datos desde feature/donayre
 variable "db_name" {
   description = "The name of the database"
   type        = string
@@ -78,15 +84,20 @@ variable "allocated_storage" {
   default     = 20
 }
 
-# Asegúrate de que las subredes privadas estén correctamente definidas
 variable "private_subnet_ids" {
   description = "IDs of the private subnets"
   type        = list(string)
 }
 
-# Añadir una descripción y tipo para la variable 'project'
 variable "project" {
   description = "Project name"
   type        = string
   default     = "reservas"
+}
+
+# Variables desde develop
+variable "ami_id" {
+  description = "AMI ID para instancias EC2"
+  type        = string
+  default     = "ami-0f3f13f145e66a0a3"
 }

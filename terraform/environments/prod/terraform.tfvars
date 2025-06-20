@@ -1,3 +1,4 @@
+# DONAYRE BD
 db_name           = "reservas_dev"
 db_username       = "admin"
 db_password       = "DevClave123!"
@@ -11,3 +12,6 @@ private_subnet_ids = [
   "subnet-085270008d89f23aa",
   "subnet-0c5302845869a79cf"
 ]
+
+# ALESSIA COGNITO - API
+project_name = "villa-alfredo-prod"
