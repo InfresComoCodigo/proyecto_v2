@@ -57,6 +57,42 @@ resource "aws_autoscaling_group" "reservas_asg" {
   }
 }
 
+data "aws_subnet" "first_private" {
+  id = var.private_subnets[0]
+}
+
+resource "aws_lb" "app_lb" {
+  name               = "${var.env}-alb"
+  internal           = true
+  load_balancer_type = "application"
+  security_groups    = [var.ec2_sg_id]
+  subnets            = var.private_subnets
+
+  tags = var.tags
+}
+
+resource "aws_lb_target_group" "app_tg" {
+  name        = "${var.env}-tg"
+  port        = 80
+  protocol    = "HTTP"
+  vpc_id      = data.aws_subnet.first_private.vpc_id
+  target_type = "ip"
+
+  tags = var.tags
+}
+
+resource "aws_lb_listener" "http" {
+  load_balancer_arn = aws_lb.app_lb.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.app_tg.arn
+  }
+}
+
+
 # Perfil de IAM para las instancias EC2
 resource "aws_iam_role" "ec2_role" {
   name_prefix = "ec2-role-"

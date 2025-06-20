@@ -1,0 +1,88 @@
+{
+  "annotations": {"list": []},
+  "panels": [
+    {
+      "type": "graph",
+      "title": "EC2 CPU Utilization",
+      "targets": [
+        {
+          "datasource": "CloudWatch",
+          "refId": "A",
+          "region": "us-east-1",  // Cambiar por la región correcta
+          "namespace": "AWS/EC2",
+          "metricName": "CPUUtilization",
+          "dimensions": {
+            "InstanceId": "i-1234567890abcdef0"  // Cambiar por tu InstanceId o usar variable
+          },
+          "statistics": ["Average"],
+          "period": "300"
+        }
+      ],
+      "xAxis": {"mode": "time"},
+      "yAxis": {"label": "CPU %", "min": 0, "max": 100},
+      "grid": {"leftMax": 100}
+    },
+    {
+      "type": "graph",
+      "title": "API Gateway Latency",
+      "targets": [
+        {
+          "datasource": "CloudWatch",
+          "refId": "B",
+          "region": "us-east-1",
+          "namespace": "AWS/ApiGateway",
+          "metricName": "Latency",
+          "dimensions": {
+            "ApiName": "my-api"  // Cambiar por el nombre de tu API Gateway
+          },
+          "statistics": ["Average"],
+          "period": "300"
+        }
+      ],
+      "xAxis": {"mode": "time"},
+      "yAxis": {"label": "Latency (ms)", "min": 0}
+    },
+    {
+      "type": "graph",
+      "title": "Lambda Invocations",
+      "targets": [
+        {
+          "datasource": "CloudWatch",
+          "refId": "C",
+          "region": "us-east-1",
+          "namespace": "AWS/Lambda",
+          "metricName": "Invocations",
+          "dimensions": {
+            "FunctionName": "my-lambda-function"  // Cambiar por el nombre de tu función Lambda
+          },
+          "statistics": ["Sum"],
+          "period": "300"
+        }
+      ],
+      "xAxis": {"mode": "time"},
+      "yAxis": {"label": "Invocations", "min": 0}
+    },
+    {
+      "type": "table",
+      "title": "CloudWatch Alarms",
+      "targets": [
+        {
+          "datasource": "CloudWatch",
+          "refId": "D",
+          "region": "us-east-1",
+          "namespace": "AWS/CloudWatch",
+          "metricName": "AlarmStatus",
+          "dimensions": {},
+          "statistics": ["SampleCount"],
+          "period": "300"
+        }
+      ],
+      "columns": [
+        { "text": "Alarm Name", "value": "metricName" },
+        { "text": "Status", "value": "stateValue" }
+      ]
+    }
+  ],
+  "schemaVersion": 30,
+  "version": 1
+}

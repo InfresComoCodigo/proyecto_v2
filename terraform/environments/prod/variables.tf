@@ -2,7 +2,9 @@
 variable "frontend_bucket_name" {
   description = "El nombre único para el bucket S3 del frontend."
   type        = string
+  default     = "default-frontend-bucket-name"
 }
+
 
 variable "common_tags" {
   description = "Etiquetas comunes para aplicar a todos los recursos."
@@ -108,9 +110,16 @@ variable "project" {
   default     = "reservas"
 }
 
+variable "project_name" {
+  description = "Nombre del proyecto"
+  type        = string
+}
+
+
 # Variables desde develop
 variable "ami_id" {
   description = "AMI ID para instancias EC2"
   type        = string
   default     = "ami-0f3f13f145e66a0a3"
 }
+
