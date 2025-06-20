@@ -1,4 +1,3 @@
-
 variable "region" {
   description = "AWS region"
   type        = string
@@ -13,6 +12,12 @@ variable "env" {
 
 variable "cidr_block" {
   description = "CIDR block for the VPC"
+  type        = string
+  default     = "172.16.0.0/16"
+}
+
+variable "vpc_cidr" {
+  description = "CIDR de la VPC"
   type        = string
   default     = "172.16.0.0/16"
 }
@@ -44,13 +49,53 @@ variable "tags" {
   }
 }
 
-# Variable for VPC CIDR
-variable "vpc_cidr" {
-  description = "CIDR de la VPC"
+# Variables de base de datos desde feature/donayre
+variable "db_name" {
+  description = "The name of the database"
   type        = string
-  default     = "172.16.0.0/16"
 }
 
+variable "db_username" {
+  description = "The username for the database"
+  type        = string
+}
+
+variable "db_password" {
+  description = "The password for the database"
+  type        = string
+  sensitive   = true
+}
+
+variable "engine_version" {
+  description = "The version of the database engine"
+  type        = string
+  default     = "8.0"
+}
+
+variable "instance_class" {
+  description = "The class of the database instance"
+  type        = string
+  default     = "db.t3.medium"
+}
+
+variable "allocated_storage" {
+  description = "The amount of storage to be allocated for the database"
+  type        = number
+  default     = 20
+}
+
+variable "private_subnet_ids" {
+  description = "IDs of the private subnets"
+  type        = list(string)
+}
+
+variable "project" {
+  description = "Project name"
+  type        = string
+  default     = "reservas"
+}
+
+# Variables desde develop
 variable "ami_id" {
   description = "AMI ID para instancias EC2"
   type        = string
