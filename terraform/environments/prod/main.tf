@@ -2,6 +2,12 @@ provider "aws" {
   region = var.region
 }
 
+
+module "auth" {
+  source       = "../../modules/auth"  # Ruta al módulo `auth` donde definimos Cognito
+  project_name = var.project_name  # Nombre del proyecto para prefijar los recursos (de terraform.tfvars)
+}
+
 module "s3_storage" {
   source = "../../modules/storage"  # Esta es la ruta correcta hacia el módulo storage
 
