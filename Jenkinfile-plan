@@ -1,0 +1,32 @@
+pipeline {
+  agent any
+
+  environment {
+    TF_DIR = 'terraform/environments/prod'
+    TF_VAR_region = 'us-east-1'
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        git url: 'https://github.com/InfresComoCodigo/proyecto_v2.git', branch: 'feature/pipeline'
+      }
+    }
+
+    stage('Terraform Init') {
+      steps {
+        dir("${TF_DIR}") {
+          sh 'terraform init'
+        }
+      }
+    }
+
+    stage('Terraform Plan') {
+      steps {
+        dir("${TF_DIR}") {
+          sh 'terraform plan -out=tfplan'
+        }
+      }
+    }
+  }
+}
