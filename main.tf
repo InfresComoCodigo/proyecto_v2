@@ -9,7 +9,7 @@
 ###################################################################
 
 module "vpc" {
-    source = "./modules/networking/vpc"
+    source = "./terraform/modules/networking/vpc"
 
     # Configuración básica usando locals
     project_name = local.project_info.name
@@ -35,7 +35,7 @@ module "vpc" {
 ###################################################################
 
 module "security" {
-    source = "./modules/security"
+    source = "./terraform/modules/security"
 
     vpc_id                = module.vpc.vpc_id
     private_subnet_cidrs  = module.vpc.private_subnet_cidrs
@@ -50,7 +50,7 @@ module "security" {
 ###################################################################
 
 module "vpc_endpoints" {
-    source = "./modules/networking/vpc_endpoint"
+    source = "./terraform/modules/networking/vpc_endpoint"
 
     vpc_id                    = module.vpc.vpc_id
     private_subnet_ids        = module.vpc.private_subnet_ids
@@ -67,7 +67,7 @@ module "vpc_endpoints" {
 ###################################################################
 
 module "alb" {
-    source = "./modules/networking/alb"
+    source = "./terraform/modules/networking/alb"
 
     # Configuración de red
     vpc_id             = module.vpc.vpc_id
@@ -103,7 +103,7 @@ module "alb" {
 ###################################################################
 
 module "compute" {
-    source = "./modules/compute"
+    source = "./terraform/modules/compute"
 
     # Configuración básica
     vpc_id            = module.vpc.vpc_id
@@ -155,7 +155,7 @@ resource "aws_lb_target_group_attachment" "fixed_instances" {
 ###################################################################
 
 module "auth" {
-    source = "./modules/auth"
+    source = "./terraform/modules/auth"
 
     # Configuración básica
     project_name = local.project_info.name
@@ -207,7 +207,7 @@ module "auth" {
 ###################################################################
 
 module "database" {
-    source = "./modules/database"
+    source = "./terraform/modules/database"
 
     # Configuración general
     project_name = local.project_info.name
@@ -265,7 +265,7 @@ module "database" {
 ###################################################################
 
 module "api_gateway" {
-    source = "./modules/api_gateway"
+    source = "./terraform/modules/api_gateway"
 
     # Configuración básica
     project_name = local.project_info.name
@@ -301,7 +301,7 @@ module "api_gateway" {
 ###################################################################
 
 module "waf" {
-    source = "./modules/waf"
+    source = "./terraform/modules/waf"
     
     providers = {
         aws.us_east_1 = aws.us_east_1
@@ -346,7 +346,7 @@ module "waf" {
 ###################################################################
 
 module "cdn" {
-    source = "./modules/cdn"
+    source = "./terraform/modules/cdn"
 
     providers = {
         aws.us_east_1 = aws.us_east_1
@@ -433,7 +433,7 @@ module "cdn" {
 ###################################################################
 
 module "storage" {
-    source = "./modules/storage"
+    source = "./terraform/modules/storage"
 
     # Configuración básica
     project_name = local.project_info.name
