@@ -53,7 +53,7 @@ variable "key_name" {
 variable "ami_id" {
   description = "ID de la AMI a usar para las instancias"
   type        = string
-  default     = "ami-05ffe3c48a9991133"  # Amazon Linux 2023 en us-east-1
+  default     = "ami-05ffe3c48a9991133" # Amazon Linux 2023 en us-east-1
 }
 
 variable "user_data_file" {

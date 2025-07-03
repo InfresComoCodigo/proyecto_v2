@@ -108,7 +108,7 @@ output "integration_info" {
       origin_id   = "${var.project_name}-${var.environment}-s3-origin"
       oac_id      = aws_cloudfront_origin_access_control.main.id
     }
-    
+
     # Para EC2 access via VPC endpoint
     vpc_endpoint_access = {
       bucket_name     = aws_s3_bucket.main.bucket
@@ -116,7 +116,7 @@ output "integration_info" {
       vpc_endpoint_id = var.s3_vpc_endpoint_id
       access_methods  = ["GetObject", "PutObject", "DeleteObject", "ListBucket"]
     }
-    
+
     # Información general
     general = {
       bucket_name = aws_s3_bucket.main.bucket
@@ -159,7 +159,7 @@ output "s3_configuration_summary" {
       encryption_enabled    = true
       versioning_enabled    = var.enable_versioning
       public_access_blocked = true
-      cors_enabled         = var.enable_cors
+      cors_enabled          = var.enable_cors
     }
     access = {
       vpc_endpoint_enabled = true
@@ -167,9 +167,9 @@ output "s3_configuration_summary" {
       lifecycle_policy     = var.enable_lifecycle_policy
     }
     integration = {
-      vpc_endpoint_id      = var.s3_vpc_endpoint_id
+      vpc_endpoint_id         = var.s3_vpc_endpoint_id
       cloudfront_distribution = var.cloudfront_distribution_arn
-      ec2_access_enabled  = var.ec2_instance_roles != null
+      ec2_access_enabled      = var.ec2_instance_roles != null
     }
     deployment = {
       created_at  = timestamp()

@@ -21,7 +21,7 @@ locals {
     Module      = "storage"
     ManagedBy   = "terraform"
   }
-  
+
   bucket_name = "${var.project_name}-${var.environment}-content-${random_string.bucket_suffix.result}"
 }
 
@@ -43,9 +43,9 @@ resource "aws_s3_bucket" "main" {
   bucket = local.bucket_name
 
   tags = merge(local.common_tags, var.tags, {
-    Name        = "${var.project_name}-${var.environment}-main-bucket"
-    Purpose     = "Content storage and CloudFront origin"
-    AccessType  = "Private with CloudFront and VPC endpoint"
+    Name       = "${var.project_name}-${var.environment}-main-bucket"
+    Purpose    = "Content storage and CloudFront origin"
+    AccessType = "Private with CloudFront and VPC endpoint"
   })
 }
 
@@ -83,10 +83,10 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "main" {
 resource "aws_s3_bucket_public_access_block" "main" {
   bucket = aws_s3_bucket.main.id
 
-  block_public_acls       = true  # Fix CKV_AWS_53
-  block_public_policy     = true  # Fix CKV_AWS_54
-  ignore_public_acls      = true  # Fix CKV_AWS_55
-  restrict_public_buckets = true  # Fix CKV_AWS_56
+  block_public_acls       = true # Fix CKV_AWS_53
+  block_public_policy     = true # Fix CKV_AWS_54
+  ignore_public_acls      = true # Fix CKV_AWS_55
+  restrict_public_buckets = true # Fix CKV_AWS_56
 }
 
 # Random suffix for unique resource naming
@@ -113,21 +113,21 @@ data "aws_iam_policy_document" "bucket_policy" {
     content {
       sid    = "AllowVPCEndpointAccess"
       effect = "Allow"
-      
+
       principals {
         type        = "AWS"
         identifiers = var.ec2_instance_roles
       }
-      
+
       actions = [
         "s3:GetObject",
         "s3:PutObject"
       ]
-      
+
       resources = [
-        "${aws_s3_bucket.main.arn}/*"  # Only allow access to specific objects
+        "${aws_s3_bucket.main.arn}/*" # Only allow access to specific objects
       ]
-      
+
       condition {
         test     = "StringEquals"
         variable = "aws:SourceVpce"
@@ -135,77 +135,77 @@ data "aws_iam_policy_document" "bucket_policy" {
       }
     }
   }
-  
+
   # Permitir acceso desde CloudFront (usando OAC) - más restrictivo
   statement {
     sid    = "AllowCloudFrontServicePrincipal"
     effect = "Allow"
-    
+
     principals {
       type        = "Service"
       identifiers = ["cloudfront.amazonaws.com"]
     }
-    
+
     actions = [
-      "s3:GetObject"  # Only allow GetObject, not all S3 actions
+      "s3:GetObject" # Only allow GetObject, not all S3 actions
     ]
-    
+
     resources = [
-      "${aws_s3_bucket.main.arn}/*"  # Only allow access to objects, not bucket
+      "${aws_s3_bucket.main.arn}/*" # Only allow access to objects, not bucket
     ]
-    
+
     condition {
       test     = "StringEquals"
       variable = "AWS:SourceArn"
       values   = [var.cloudfront_distribution_arn]
     }
   }
-  
+
   # Denegar acceso no SSL
   statement {
     sid    = "DenyInsecureConnections"
     effect = "Deny"
-    
+
     principals {
       type        = "*"
       identifiers = ["*"]
     }
-    
+
     actions = [
       "s3:*"
     ]
-    
+
     resources = [
       aws_s3_bucket.main.arn,
       "${aws_s3_bucket.main.arn}/*"
     ]
-    
+
     condition {
       test     = "Bool"
       variable = "aws:SecureTransport"
       values   = ["false"]
     }
   }
-  
+
   # Denegar acceso desde cuentas no autorizadas (fix CKV_AWS_283)
   statement {
     sid    = "DenyUnauthorizedAccounts"
     effect = "Deny"
-    
+
     principals {
       type        = "*"
       identifiers = ["*"]
     }
-    
+
     actions = [
       "s3:*"
     ]
-    
+
     resources = [
       aws_s3_bucket.main.arn,
       "${aws_s3_bucket.main.arn}/*"
     ]
-    
+
     condition {
       test     = "StringNotEquals"
       variable = "aws:PrincipalAccount"
@@ -217,7 +217,7 @@ data "aws_iam_policy_document" "bucket_policy" {
 resource "aws_s3_bucket_policy" "main" {
   bucket = aws_s3_bucket.main.id
   policy = data.aws_iam_policy_document.bucket_policy.json
-  
+
   depends_on = [aws_s3_bucket_public_access_block.main]
 }
 
@@ -276,17 +276,17 @@ resource "aws_s3_bucket_lifecycle_configuration" "main" {
 
 resource "aws_s3_object" "sample_files" {
   for_each = var.create_sample_files ? {
-    "index.html"    = "text/html"
-    "style.css"     = "text/css"
-    "script.js"     = "application/javascript"
-    "favicon.ico"   = "image/x-icon"
+    "index.html"  = "text/html"
+    "style.css"   = "text/css"
+    "script.js"   = "application/javascript"
+    "favicon.ico" = "image/x-icon"
   } : {}
 
   bucket       = aws_s3_bucket.main.id
   key          = each.key
   content      = each.key == "index.html" ? local.sample_html : "/* Sample ${each.key} file */"
   content_type = each.value
-  
+
   tags = merge(local.common_tags, {
     Name = "sample-${each.key}"
     Type = "Sample file"

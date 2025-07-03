@@ -99,8 +99,8 @@ output "instances_configuration" {
       zone_b_subnet = var.subnet_ids[1]
     }
     auto_scaling = {
-      min_additional_instances = var.min_size
-      max_additional_instances = var.max_size
+      min_additional_instances     = var.min_size
+      max_additional_instances     = var.max_size
       current_additional_instances = var.desired_capacity
     }
     total_capacity = {

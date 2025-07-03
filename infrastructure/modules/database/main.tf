@@ -52,12 +52,12 @@ resource "aws_security_group_rule" "rds_mysql_ingress_from_cidrs" {
 resource "aws_security_group_rule" "rds_mysql_ingress_from_sgs" {
   count                    = length(var.allowed_security_groups)
   type                     = "ingress"
-  description             = "MySQL access from application security groups for database connectivity"
-  from_port               = 3306
-  to_port                 = 3306
-  protocol                = "tcp"
+  description              = "MySQL access from application security groups for database connectivity"
+  from_port                = 3306
+  to_port                  = 3306
+  protocol                 = "tcp"
   source_security_group_id = var.allowed_security_groups[count.index]
-  security_group_id       = aws_security_group.rds.id
+  security_group_id        = aws_security_group.rds.id
 }
 
 ###################################################################
@@ -106,8 +106,8 @@ resource "aws_db_instance" "main" {
   allocated_storage     = var.allocated_storage
   max_allocated_storage = var.max_allocated_storage
   storage_type          = var.storage_type
-  storage_encrypted     = true  # Obligatorio: cifrado en reposo
-  kms_key_id           = var.kms_key_id
+  storage_encrypted     = true # Obligatorio: cifrado en reposo
+  kms_key_id            = var.kms_key_id
 
   # Configuración de base de datos
   db_name  = var.database_name
@@ -120,16 +120,16 @@ resource "aws_db_instance" "main" {
   publicly_accessible    = false
 
   # Multi-AZ para alta disponibilidad
-  multi_az = true  # Obligatorio para cumplir CKV_AWS_157
+  multi_az = true # Obligatorio para cumplir CKV_AWS_157
 
   # Configuraciones adicionales
   parameter_group_name = aws_db_parameter_group.main.name
   option_group_name    = var.option_group_name
 
   # Backups y mantenimiento
-  backup_retention_period   = var.backup_retention_period
-  backup_window            = var.backup_window
-  maintenance_window       = var.maintenance_window
+  backup_retention_period    = var.backup_retention_period
+  backup_window              = var.backup_window
+  maintenance_window         = var.maintenance_window
   auto_minor_version_upgrade = var.auto_minor_version_upgrade
 
   # Monitoreo mejorado
@@ -137,16 +137,16 @@ resource "aws_db_instance" "main" {
   monitoring_role_arn = var.monitoring_interval > 0 ? aws_iam_role.rds_enhanced_monitoring[0].arn : null
 
   # Performance Insights
-  performance_insights_enabled = var.performance_insights_enabled  # Use variable to control
+  performance_insights_enabled          = var.performance_insights_enabled # Use variable to control
   performance_insights_retention_period = var.performance_insights_enabled ? var.performance_insights_retention_period : null
-  performance_insights_kms_key_id = var.performance_insights_enabled ? var.kms_key_id : null  # Only set if enabled
+  performance_insights_kms_key_id       = var.performance_insights_enabled ? var.kms_key_id : null # Only set if enabled
 
   # Certificado CA moderno
-  ca_cert_identifier = "rds-ca-rsa2048-g1"  # Certificado CA moderno para cumplir CKV_AWS_211
+  ca_cert_identifier = "rds-ca-rsa2048-g1" # Certificado CA moderno para cumplir CKV_AWS_211
 
   # Protección contra eliminación
-  deletion_protection = var.deletion_protection
-  skip_final_snapshot = var.skip_final_snapshot
+  deletion_protection       = var.deletion_protection
+  skip_final_snapshot       = var.skip_final_snapshot
   final_snapshot_identifier = var.skip_final_snapshot ? null : "${var.project_name}-mysql-final-snapshot-${formatdate("YYYY-MM-DD-hhmm", timestamp())}"
 
   tags = merge(local.common_tags, {
@@ -193,7 +193,7 @@ resource "aws_secretsmanager_secret" "db_credentials" {
   count                   = var.create_secrets_manager ? 1 : 0
   name                    = "${var.project_name}/rds/mysql/credentials"
   description             = "Credenciales para la base de datos MySQL"
-  recovery_window_in_days = 0  # Permite recrear inmediatamente si existe uno programado para eliminación
+  recovery_window_in_days = 0 # Permite recrear inmediatamente si existe uno programado para eliminación
 
   tags = merge(local.common_tags, {
     Name = "${var.project_name}-db-credentials"
@@ -219,8 +219,8 @@ resource "aws_secretsmanager_secret_version" "db_credentials" {
 resource "aws_cloudwatch_log_group" "mysql_error" {
   count             = var.enable_cloudwatch_logs ? 1 : 0
   name              = "/aws/rds/instance/${aws_db_instance.main.identifier}/error"
-  retention_in_days = var.log_retention_days > 0 ? var.log_retention_days : 365  # Mínimo 1 año
-  kms_key_id        = var.kms_key_id  # Cifrado con KMS
+  retention_in_days = var.log_retention_days > 0 ? var.log_retention_days : 365 # Mínimo 1 año
+  kms_key_id        = var.kms_key_id                                            # Cifrado con KMS
 
   tags = merge(local.common_tags, {
     Name = "${var.project_name}-mysql-error-logs"
@@ -230,8 +230,8 @@ resource "aws_cloudwatch_log_group" "mysql_error" {
 resource "aws_cloudwatch_log_group" "mysql_general" {
   count             = var.enable_cloudwatch_logs ? 1 : 0
   name              = "/aws/rds/instance/${aws_db_instance.main.identifier}/general"
-  retention_in_days = var.log_retention_days > 0 ? var.log_retention_days : 365  # Mínimo 1 año
-  kms_key_id        = var.kms_key_id  # Cifrado con KMS
+  retention_in_days = var.log_retention_days > 0 ? var.log_retention_days : 365 # Mínimo 1 año
+  kms_key_id        = var.kms_key_id                                            # Cifrado con KMS
 
   tags = merge(local.common_tags, {
     Name = "${var.project_name}-mysql-general-logs"
@@ -241,8 +241,8 @@ resource "aws_cloudwatch_log_group" "mysql_general" {
 resource "aws_cloudwatch_log_group" "mysql_slowquery" {
   count             = var.enable_cloudwatch_logs ? 1 : 0
   name              = "/aws/rds/instance/${aws_db_instance.main.identifier}/slowquery"
-  retention_in_days = var.log_retention_days > 0 ? var.log_retention_days : 365  # Mínimo 1 año
-  kms_key_id        = var.kms_key_id  # Cifrado con KMS
+  retention_in_days = var.log_retention_days > 0 ? var.log_retention_days : 365 # Mínimo 1 año
+  kms_key_id        = var.kms_key_id                                            # Cifrado con KMS
 
   tags = merge(local.common_tags, {
     Name = "${var.project_name}-mysql-slowquery-logs"

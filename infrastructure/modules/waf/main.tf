@@ -1,8 +1,8 @@
 terraform {
   required_providers {
     aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
+      source                = "hashicorp/aws"
+      version               = "~> 5.0"
       configuration_aliases = [aws.us_east_1]
     }
   }
@@ -42,9 +42,9 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
     ]
   }
 
-  name  = "${var.project_name}-${var.environment}-cloudfront-waf-${random_string.waf_suffix.result}"
+  name        = "${var.project_name}-${var.environment}-cloudfront-waf-${random_string.waf_suffix.result}"
   description = "WAF para proteger CloudFront Distribution de ${var.project_name}"
-  scope = "CLOUDFRONT"
+  scope       = "CLOUDFRONT"
 
   default_action {
     allow {}
@@ -257,7 +257,7 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
 ###################################################################
 resource "aws_wafv2_ip_set" "blocked_ips" {
   provider = aws.us_east_1
-  count = length(var.blocked_ip_addresses) > 0 ? 1 : 0
+  count    = length(var.blocked_ip_addresses) > 0 ? 1 : 0
 
   name               = "${var.project_name}-${var.environment}-blocked-ips"
   description        = "IP addresses blocked for ${var.project_name}"
@@ -277,7 +277,7 @@ resource "aws_wafv2_ip_set" "blocked_ips" {
 ###################################################################
 resource "aws_wafv2_ip_set" "allowed_ips" {
   provider = aws.us_east_1
-  count = length(var.allowed_ip_addresses) > 0 ? 1 : 0
+  count    = length(var.allowed_ip_addresses) > 0 ? 1 : 0
 
   name               = "${var.project_name}-${var.environment}-allowed-ips"
   description        = "IP addresses allowed for ${var.project_name}"
@@ -297,7 +297,7 @@ resource "aws_wafv2_ip_set" "allowed_ips" {
 ###################################################################
 resource "aws_wafv2_web_acl" "cloudfront_waf_with_whitelist" {
   provider = aws.us_east_1
-  count = length(var.allowed_ip_addresses) > 0 ? 1 : 0
+  count    = length(var.allowed_ip_addresses) > 0 ? 1 : 0
 
   name        = "${var.project_name}-${var.environment}-cloudfront-waf-whitelist-${random_string.waf_suffix.result}"
   description = "WAF con whitelist de IPs para ${var.project_name}"
@@ -346,7 +346,7 @@ resource "aws_wafv2_web_acl" "cloudfront_waf_with_whitelist" {
 ###################################################################
 resource "aws_cloudwatch_log_group" "waf_log_group" {
   provider = aws.us_east_1
-  count = var.enable_waf_logging ? 1 : 0
+  count    = var.enable_waf_logging ? 1 : 0
 
   name              = "/aws/waf/${var.project_name}-${var.environment}-cloudfront"
   retention_in_days = var.log_retention_days
@@ -362,9 +362,9 @@ resource "aws_cloudwatch_log_group" "waf_log_group" {
 ###################################################################
 resource "aws_cloudwatch_log_group" "waf_logs" {
   provider = aws.us_east_1
-  
+
   name              = "/aws/wafv2/${var.project_name}-${var.environment}-cloudfront-waf"
-  retention_in_days = 365  # Retención de 1 año
+  retention_in_days = 365 # Retención de 1 año
   kms_key_id        = var.kms_key_id
 
   tags = merge(local.common_tags, {

@@ -18,22 +18,22 @@ resource "aws_security_group" "ec2_instances" {
 # Reglas de entrada específicas y seguras
 resource "aws_security_group_rule" "ec2_http_from_alb" {
   type                     = "ingress"
-  description             = "HTTP from ALB security group for web traffic routing"
-  from_port               = 80
-  to_port                 = 80
-  protocol                = "tcp"
+  description              = "HTTP from ALB security group for web traffic routing"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
   source_security_group_id = aws_security_group.alb.id
-  security_group_id       = aws_security_group.ec2_instances.id
+  security_group_id        = aws_security_group.ec2_instances.id
 }
 
 resource "aws_security_group_rule" "ec2_https_from_alb" {
   type                     = "ingress"
-  description             = "HTTPS from ALB security group for secure web traffic routing"
-  from_port               = 443
-  to_port                 = 443
-  protocol                = "tcp"
+  description              = "HTTPS from ALB security group for secure web traffic routing"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
   source_security_group_id = aws_security_group.alb.id
-  security_group_id       = aws_security_group.ec2_instances.id
+  security_group_id        = aws_security_group.ec2_instances.id
 }
 
 # Reglas de salida específicas y controladas

@@ -177,8 +177,8 @@ variable "skip_final_snapshot" {
 variable "monitoring_interval" {
   description = "Intervalo de monitoreo mejorado en segundos (0, 1, 5, 10, 15, 30, 60)"
   type        = number
-  default     = 0  # Disabled by default to avoid IAM role issues
-  
+  default     = 0 # Disabled by default to avoid IAM role issues
+
   validation {
     condition     = contains([0, 1, 5, 10, 15, 30, 60], var.monitoring_interval)
     error_message = "El intervalo de monitoreo debe ser 0, 1, 5, 10, 15, 30, o 60 segundos."

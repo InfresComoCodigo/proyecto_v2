@@ -21,7 +21,7 @@ resource "aws_lb" "main" {
   subnets            = var.public_subnet_ids
 
   enable_deletion_protection = false
-  
+
   # Configuración de desync mitigation para cumplir CKV_AWS_328
   desync_mitigation_mode = "strictest"
 
@@ -29,7 +29,7 @@ resource "aws_lb" "main" {
   access_logs {
     bucket  = var.access_logs_bucket != null ? var.access_logs_bucket : aws_s3_bucket.alb_logs[0].bucket
     prefix  = var.access_logs_prefix
-    enabled = true  # Force enable access logs for compliance
+    enabled = true # Force enable access logs for compliance
   }
 
   tags = merge(var.tags, {
@@ -56,7 +56,7 @@ resource "aws_lb_target_group" "ec2_targets" {
     timeout             = var.health_check_timeout
     interval            = var.health_check_interval
     path                = var.health_check_path
-    matcher             = "200,301,302"  # Ampliar códigos de respuesta válidos para cumplir CKV_AWS_261
+    matcher             = "200,301,302" # Ampliar códigos de respuesta válidos para cumplir CKV_AWS_261
     port                = "traffic-port"
     protocol            = "HTTP"
   }
@@ -86,7 +86,7 @@ resource "aws_lb_listener" "main" {
   load_balancer_arn = aws_lb.main.arn
   port              = var.alb_port
   protocol          = var.alb_port == 443 ? "HTTPS" : "HTTP"
-  ssl_policy        = var.alb_port == 443 ? "ELBSecurityPolicy-TLS-1-2-2017-01" : null  # Política TLS segura para cumplir CKV2_AWS_74
+  ssl_policy        = var.alb_port == 443 ? "ELBSecurityPolicy-TLS-1-2-2017-01" : null # Política TLS segura para cumplir CKV2_AWS_74
   certificate_arn   = var.alb_port == 443 ? var.ssl_certificate_arn : null
 
   default_action {
@@ -111,7 +111,7 @@ data "aws_elb_service_account" "main" {}
 resource "aws_s3_bucket" "alb_logs" {
   count  = var.access_logs_bucket == null ? 1 : 0
   bucket = "${var.project_name}-${var.environment}-alb-logs-${random_string.alb_suffix.result}"
-  
+
   tags = merge(var.tags, {
     Name        = "${var.project_name}-${var.environment}-alb-logs"
     Environment = var.environment
@@ -132,7 +132,7 @@ resource "aws_s3_bucket_policy" "alb_logs" {
         Principal = {
           AWS = data.aws_elb_service_account.main.arn
         }
-        Action = "s3:PutObject"
+        Action   = "s3:PutObject"
         Resource = "${aws_s3_bucket.alb_logs[0].arn}/*"
       }
     ]

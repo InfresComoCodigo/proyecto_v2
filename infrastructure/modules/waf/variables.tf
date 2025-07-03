@@ -67,7 +67,7 @@ variable "blocked_countries" {
   description = "Lista de códigos de países a bloquear (ISO 3166-1 alpha-2)"
   type        = list(string)
   default     = []
-  
+
   validation {
     condition = alltrue([
       for country in var.blocked_countries : can(regex("^[A-Z]{2}$", country))
@@ -80,7 +80,7 @@ variable "allowed_countries" {
   description = "Lista de códigos de países permitidos (ISO 3166-1 alpha-2). Si se especifica, todos los demás países serán bloqueados"
   type        = list(string)
   default     = []
-  
+
   validation {
     condition = alltrue([
       for country in var.allowed_countries : can(regex("^[A-Z]{2}$", country))
@@ -97,7 +97,7 @@ variable "blocked_ip_addresses" {
   description = "Lista de direcciones IP o CIDR blocks a bloquear"
   type        = list(string)
   default     = []
-  
+
   validation {
     condition = alltrue([
       for ip in var.blocked_ip_addresses : can(cidrhost(ip, 0))
@@ -110,7 +110,7 @@ variable "allowed_ip_addresses" {
   description = "Lista de direcciones IP o CIDR blocks permitidos (whitelist). Si se especifica, todas las demás IPs serán bloqueadas"
   type        = list(string)
   default     = []
-  
+
   validation {
     condition = alltrue([
       for ip in var.allowed_ip_addresses : can(cidrhost(ip, 0))
@@ -155,7 +155,7 @@ variable "log_retention_days" {
   description = "Días de retención para los logs de WAF"
   type        = number
   default     = 30
-  
+
   validation {
     condition = contains([
       1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653
@@ -167,7 +167,7 @@ variable "log_retention_days" {
 variable "redacted_fields" {
   description = "Campos a ocultar en los logs de WAF"
   type = list(object({
-    type = string # "single_header", "uri_path", "query_string"
+    type = string           # "single_header", "uri_path", "query_string"
     name = optional(string) # Solo requerido para single_header
   }))
   default = []
@@ -194,14 +194,14 @@ variable "custom_rules" {
 variable "enable_aws_managed_rules" {
   description = "Configuración de reglas administradas por AWS"
   type = object({
-    common_rule_set           = optional(bool, true)
-    known_bad_inputs         = optional(bool, true)
-    sql_injection           = optional(bool, true)
-    linux_rule_set          = optional(bool, false)
-    unix_rule_set           = optional(bool, false)
-    windows_rule_set        = optional(bool, false)
-    php_rule_set            = optional(bool, false)
-    wordpress_rule_set      = optional(bool, false)
+    common_rule_set    = optional(bool, true)
+    known_bad_inputs   = optional(bool, true)
+    sql_injection      = optional(bool, true)
+    linux_rule_set     = optional(bool, false)
+    unix_rule_set      = optional(bool, false)
+    windows_rule_set   = optional(bool, false)
+    php_rule_set       = optional(bool, false)
+    wordpress_rule_set = optional(bool, false)
   })
   default = {}
 }

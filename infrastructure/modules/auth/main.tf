@@ -71,7 +71,7 @@ resource "aws_cognito_user_pool" "main" {
   dynamic "lambda_config" {
     for_each = var.enable_lambda_triggers ? [1] : []
     content {
-      pre_sign_up    = var.pre_sign_up_lambda_arn
+      pre_sign_up       = var.pre_sign_up_lambda_arn
       post_confirmation = var.post_confirmation_lambda_arn
     }
   }
@@ -100,9 +100,9 @@ resource "aws_cognito_user_pool_client" "api_client" {
   user_pool_id = aws_cognito_user_pool.main.id
 
   # Configuración de tokens
-  access_token_validity                = var.access_token_validity
-  id_token_validity                   = var.id_token_validity
-  refresh_token_validity              = var.refresh_token_validity
+  access_token_validity  = var.access_token_validity
+  id_token_validity      = var.id_token_validity
+  refresh_token_validity = var.refresh_token_validity
   token_validity_units {
     access_token  = "hours"
     id_token      = "hours"
@@ -110,9 +110,9 @@ resource "aws_cognito_user_pool_client" "api_client" {
   }
 
   # Configuración de autenticación
-  generate_secret                      = false
-  prevent_user_existence_errors       = "ENABLED"
-  enable_token_revocation             = true
+  generate_secret                               = false
+  prevent_user_existence_errors                 = "ENABLED"
+  enable_token_revocation                       = true
   enable_propagate_additional_user_context_data = false
 
   # Flujos de autenticación permitidos
@@ -147,9 +147,9 @@ resource "aws_cognito_user_pool_client" "web_client" {
   user_pool_id = aws_cognito_user_pool.main.id
 
   # Configuración de tokens
-  access_token_validity                = var.access_token_validity
-  id_token_validity                   = var.id_token_validity
-  refresh_token_validity              = var.refresh_token_validity
+  access_token_validity  = var.access_token_validity
+  id_token_validity      = var.id_token_validity
+  refresh_token_validity = var.refresh_token_validity
   token_validity_units {
     access_token  = "hours"
     id_token      = "hours"
@@ -157,9 +157,9 @@ resource "aws_cognito_user_pool_client" "web_client" {
   }
 
   # Configuración de autenticación
-  generate_secret                      = true
-  prevent_user_existence_errors       = "ENABLED"
-  enable_token_revocation             = true
+  generate_secret               = true
+  prevent_user_existence_errors = "ENABLED"
+  enable_token_revocation       = true
 
   # Flujos de autenticación permitidos
   explicit_auth_flows = [
@@ -299,7 +299,7 @@ resource "aws_cognito_identity_pool_roles_attachment" "main" {
   identity_pool_id = aws_cognito_identity_pool.main[0].id
 
   roles = {
-    authenticated = aws_iam_role.authenticated[0].arn
+    authenticated   = aws_iam_role.authenticated[0].arn
     unauthenticated = var.allow_unauthenticated_identities ? aws_iam_role.unauthenticated[0].arn : null
   }
 }

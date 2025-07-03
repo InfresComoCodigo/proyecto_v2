@@ -70,18 +70,18 @@ output "log_group_arn" {
 output "waf_configuration" {
   description = "Resumen de la configuración del WAF"
   value = {
-    name                          = aws_wafv2_web_acl.cloudfront_waf.name
-    scope                        = "CLOUDFRONT"
-    sql_injection_protection     = var.enable_sql_injection_protection
-    rate_limiting_enabled        = var.enable_rate_limiting
-    rate_limit_requests          = var.rate_limit_requests
-    blocked_countries_count      = length(var.blocked_countries)
-    allowed_countries_count      = length(var.allowed_countries)
-    blocked_ip_addresses_count   = length(var.blocked_ip_addresses)
-    allowed_ip_addresses_count   = length(var.allowed_ip_addresses)
-    blocked_user_agents_count    = length(var.blocked_user_agents)
-    cloudwatch_metrics_enabled  = var.enable_cloudwatch_metrics
-    waf_logging_enabled          = var.enable_waf_logging
+    name                       = aws_wafv2_web_acl.cloudfront_waf.name
+    scope                      = "CLOUDFRONT"
+    sql_injection_protection   = var.enable_sql_injection_protection
+    rate_limiting_enabled      = var.enable_rate_limiting
+    rate_limit_requests        = var.rate_limit_requests
+    blocked_countries_count    = length(var.blocked_countries)
+    allowed_countries_count    = length(var.allowed_countries)
+    blocked_ip_addresses_count = length(var.blocked_ip_addresses)
+    allowed_ip_addresses_count = length(var.allowed_ip_addresses)
+    blocked_user_agents_count  = length(var.blocked_user_agents)
+    cloudwatch_metrics_enabled = var.enable_cloudwatch_metrics
+    waf_logging_enabled        = var.enable_waf_logging
   }
 }
 
