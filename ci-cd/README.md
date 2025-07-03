@@ -1,279 +1,313 @@
-# 🚀 CI/CD Pipeline - Villa Alfredo Project
+# Jenkins CI/CD Pipeline para Terraform
 
-Este directorio contiene la configuración completa del pipeline CI/CD para el proyecto Villa Alfredo, incluyendo Jenkins, análisis de seguridad, pruebas automatizadas y monitoreo con Grafana.
+Este directorio contiene la configuración completa para un pipeline de Jenkins que puede ejecutar `terraform apply` y `terraform destroy` de forma automatizada.
 
-## 📋 Componentes del Sistema
+## 🏗️ Arquitectura
 
-### 🔧 Jenkins
-- **Master**: Coordinador principal del pipeline
-- **Agent**: Ejecutor de tareas en contenedor Docker
-- **Plugins**: Configuración automática con plugins esenciales
+- **Dockerfile**: Imagen personalizada de Jenkins con Terraform, AWS CLI, Docker y Node.js
+- **Jenkinsfile**: Pipeline declarativo con etapas para validación, planificación y aplicación/destrucción
+- **docker-compose.yml**: Orquestación de servicios de Jenkins
+- **Scripts de ayuda**: Automatización para inicio y parada del entorno
 
-### 🔍 Análisis de Seguridad
-- **SonarQube**: Análisis de calidad de código
-- **OWASP Dependency Check**: Detección de vulnerabilidades en dependencias
-- **Semgrep**: Análisis estático de seguridad (SAST)
-- **NPM Audit**: Auditoría de paquetes Node.js
-
-### 📊 Monitoreo y Observabilidad
-- **Grafana**: Dashboards y visualización
-- **Prometheus**: Recolección de métricas
-- **Alertas**: Notificaciones automáticas
-
-## 🛠️ Configuración Inicial
+## 🚀 Inicio Rápido
 
 ### Prerrequisitos
+
+- Docker Desktop instalado y ejecutándose
+- Docker Compose incluido (viene con Docker Desktop)
+- Acceso a AWS (credenciales configuradas)
+- Repositorio Git con código de Terraform
+
+**⚠️ Importante para Windows:**
+- Docker Desktop debe estar ejecutándose
+- Habilitar "Use the WSL 2 based engine" en Docker Desktop settings
+- Asegurarse de que el motor de Docker esté iniciado
+
+### 1. Verificar Docker Desktop
+
+**⚠️ IMPORTANTE: Antes de ejecutar Jenkins, asegúrate de que Docker Desktop esté ejecutándose:**
+
+**Verificación automática:**
 ```bash
-# Verificar que tienes instalado:
-docker --version
-docker-compose --version
-git --version
+# En bash (Git Bash, WSL, Linux, macOS)
+./check-docker.sh
+
+# En Command Prompt (Windows)
+check-docker.bat
 ```
 
-### 1. Configuración del Entorno
-```bash
-# Navegar al directorio del proyecto
-cd /path/to/project
+**Verificación manual:**
 
-# Ejecutar script de configuración
-chmod +x ci-cd/setup.sh
-./ci-cd/setup.sh
+1. **Abrir Docker Desktop**:
+   - Buscar "Docker Desktop" en el menú de inicio de Windows
+   - Hacer clic para abrir la aplicación
+   - Esperar a que aparezca el ícono de Docker en la bandeja del sistema (área de notificaciones)
+
+2. **Verificar que Docker está funcionando**:
+   ```cmd
+   docker version
+   ```
+   Si ves información de cliente y servidor, Docker está listo.
+
+3. **Si Docker no responde**:
+   - Esperar unos minutos a que Docker termine de iniciar
+   - El ícono en la bandeja debe mostrar "Docker Desktop is running"
+   - Reiniciar Docker Desktop si es necesario
+
+### 2. Iniciar Jenkins
+
+**En Linux/macOS:**
+```bash
+chmod +x start-jenkins.sh
+./start-jenkins.sh
 ```
 
-### 2. Configurar Variables de Entorno
-Edita el archivo `.env` creado por el script:
-
-```bash
-# GitHub Configuration
-GITHUB_USERNAME=tu-usuario-github
-GITHUB_TOKEN=ghp_tu_token_personal
-
-# AWS Configuration
-AWS_ACCESS_KEY_ID=tu-access-key
-AWS_SECRET_ACCESS_KEY=tu-secret-key
-AWS_ACCOUNT_ID=123456789012
-
-# SonarQube Configuration (se genera automáticamente)
-SONARQUBE_TOKEN=tu-token-sonarqube
-
-# Slack Configuration (opcional)
-SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
+**En Windows:**
+```cmd
+start-jenkins.bat
 ```
 
-### 3. Levantar Servicios
-```bash
-cd ci-cd
-docker-compose up -d
+### 2. Configuración Inicial
 
-# Verificar estado
-docker-compose ps
-```
+1. Acceder a http://localhost:8080
+2. Usar la contraseña inicial mostrada por el script
+3. Instalar plugins sugeridos
+4. Crear usuario administrador
+5. Configurar credenciales de AWS:
+   - Ir a "Manage Jenkins" > "Manage Credentials"
+   - Agregar credenciales de tipo "AWS Credentials"
+   - ID: `aws-credentials`
 
-## 🌐 URLs de Acceso
+### 3. Crear Pipeline
 
-| Servicio | URL | Credenciales |
-|----------|-----|--------------|
-| Jenkins | http://localhost:8080 | admin/admin123 |
-| Grafana | http://localhost:3000 | admin/admin123 |
-| SonarQube | http://localhost:9000 | admin/admin |
-| Prometheus | http://localhost:9090 | - |
+1. Crear nuevo job de tipo "Pipeline"
+2. En "Pipeline", seleccionar "Pipeline script from SCM"
+3. Configurar repositorio Git
+4. Especificar ruta del Jenkinsfile: `ci-cd/Jenkinsfile`
 
-## 📈 Pipeline de CI/CD
+## 📋 Características del Pipeline
+
+### Parámetros de Ejecución
+
+- **ACTION**: `apply` o `destroy`
+- **AUTO_APPROVE**: Aprobar automáticamente los cambios
+- **TERRAFORM_WORKSPACE**: Workspace de Terraform a usar
 
 ### Etapas del Pipeline
 
-1. **🔧 Setup**
-   - Configuración del entorno Node.js
-   - Checkout del código fuente
-   - Limpieza del workspace
+1. **Checkout**: Clonar repositorio
+2. **Validate Environment**: Verificar herramientas instaladas
+3. **Terraform Init**: Inicializar Terraform y seleccionar workspace
+4. **Terraform Validate**: Validar y formatear código
+5. **Terraform Plan**: Generar plan de ejecución
+6. **Review Plan**: Revisión manual (si AUTO_APPROVE=false)
+7. **Terraform Apply/Destroy**: Ejecutar acción seleccionada
+8. **Save State**: Respaldar estado de Terraform
+9. **Test Infrastructure**: Pruebas post-aplicación
 
-2. **📦 Install Dependencies**
-   - Instalación de dependencias del backend
-   - Validación de configuración de Terraform
+### Variables de Entorno
 
-3. **🔍 Code Quality & Security Analysis**
-   - **ESLint**: Análisis de estilo de código
-   - **SonarQube**: Análisis de calidad y cobertura
-   - **Dependency Security Scan**: Vulnerabilidades en dependencias
-   - **SAST Security Scan**: Análisis estático de seguridad
+- `AWS_DEFAULT_REGION`: Región de AWS por defecto
+- `TF_VAR_environment`: Environment para Terraform
+- `TERRAFORM_DIR`: Directorio donde están los archivos .tf
 
-4. **🧪 Testing**
-   - **Unit Tests**: Pruebas unitarias con Jest
-   - **Integration Tests**: Pruebas de integración
-   - **Coverage Reports**: Informes de cobertura
+## 🔧 Configuración Avanzada
 
-5. **🏗️ Build**
-   - Compilación de TypeScript
-   - Generación de artefactos
+### Credenciales de AWS
 
-6. **🐳 Docker Build**
-   - Construcción de imagen Docker
-   - Tag con versión y commit hash
+El pipeline busca credenciales con ID `aws-credentials`. Configurar en Jenkins:
 
-7. **🔒 Security Gate**
-   - Quality Gate de SonarQube
-   - Verificación de vulnerabilidades críticas
-   - Límites de seguridad
+1. Manage Jenkins > Manage Credentials
+2. Add Credentials > AWS Credentials
+3. ID: `aws-credentials`
+4. Agregar Access Key ID y Secret Access Key
 
-8. **🚀 Deploy**
-   - Push a Amazon ECR
-   - Despliegue con Terraform
-   - Smoke tests
+### Notificaciones
 
-### Triggers del Pipeline
+El Jenkinsfile incluye secciones comentadas para notificaciones Slack:
 
-- **Push a main/develop**: Ejecución automática
-- **Pull Requests**: Verificación de calidad
-- **Scheduled**: Scan completo semanal
-- **Manual**: Ejecución bajo demanda
-
-## 🔒 Configuración de Seguridad
-
-### Quality Gates
-```yaml
-# Límites de calidad en SonarQube
-Coverage: > 70%
-Duplicated Lines: < 3%
-Maintainability Rating: A
-Reliability Rating: A
-Security Rating: A
+```groovy
+// Descomentar y configurar para habilitar notificaciones
+slackSend(
+    channel: '#devops',
+    color: 'good',
+    message: "✅ Terraform apply completado"
+)
 ```
 
-### Límites de Vulnerabilidades
-```yaml
-# Límites en el pipeline
-Critical Vulnerabilities: 0
-High Vulnerabilities: < 5
-Medium Vulnerabilities: < 20
+### Workspaces de Terraform
+
+El pipeline soporta múltiples workspaces:
+
+- `default`: Entorno por defecto
+- `dev`: Desarrollo
+- `staging`: Pruebas
+- `prod`: Producción
+
+## 📁 Estructura de Archivos
+
+```
+ci-cd/
+├── Dockerfile              # Imagen de Jenkins personalizada
+├── Jenkinsfile             # Definición del pipeline
+├── docker-compose.yml      # Orquestación de servicios
+├── start-jenkins.sh        # Script de inicio (Linux/macOS)
+├── start-jenkins.bat       # Script de inicio (Windows)
+├── stop-jenkins.sh         # Script de parada
+├── check-docker.sh         # Verificador de Docker (bash)
+├── check-docker.bat        # Verificador de Docker (Windows)
+├── validate-setup.sh       # Validador de configuración
+├── jenkins-job-config.xml  # Configuración de job ejemplo
+└── README.md              # Esta documentación
 ```
 
-## 📊 Dashboards y Métricas
+## 🛠️ Comandos Útiles
 
-### Métricas de Jenkins
-- Tiempo de ejecución de builds
-- Tasa de éxito/fallo
-- Cola de trabajos
-- Uso de agentes
+### Docker
 
-### Métricas de Aplicación
-- Rendimiento de la API
-- Errores y excepciones
-- Uso de recursos
-- Disponibilidad
-
-### Métricas de Seguridad
-- Vulnerabilidades detectadas
-- Cobertura de tests
-- Quality Gates
-
-## 🛠️ Scripts de Utilidad
-
-### Gestión de Servicios
-```bash
-# Iniciar servicios
-./scripts/ci-cd-utils.sh start
-
-# Detener servicios
-./scripts/ci-cd-utils.sh stop
-
-# Ver logs
-./scripts/ci-cd-utils.sh logs jenkins
-
-# Estado de servicios
-./scripts/ci-cd-utils.sh status
-
-# Backup de datos
-./scripts/ci-cd-utils.sh backup
-```
-
-### Comandos Docker
 ```bash
 # Ver logs de Jenkins
 docker-compose logs -f jenkins
 
-# Acceder a contenedor de Jenkins
-docker-compose exec jenkins bash
+# Acceder al contenedor
+docker exec -it jenkins-terraform bash
 
-# Reiniciar servicio específico
-docker-compose restart grafana
+# Reiniciar Jenkins
+docker-compose restart jenkins
+
+# Detener todo
+docker-compose down
+
+# Detener y limpiar volúmenes
+docker-compose down -v
 ```
 
-## 🔧 Configuración Avanzada
+### Jenkins CLI
 
-### Configurar Webhooks de GitHub
-
-1. Ve a tu repositorio en GitHub
-2. Settings → Webhooks → Add webhook
-3. Payload URL: `http://tu-jenkins-url:8080/github-webhook/`
-4. Content type: `application/json`
-5. Events: Push events, Pull requests
-
-### Configurar Notificaciones Slack
-
-1. Crear webhook en Slack
-2. Actualizar `SLACK_WEBHOOK_URL` en `.env`
-3. Configurar canal en Jenkinsfile: `SLACK_CHANNEL = '#ci-cd'`
-
-### Personalizar Dashboards Grafana
-
-1. Acceder a Grafana (http://localhost:3000)
-2. Importar dashboards desde `grafana/dashboards/`
-3. Configurar alertas en base a métricas
-
-## 🐛 Troubleshooting
-
-### Problemas Comunes
-
-#### Jenkins no inicia
 ```bash
-# Verificar logs
-docker-compose logs jenkins
+# Descargar Jenkins CLI
+wget http://localhost:8080/jnlpJars/jenkins-cli.jar
 
-# Verificar permisos
-sudo chown -R 1000:1000 jenkins_home/
+# Crear job desde archivo
+java -jar jenkins-cli.jar -s http://localhost:8080 create-job terraform-pipeline < job-config.xml
+
+# Ejecutar job
+java -jar jenkins-cli.jar -s http://localhost:8080 build terraform-pipeline -p ACTION=apply
 ```
 
-#### SonarQube falla al iniciar
+## 🔍 Troubleshooting
+
+### Problema: Docker Desktop no está ejecutándose (Windows)
+
+**Error típico**: `open //./pipe/dockerDesktopLinuxEngine: El sistema no puede encontrar el archivo especificado`
+
+**Soluciones**:
+1. **Iniciar Docker Desktop**:
+   - Abrir Docker Desktop desde el menú de inicio
+   - Esperar a que aparezca el ícono en la bandeja del sistema
+   - Verificar que muestre "Docker Desktop is running"
+
+2. **Verificar estado de Docker**:
+   ```cmd
+   docker version
+   docker ps
+   ```
+
+3. **Reiniciar Docker Desktop**:
+   - Clic derecho en el ícono de Docker en la bandeja del sistema
+   - Seleccionar "Restart"
+   - Esperar a que se reinicie completamente
+
+4. **Configurar WSL 2 (recomendado)**:
+   - Abrir Docker Desktop Settings
+   - Ir a "General"
+   - Habilitar "Use the WSL 2 based engine"
+   - Aplicar y reiniciar
+
+5. **Verificar recursos**:
+   - En Docker Desktop Settings > "Resources"
+   - Asignar suficiente memoria (mínimo 4GB recomendado)
+   - Asignar suficiente espacio en disco
+
+### Problema: Jenkins no puede acceder a Docker
+
+**Solución**: Verificar que el socket de Docker está montado correctamente:
 ```bash
-# Aumentar límites del sistema
-echo 'vm.max_map_count=262144' | sudo tee -a /etc/sysctl.conf
-sudo sysctl -p
+docker exec jenkins-terraform docker ps
 ```
 
-#### Pipeline falla en análisis de seguridad
+### Problema: Terraform no encuentra archivos .tf
+
+**Solución**: Verificar la variable `TERRAFORM_DIR` en el Jenkinsfile y la estructura del repositorio.
+
+### Problema: Credenciales de AWS no funcionan
+
+**Solución**: 
+1. Verificar que las credenciales están configuradas con ID `aws-credentials`
+2. Verificar permisos IAM del usuario
+3. Verificar región configurada
+
+### Problema: Error de permisos en scripts
+
+**Solución**: Dar permisos de ejecución:
 ```bash
-# Verificar configuración de SonarQube
-curl -u admin:admin http://localhost:9000/api/system/status
-
-# Regenerar token
-curl -u admin:admin -X POST "http://localhost:9000/api/user_tokens/generate" -d "name=jenkins-token"
+chmod +x start-jenkins.sh stop-jenkins.sh
 ```
 
-## 📚 Documentación Adicional
+## 🔒 Seguridad
 
-- [Configuración de Jenkins](./docs/jenkins-configuration.md)
-- [Configuración de SonarQube](./docs/sonarqube-setup.md)
-- [Dashboards de Grafana](./docs/grafana-dashboards.md)
-- [Análisis de Seguridad](./docs/security-analysis.md)
-- [Deployment con Terraform](./docs/terraform-deployment.md)
+### Mejores Prácticas
 
-## 🤝 Contribución
+1. **Credenciales**: Nunca hardcodear credenciales en el código
+2. **IAM**: Usar roles con permisos mínimos necesarios
+3. **Secrets**: Usar Jenkins Credentials para datos sensibles
+4. **Network**: Limitar acceso a Jenkins solo a IPs autorizadas
+5. **Backups**: Respaldar estado de Terraform regularmente
 
-1. Fork el proyecto
-2. Crear rama para feature (`git checkout -b feature/amazing-feature`)
-3. Commit cambios (`git commit -m 'Add amazing feature'`)
-4. Push a la rama (`git push origin feature/amazing-feature`)
-5. Abrir Pull Request
+### Configuración de Seguridad
+
+```groovy
+// En Jenkinsfile, usar credenciales seguras
+withCredentials([
+    aws(credentialsId: 'aws-credentials', 
+        accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
+        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')
+]) {
+    // Comandos que necesitan AWS
+}
+```
+
+## 📊 Monitoreo
+
+### Métricas del Pipeline
+
+- Tiempo de ejecución por etapa
+- Tasa de éxito/fallo
+- Recursos creados/destruidos
+- Costos de infraestructura
+
+### Logs Importantes
+
+- Terraform plan output
+- AWS CloudTrail events
+- Jenkins build console
+- Docker container logs
+
+## 🚀 Mejoras Futuras
+
+- [ ] Integración con herramientas de testing (Terratest)
+- [ ] Notificaciones por email/Slack
+- [ ] Dashboard de métricas con Grafana
+- [ ] Integración con sistemas de tickets (Jira)
+- [ ] Análisis de costos automático
+- [ ] Políticas de seguridad con Sentinel
+- [ ] Multi-cloud support (Azure, GCP)
 
 ## 📞 Soporte
 
-Para soporte y consultas:
-- **Email**: devops@villalfredo.com
-- **Slack**: #ci-cd-support
-- **Issues**: GitHub Issues
+Para problemas o sugerencias:
 
----
-
-**Última actualización**: Julio 2025
-**Versión**: 1.0.0
-**Mantenido por**: DevOps Team - Villa Alfredo
+1. Revisar logs de Jenkins y Docker
+2. Verificar documentación de Terraform
+3. Consultar documentación de AWS
+4. Crear issue en el repositorio del proyecto
