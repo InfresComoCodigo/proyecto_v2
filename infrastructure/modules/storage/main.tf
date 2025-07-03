@@ -40,7 +40,8 @@ resource "random_string" "bucket_suffix" {
 ###################################################################
 
 resource "aws_s3_bucket" "main" {
-  bucket = local.bucket_name
+  bucket        = local.bucket_name
+  force_destroy = true
 
   tags = merge(local.common_tags, var.tags, {
     Name       = "${var.project_name}-${var.environment}-main-bucket"

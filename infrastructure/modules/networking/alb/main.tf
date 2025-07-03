@@ -109,8 +109,9 @@ data "aws_elb_service_account" "main" {}
 
 # S3 bucket for ALB access logs
 resource "aws_s3_bucket" "alb_logs" {
-  count  = var.access_logs_bucket == null ? 1 : 0
-  bucket = "${var.project_name}-${var.environment}-alb-logs-${random_string.alb_suffix.result}"
+  count         = var.access_logs_bucket == null ? 1 : 0
+  bucket        = "${var.project_name}-${var.environment}-alb-logs-${random_string.alb_suffix.result}"
+  force_destroy = true
 
   tags = merge(var.tags, {
     Name        = "${var.project_name}-${var.environment}-alb-logs"

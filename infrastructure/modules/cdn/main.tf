@@ -4,9 +4,10 @@
 
 # S3 bucket for CloudFront logs
 resource "aws_s3_bucket" "cloudfront_logs" {
-  count    = var.log_bucket_domain_name == null ? 1 : 0
-  provider = aws.us_east_1
-  bucket   = "${var.project_name}-${var.environment}-cloudfront-logs-${random_string.log_bucket_suffix[0].result}"
+  count         = var.log_bucket_domain_name == null ? 1 : 0
+  provider      = aws.us_east_1
+  bucket        = "${var.project_name}-${var.environment}-cloudfront-logs-${random_string.log_bucket_suffix[0].result}"
+  force_destroy = true
 
   tags = merge(var.tags, {
     Name        = "${var.project_name}-${var.environment}-cloudfront-logs"
