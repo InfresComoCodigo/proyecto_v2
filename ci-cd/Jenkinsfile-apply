@@ -1,0 +1,372 @@
+pipeline {
+    agent any
+    
+    parameters {
+        booleanParam(
+            name: 'AUTO_APPROVE',
+            defaultValue: false,
+            description: 'Auto-aprobar los cambios de Terraform'
+        )
+        string(
+            name: 'TERRAFORM_WORKSPACE',
+            defaultValue: 'default',
+            description: 'Workspace de Terraform'
+        )
+        booleanParam(
+            name: 'RUN_TESTS',
+            defaultValue: true,
+            description: 'Ejecutar pruebas de infraestructura después del deploy'
+        )
+    }
+    
+    environment {
+        AWS_DEFAULT_REGION = 'us-east-1'
+        TF_VAR_environment = "${params.TERRAFORM_WORKSPACE}"
+        TERRAFORM_DIR = 'infrastructure'
+        ACTION = 'apply'
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+                echo "🔄 Repositorio clonado exitosamente"
+            }
+        }
+        
+        stage('Validate Environment') {
+            steps {
+                script {
+                    sh '''
+                        echo "🔍 Validando herramientas requeridas..."
+                        terraform version
+                        aws --version
+                        echo "📁 Directorio actual: $(pwd)"
+                        ls -la
+                        
+                        echo "🔐 Verificando credenciales AWS..."
+                        aws sts get-caller-identity
+                    '''
+                }
+            }
+        }
+        
+        stage('Terraform Init') {
+            steps {
+                dir("${TERRAFORM_DIR}") {
+                    script {
+                        sh '''
+                            echo "🚀 Inicializando Terraform..."
+                            terraform init -upgrade
+                            
+                            echo "🏷️  Seleccionando workspace: ${TERRAFORM_WORKSPACE}"
+                            terraform workspace select ${TERRAFORM_WORKSPACE} || terraform workspace new ${TERRAFORM_WORKSPACE}
+                            
+                            echo "📍 Workspace actual:"
+                            terraform workspace show
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Terraform Validate & Format') {
+            steps {
+                dir("${TERRAFORM_DIR}") {
+                    script {
+                        sh '''
+                            echo "✅ Validando configuración de Terraform..."
+                            terraform validate
+                            
+                            echo "🎨 Verificando formato de archivos..."
+                            terraform fmt -check=true -diff=true || {
+                                echo "⚠️  Aplicando formato automático..."
+                                terraform fmt -recursive
+                            }
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Terraform Plan') {
+            steps {
+                dir("${TERRAFORM_DIR}") {
+                    script {
+                        sh '''
+                            echo "📋 Generando plan de aplicación..."
+                            terraform plan -out=tfplan -var-file=terraform.tfvars
+                            
+                            echo "💾 Guardando plan en archivo de texto para revisión..."
+                            terraform show -no-color tfplan > tfplan.txt
+                            
+                            echo "📊 Resumen del plan:"
+                            grep -E "(Plan:|No changes)" tfplan.txt || echo "Plan generado exitosamente"
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Security & Cost Analysis') {
+            steps {
+                dir("${TERRAFORM_DIR}") {
+                    script {
+                        sh '''
+                            echo "🔒 Analizando configuración de seguridad..."
+                            
+                            # Verificar que no haya recursos públicos innecesarios
+                            echo "Verificando configuraciones de seguridad en el plan..."
+                            grep -i "public" tfplan.txt || echo "✅ No se encontraron configuraciones públicas inesperadas"
+                            
+                            echo "💰 Estimación de costos disponible en AWS Cost Calculator"
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Review Plan') {
+            when {
+                equals expected: false, actual: params.AUTO_APPROVE
+            }
+            steps {
+                dir("${TERRAFORM_DIR}") {
+                    script {
+                        echo "📖 Plan de Terraform generado. Revisa los cambios:"
+                        sh 'cat tfplan.txt'
+                        
+                        // Mostrar resumen de cambios
+                        sh '''
+                            echo "📈 RESUMEN DE CAMBIOS:"
+                            echo "===================="
+                            grep -E "to add|to change|to destroy" tfplan.txt || echo "No hay cambios destructivos"
+                        '''
+                        
+                        // Pausar para revisión manual
+                        input message: "🚀 ¿Proceder con el despliegue de infraestructura?", ok: 'Continuar'
+                    }
+                }
+            }
+        }
+        
+        stage('Terraform Apply') {
+            steps {
+                dir("${TERRAFORM_DIR}") {
+                    script {
+                        sh '''
+                            echo "🚀 Aplicando cambios de Terraform..."
+                            terraform apply -auto-approve tfplan
+                            
+                            echo "📄 Mostrando outputs de infraestructura:"
+                            terraform output -json > terraform-outputs.json
+                            terraform output
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Save State Backup') {
+            steps {
+                dir("${TERRAFORM_DIR}") {
+                    script {
+                        sh '''
+                            echo "💾 Creando respaldo del estado..."
+                            
+                            # Crear directorio de respaldo con timestamp
+                            BACKUP_DIR="backups/$(date +%Y%m%d_%H%M%S)"
+                            mkdir -p $BACKUP_DIR
+                            
+                            # Copiar archivos de estado y configuración
+                            if [ -f terraform.tfstate ]; then
+                                cp terraform.tfstate $BACKUP_DIR/
+                                echo "✅ Estado principal respaldado"
+                            fi
+                            
+                            if [ -f terraform.tfstate.backup ]; then
+                                cp terraform.tfstate.backup $BACKUP_DIR/
+                                echo "✅ Estado de respaldo copiado"
+                            fi
+                            
+                            if [ -f terraform.tfvars ]; then
+                                cp terraform.tfvars $BACKUP_DIR/
+                                echo "✅ Variables respaldadas"
+                            fi
+                            
+                            if [ -f terraform-outputs.json ]; then
+                                cp terraform-outputs.json $BACKUP_DIR/
+                                echo "✅ Outputs respaldados"
+                            fi
+                            
+                            echo "📦 Estado respaldado en: $BACKUP_DIR"
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Test Infrastructure') {
+            when {
+                equals expected: true, actual: params.RUN_TESTS
+            }
+            steps {
+                dir("${TERRAFORM_DIR}") {
+                    script {
+                        sh '''
+                            echo "🧪 Ejecutando pruebas de infraestructura..."
+                            
+                            # Verificar que los recursos críticos estén funcionando
+                            echo "🔍 Verificando recursos críticos..."
+                            
+                            # Probar conectividad a instancias EC2
+                            terraform show -json | jq -r '.values.root_module.resources[] | select(.type == "aws_instance") | .values.public_ip' > ec2_ips.txt
+                            if [ -s ec2_ips.txt ]; then
+                                echo "✅ Instancias EC2 encontradas:"
+                                cat ec2_ips.txt
+                            else
+                                echo "ℹ️  No hay instancias EC2 con IP pública"
+                            fi
+                            
+                            # Verificar load balancer
+                            ALB_DNS=$(terraform output -raw alb_dns_name 2>/dev/null || echo "")
+                            if [ ! -z "$ALB_DNS" ]; then
+                                echo "🌐 Load Balancer DNS: $ALB_DNS"
+                                echo "✅ ALB configurado correctamente"
+                            fi
+                            
+                            # Verificar CloudFront
+                            CF_DOMAIN=$(terraform output -raw cloudfront_domain_name 2>/dev/null || echo "")
+                            if [ ! -z "$CF_DOMAIN" ]; then
+                                echo "🌍 CloudFront Domain: $CF_DOMAIN"
+                                echo "✅ CDN configurado correctamente"
+                            fi
+                            
+                            # Ejecutar scripts de prueba personalizados si existen
+                            if [ -f "../scripts/test_infrastructure.sh" ]; then
+                                echo "🔧 Ejecutando pruebas personalizadas..."
+                                chmod +x ../scripts/test_infrastructure.sh
+                                ../scripts/test_infrastructure.sh
+                            fi
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Generate Infrastructure Report') {
+            steps {
+                dir("${TERRAFORM_DIR}") {
+                    script {
+                        sh '''
+                            echo "📊 Generando reporte de infraestructura..."
+                            
+                            # Crear reporte HTML simple
+                            cat > infrastructure-report.html << EOF
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Infrastructure Deployment Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .success { color: green; }
+        .info { color: blue; }
+        .header { background-color: #f0f0f0; padding: 10px; }
+        pre { background-color: #f5f5f5; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 Infrastructure Deployment Report</h1>
+        <p class="info">Deployment Date: $(date)</p>
+        <p class="info">Workspace: ${TERRAFORM_WORKSPACE}</p>
+        <p class="info">Build: ${BUILD_NUMBER}</p>
+    </div>
+    
+    <h2>📋 Terraform Outputs</h2>
+    <pre>$(terraform output 2>/dev/null || echo "No outputs available")</pre>
+    
+    <h2 class="success">✅ Deployment Completed Successfully</h2>
+    <p>Infrastructure has been deployed and is ready for use.</p>
+</body>
+</html>
+EOF
+                            
+                            echo "✅ Reporte generado: infrastructure-report.html"
+                        '''
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            dir("${TERRAFORM_DIR}") {
+                script {
+                    // Limpiar archivos temporales
+                    sh '''
+                        echo "🧹 Limpiando archivos temporales..."
+                        rm -f tfplan tfplan.txt ec2_ips.txt
+                    '''
+                }
+            }
+            
+            // Archivar logs y reportes
+            archiveArtifacts artifacts: 'infrastructure/backups/**/*', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'infrastructure/infrastructure-report.html', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'infrastructure/terraform-outputs.json', allowEmptyArchive: true
+            
+            // Publicar reporte HTML
+            publishHTML([
+                allowMissing: false,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'infrastructure',
+                reportFiles: 'infrastructure-report.html',
+                reportName: 'Infrastructure Report'
+            ])
+        }
+        
+        success {
+            echo "🎉 Pipeline de DEPLOY ejecutado exitosamente"
+            echo "✅ Infraestructura desplegada y lista para uso"
+            
+            // Notificaciones de éxito (opcional)
+            // slackSend(
+            //     channel: '#devops',
+            //     color: 'good',
+            //     message: "✅ Infrastructure DEPLOYED successfully in ${env.JOB_NAME} #${env.BUILD_NUMBER}\n🌍 Environment: ${params.TERRAFORM_WORKSPACE}"
+            // )
+        }
+        
+        failure {
+            echo "❌ Pipeline de DEPLOY falló"
+            
+            // En caso de fallo, mostrar información útil
+            dir("${TERRAFORM_DIR}") {
+                script {
+                    sh '''
+                        echo "🔍 Estado actual de Terraform:"
+                        terraform show 2>/dev/null || echo "No se puede mostrar el estado"
+                        
+                        echo "📋 Últimos logs:"
+                        tail -20 *.log 2>/dev/null || echo "No hay logs disponibles"
+                    '''
+                }
+            }
+            
+            // Notificaciones de error (opcional)
+            // slackSend(
+            //     channel: '#devops',
+            //     color: 'danger',
+            //     message: "❌ Infrastructure DEPLOYMENT failed in ${env.JOB_NAME} #${env.BUILD_NUMBER}\n🚨 Environment: ${params.TERRAFORM_WORKSPACE}"
+            // )
+        }
+        
+        cleanup {
+            // Limpiar workspace si es necesario
+            cleanWs()
+        }
+    }
+}

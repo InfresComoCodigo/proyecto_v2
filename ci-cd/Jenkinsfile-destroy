@@ -1,0 +1,411 @@
+pipeline {
+    agent any
+    
+    parameters {
+        booleanParam(
+            name: 'AUTO_APPROVE',
+            defaultValue: false,
+            description: 'Auto-aprobar la destrucción de infraestructura (⚠️ PELIGROSO)'
+        )
+        string(
+            name: 'TERRAFORM_WORKSPACE',
+            defaultValue: 'default',
+            description: 'Workspace de Terraform a destruir'
+        )
+        booleanParam(
+            name: 'FORCE_DESTROY',
+            defaultValue: false,
+            description: '🚨 Forzar destrucción incluso con recursos protegidos'
+        )
+        string(
+            name: 'CONFIRMATION_TEXT',
+            defaultValue: '',
+            description: 'Escribe "DESTROY" para confirmar la destrucción'
+        )
+    }
+    
+    environment {
+        AWS_DEFAULT_REGION = 'us-east-1'
+        TF_VAR_environment = "${params.TERRAFORM_WORKSPACE}"
+        TERRAFORM_DIR = 'infrastructure'
+        ACTION = 'destroy'
+    }
+    
+    stages {
+        stage('Pre-flight Safety Checks') {
+            steps {
+                script {
+                    // Verificación de confirmación
+                    if (params.CONFIRMATION_TEXT != 'DESTROY') {
+                        error("❌ CONFIRMACIÓN REQUERIDA: Debes escribir 'DESTROY' en el parámetro CONFIRMATION_TEXT para proceder")
+                    }
+                    
+                    // Advertencia adicional para workspace de producción
+                    if (params.TERRAFORM_WORKSPACE.toLowerCase().contains('prod')) {
+                        echo "🚨 ¡ADVERTENCIA! Intentando destruir workspace de PRODUCCIÓN: ${params.TERRAFORM_WORKSPACE}"
+                        if (!params.FORCE_DESTROY) {
+                            error("❌ DESTRUCCIÓN BLOQUEADA: Para destruir producción, debes activar FORCE_DESTROY")
+                        }
+                    }
+                    
+                    echo "⚠️  INICIANDO PROCESO DE DESTRUCCIÓN"
+                    echo "🎯 Workspace objetivo: ${params.TERRAFORM_WORKSPACE}"
+                    echo "🤖 Auto-approve: ${params.AUTO_APPROVE}"
+                }
+            }
+        }
+        
+        stage('Checkout') {
+            steps {
+                checkout scm
+                echo "🔄 Repositorio clonado exitosamente"
+            }
+        }
+        
+        stage('Validate Environment') {
+            steps {
+                script {
+                    sh '''
+                        echo "🔍 Validando herramientas requeridas..."
+                        terraform version
+                        aws --version
+                        echo "📁 Directorio actual: $(pwd)"
+                        ls -la
+                        
+                        echo "🔐 Verificando credenciales AWS..."
+                        aws sts get-caller-identity
+                    '''
+                }
+            }
+        }
+        
+        stage('Backup Current State') {
+            steps {
+                dir("${TERRAFORM_DIR}") {
+                    script {
+                        sh '''
+                            echo "💾 Creando respaldo COMPLETO antes de destrucción..."
+                            
+                            # Crear directorio de respaldo con timestamp
+                            BACKUP_DIR="backups/pre-destroy-$(date +%Y%m%d_%H%M%S)"
+                            mkdir -p $BACKUP_DIR
+                            
+                            echo "📦 Respaldando estado actual..."
+                            
+                            # Respaldar todos los archivos importantes
+                            if [ -f terraform.tfstate ]; then
+                                cp terraform.tfstate $BACKUP_DIR/
+                                echo "✅ Estado principal respaldado"
+                            fi
+                            
+                            if [ -f terraform.tfstate.backup ]; then
+                                cp terraform.tfstate.backup $BACKUP_DIR/
+                                echo "✅ Estado de respaldo copiado"
+                            fi
+                            
+                            if [ -f terraform.tfvars ]; then
+                                cp terraform.tfvars $BACKUP_DIR/
+                                echo "✅ Variables respaldadas"
+                            fi
+                            
+                            # Capturar outputs actuales
+                            terraform output -json > $BACKUP_DIR/terraform-outputs-before-destroy.json 2>/dev/null || echo "{}" > $BACKUP_DIR/terraform-outputs-before-destroy.json
+                            echo "✅ Outputs capturados"
+                            
+                            # Crear manifiesto de recursos
+                            terraform state list > $BACKUP_DIR/resource-list.txt 2>/dev/null || echo "No resources found" > $BACKUP_DIR/resource-list.txt
+                            echo "✅ Lista de recursos capturada"
+                            
+                            echo "📍 Respaldo completo creado en: $BACKUP_DIR"
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Terraform Init') {
+            steps {
+                dir("${TERRAFORM_DIR}") {
+                    script {
+                        sh '''
+                            echo "🚀 Inicializando Terraform para destrucción..."
+                            terraform init -upgrade
+                            
+                            echo "🏷️  Seleccionando workspace: ${TERRAFORM_WORKSPACE}"
+                            terraform workspace select ${TERRAFORM_WORKSPACE} || {
+                                echo "❌ Workspace ${TERRAFORM_WORKSPACE} no existe"
+                                exit 1
+                            }
+                            
+                            echo "📍 Workspace actual:"
+                            terraform workspace show
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Infrastructure Inventory') {
+            steps {
+                dir("${TERRAFORM_DIR}") {
+                    script {
+                        sh '''
+                            echo "📋 Inventario de recursos a destruir..."
+                            
+                            echo "🔍 Recursos actuales en el estado:"
+                            terraform state list || echo "No hay recursos en el estado"
+                            
+                            echo ""
+                            echo "💰 Recursos que incurren en costos:"
+                            terraform state list | grep -E "(aws_instance|aws_rds|aws_nat_gateway|aws_lb)" || echo "No se encontraron recursos costosos"
+                            
+                            echo ""
+                            echo "🗄️  Recursos de almacenamiento:"
+                            terraform state list | grep -E "(aws_s3_bucket|aws_ebs_volume)" || echo "No se encontraron recursos de almacenamiento"
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Terraform Destroy Plan') {
+            steps {
+                dir("${TERRAFORM_DIR}") {
+                    script {
+                        sh '''
+                            echo "💥 Generando plan de destrucción..."
+                            terraform plan -destroy -out=tfplan -var-file=terraform.tfvars
+                            
+                            echo "💾 Guardando plan de destrucción..."
+                            terraform show -no-color tfplan > destroy-plan.txt
+                            
+                            echo "📊 Resumen del plan de destrucción:"
+                            grep -E "(Plan:|destroy)" destroy-plan.txt || echo "Plan de destrucción generado"
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Review Destroy Plan') {
+            when {
+                equals expected: false, actual: params.AUTO_APPROVE
+            }
+            steps {
+                dir("${TERRAFORM_DIR}") {
+                    script {
+                        echo "⚠️  PLAN DE DESTRUCCIÓN GENERADO"
+                        echo "================================"
+                        sh 'cat destroy-plan.txt'
+                        
+                        echo ""
+                        echo "🚨 ADVERTENCIA: Los siguientes recursos serán DESTRUIDOS PERMANENTEMENTE:"
+                        sh '''
+                            grep -A 5 -B 5 "will be destroyed" destroy-plan.txt || echo "Ver plan completo arriba"
+                        '''
+                        
+                        // Pausa crítica para revisión
+                        input message: "🚨 ¿CONFIRMAS LA DESTRUCCIÓN DE TODA LA INFRAESTRUCTURA?", ok: 'SÍ, DESTRUIR TODO'
+                    }
+                }
+            }
+        }
+        
+        stage('Final Confirmation') {
+            when {
+                equals expected: false, actual: params.AUTO_APPROVE
+            }
+            steps {
+                script {
+                    echo "🛑 ÚLTIMA OPORTUNIDAD PARA CANCELAR"
+                    echo "Workspace: ${params.TERRAFORM_WORKSPACE}"
+                    echo "Esta acción NO se puede deshacer"
+                    
+                    input message: "🔥 CONFIRMACIÓN FINAL: ¿Proceder con la destrucción IRREVERSIBLE?", ok: 'DESTRUIR AHORA'
+                }
+            }
+        }
+        
+        stage('Terraform Destroy') {
+            steps {
+                dir("${TERRAFORM_DIR}") {
+                    script {
+                        sh '''
+                            echo "💥 INICIANDO DESTRUCCIÓN DE INFRAESTRUCTURA..."
+                            echo "⏰ Timestamp: $(date)"
+                            
+                            # Aplicar el plan de destrucción
+                            terraform apply -auto-approve tfplan
+                            
+                            echo ""
+                            echo "🔍 Verificando destrucción completa..."
+                            REMAINING_RESOURCES=$(terraform state list 2>/dev/null | wc -l)
+                            
+                            if [ $REMAINING_RESOURCES -eq 0 ]; then
+                                echo "✅ DESTRUCCIÓN COMPLETA: No quedan recursos"
+                            else
+                                echo "⚠️  ADVERTENCIA: Quedan $REMAINING_RESOURCES recursos"
+                                terraform state list
+                            fi
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Cleanup Workspace') {
+            steps {
+                dir("${TERRAFORM_DIR}") {
+                    script {
+                        sh '''
+                            echo "🧹 Limpiando workspace después de destrucción..."
+                            
+                            # Crear registro final
+                            echo "Infraestructura destruida: $(date)" > destruction-log.txt
+                            echo "Workspace: ${TERRAFORM_WORKSPACE}" >> destruction-log.txt
+                            echo "Build: ${BUILD_NUMBER}" >> destruction-log.txt
+                            
+                            # Mantener logs importantes
+                            CLEANUP_DIR="backups/post-destroy-$(date +%Y%m%d_%H%M%S)"
+                            mkdir -p $CLEANUP_DIR
+                            
+                            if [ -f destruction-log.txt ]; then
+                                cp destruction-log.txt $CLEANUP_DIR/
+                            fi
+                            
+                            if [ -f destroy-plan.txt ]; then
+                                cp destroy-plan.txt $CLEANUP_DIR/
+                            fi
+                            
+                            echo "📝 Logs de destrucción guardados en: $CLEANUP_DIR"
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Generate Destruction Report') {
+            steps {
+                dir("${TERRAFORM_DIR}") {
+                    script {
+                        sh '''
+                            echo "📊 Generando reporte de destrucción..."
+                            
+                            # Crear reporte HTML
+                            cat > destruction-report.html << EOF
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Infrastructure Destruction Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .warning { color: red; font-weight: bold; }
+        .success { color: green; }
+        .info { color: blue; }
+        .header { background-color: #ffe6e6; padding: 10px; border: 1px solid #ff0000; }
+        pre { background-color: #f5f5f5; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>💥 Infrastructure Destruction Report</h1>
+        <p class="warning">DESTRUCTION COMPLETED</p>
+        <p class="info">Destruction Date: $(date)</p>
+        <p class="info">Workspace: ${TERRAFORM_WORKSPACE}</p>
+        <p class="info">Build: ${BUILD_NUMBER}</p>
+    </div>
+    
+    <h2 class="warning">⚠️ Destroyed Resources</h2>
+    <p>All infrastructure resources have been permanently destroyed.</p>
+    
+    <h2>📋 Destruction Log</h2>
+    <pre>$(cat destruction-log.txt 2>/dev/null || echo "No additional logs")</pre>
+    
+    <h2 class="success">✅ Cleanup Completed</h2>
+    <p>Infrastructure destruction completed successfully.</p>
+    <p class="warning">⚠️ Remember: Backups are available in the backups/ directory.</p>
+</body>
+</html>
+EOF
+                            
+                            echo "✅ Reporte de destrucción generado: destruction-report.html"
+                        '''
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            dir("${TERRAFORM_DIR}") {
+                script {
+                    // Limpiar archivos temporales
+                    sh '''
+                        echo "🧹 Limpiando archivos temporales..."
+                        rm -f tfplan
+                    '''
+                }
+            }
+            
+            // Archivar logs y reportes importantes
+            archiveArtifacts artifacts: 'infrastructure/backups/**/*', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'infrastructure/destruction-report.html', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'infrastructure/destroy-plan.txt', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'infrastructure/destruction-log.txt', allowEmptyArchive: true
+            
+            // Publicar reporte HTML
+            publishHTML([
+                allowMissing: false,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'infrastructure',
+                reportFiles: 'destruction-report.html',
+                reportName: 'Destruction Report'
+            ])
+        }
+        
+        success {
+            echo "💥 Pipeline de DESTRUCCIÓN ejecutado exitosamente"
+            echo "⚠️  INFRAESTRUCTURA COMPLETAMENTE DESTRUIDA"
+            echo "💾 Respaldos disponibles en directorio backups/"
+            
+            // Notificaciones de destrucción (opcional)
+            // slackSend(
+            //     channel: '#devops',
+            //     color: 'warning',
+            //     message: "💥 Infrastructure DESTROYED successfully in ${env.JOB_NAME} #${env.BUILD_NUMBER}\n⚠️ Environment: ${params.TERRAFORM_WORKSPACE}\n💾 Backups preserved"
+            // )
+        }
+        
+        failure {
+            echo "❌ Pipeline de DESTRUCCIÓN falló"
+            echo "🔍 Revisar estado de recursos manualmente"
+            
+            // En caso de fallo, mostrar información útil
+            dir("${TERRAFORM_DIR}") {
+                script {
+                    sh '''
+                        echo "🔍 Estado actual de Terraform:"
+                        terraform state list 2>/dev/null || echo "No se puede listar el estado"
+                        
+                        echo "📋 Recursos que podrían quedar:"
+                        terraform show 2>/dev/null | head -50 || echo "No se puede mostrar el estado"
+                    '''
+                }
+            }
+            
+            // Notificaciones de error crítico (opcional)
+            // slackSend(
+            //     channel: '#devops',
+            //     color: 'danger',
+            //     message: "🚨 Infrastructure DESTRUCTION failed in ${env.JOB_NAME} #${env.BUILD_NUMBER}\n⚠️ Environment: ${params.TERRAFORM_WORKSPACE}\n🔍 Manual intervention required"
+            // )
+        }
+        
+        cleanup {
+            // NO limpiar workspace automáticamente para preservar logs de destrucción
+            echo "⚠️ Workspace preserved for destruction audit"
+        }
+    }
+}

@@ -80,12 +80,36 @@ start-jenkins.bat
 
 ### 3. Crear Pipeline
 
-1. Crear nuevo job de tipo "Pipeline"
-2. En "Pipeline", seleccionar "Pipeline script from SCM"
-3. Configurar repositorio Git
-4. Especificar ruta del Jenkinsfile: `ci-cd/Jenkinsfile`
+1. **Crear nuevo job de tipo "Pipeline"**:
+   - En Jenkins, hacer clic en "New Item"
+   - Nombre: `terraform-pipeline`
+   - Tipo: "Pipeline"
+   - Hacer clic en "OK"
+
+2. **Configurar Pipeline**:
+   - En "Pipeline", seleccionar "Pipeline script from SCM"
+   - SCM: Git
+   - Repository URL: `https://github.com/tu-usuario/tu-repo.git`
+   - Branch: `*/main` (o `*/master` según tu configuración)
+   - Script Path: `ci-cd/Jenkinsfile`
+
+3. **Configurar credenciales (si el repo es privado)**:
+   - En "Credentials", seleccionar "Add" > "Jenkins"
+   - Tipo: "Username with password"
+   - Username: tu usuario de GitHub
+   - Password: tu token de acceso personal
+   - ID: `github-credentials`
+
+4. **Verificar configuración**:
+   - Hacer clic en "Save"
+   - Hacer clic en "Build Now"
 
 **💡 Tip**: Si es tu primera vez con Jenkins, puedes usar `ci-cd/Jenkinsfile-simple` para probar la configuración básica primero.
+
+**⚠️ Alternativa: Pipeline script directo**:
+Si tienes problemas con SCM, puedes copiar el contenido del Jenkinsfile directamente:
+- En "Pipeline", seleccionar "Pipeline script"
+- Copiar el contenido completo de `Jenkinsfile-simple` o `Jenkinsfile`
 
 ## 📋 Características del Pipeline
 
@@ -199,6 +223,51 @@ java -jar jenkins-cli.jar -s http://localhost:8080 build terraform-pipeline -p A
 ```
 
 ## 🔍 Troubleshooting
+
+### Problema: Git no puede encontrar el Jenkinsfile
+
+**Error típico**: `fatal: couldn't find remote ref ci-cd/Jenkinsfile`
+
+**Soluciones**:
+1. **Verificar que el archivo existe**:
+   - Asegurarse de que `ci-cd/Jenkinsfile` está en el repositorio
+   - Verificar que está en el branch correcto (main/master)
+   - Verificar que se hizo commit y push
+
+2. **Configuración del pipeline**:
+   - Repository URL debe ser correcta
+   - Branch debe ser `*/main` o `*/master`
+   - Script Path debe ser exactamente `ci-cd/Jenkinsfile`
+
+3. **Alternativa - Pipeline script directo**:
+   ```groovy
+   // En Jenkins, seleccionar "Pipeline script" y pegar el contenido de Jenkinsfile-simple
+   pipeline {
+       agent any
+       stages {
+           stage('Test') {
+               steps {
+                   echo 'Pipeline funcionando!'
+               }
+           }
+       }
+   }
+   ```
+
+4. **Verificar repositorio localmente**:
+   ```bash
+   git ls-remote --heads https://github.com/InfresComoCodigo/proyecto_v2.git
+   git ls-tree HEAD ci-cd/
+   ```
+
+### Problema: Repositorio privado sin credenciales
+
+**Solución**: Agregar credenciales de GitHub:
+1. Manage Jenkins > Manage Credentials
+2. Add Credentials > Username with password
+3. Username: tu usuario de GitHub
+4. Password: token de acceso personal (no tu contraseña)
+5. ID: `github-credentials`
 
 ### Problema: Docker Desktop no está ejecutándose (Windows)
 
