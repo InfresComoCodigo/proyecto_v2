@@ -109,14 +109,14 @@ resource "aws_cloudfront_origin_access_control" "main" {
 data "aws_iam_policy_document" "bucket_policy" {
   # Permitir acceso desde VPC Endpoint específico (más restrictivo)
   dynamic "statement" {
-    for_each = var.ec2_instance_roles != null && length(var.ec2_instance_roles) > 0 ? [1] : []
+    for_each = try(length(var.ec2_instance_roles), 0) > 0 ? [1] : []
     content {
       sid    = "AllowVPCEndpointAccess"
       effect = "Allow"
 
       principals {
         type        = "AWS"
-        identifiers = var.ec2_instance_roles
+        identifiers = var.ec2_instance_roles != null ? var.ec2_instance_roles : []
       }
 
       actions = [
