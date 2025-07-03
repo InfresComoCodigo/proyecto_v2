@@ -1,0 +1,105 @@
+pipeline {
+    agent any
+    
+    parameters {
+        choice(
+            name: 'ACTION',
+            choices: ['apply', 'destroy'],
+            description: 'Seleccionar acción de Terraform'
+        )
+        booleanParam(
+            name: 'AUTO_APPROVE',
+            defaultValue: false,
+            description: 'Auto-aprobar los cambios de Terraform'
+        )
+        string(
+            name: 'TERRAFORM_WORKSPACE',
+            defaultValue: 'default',
+            description: 'Workspace de Terraform'
+        )
+    }
+    
+    environment {
+        AWS_DEFAULT_REGION = 'us-east-1'
+        TF_VAR_environment = "${params.TERRAFORM_WORKSPACE}"
+        TERRAFORM_DIR = 'infrastructure'
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+                echo "Repositorio clonado exitosamente"
+            }
+        }
+        
+        stage('Validate Environment') {
+            steps {
+                script {
+                    sh '''
+                        echo "Validando herramientas..."
+                        terraform version || echo "Terraform no disponible"
+                        aws --version || echo "AWS CLI no disponible"
+                        echo "Directorio actual: $(pwd)"
+                        ls -la
+                    '''
+                }
+            }
+        }
+        
+        stage('Simple Test') {
+            steps {
+                script {
+                    echo "Acción seleccionada: ${params.ACTION}"
+                    echo "Auto-aprobar: ${params.AUTO_APPROVE}"
+                    echo "Workspace: ${params.TERRAFORM_WORKSPACE}"
+                    
+                    if (params.ACTION == 'apply') {
+                        echo "Simulando terraform apply..."
+                    } else {
+                        echo "Simulando terraform destroy..."
+                    }
+                }
+            }
+        }
+        
+        stage('Manual Approval') {
+            when {
+                expression { params.AUTO_APPROVE == false }
+            }
+            steps {
+                script {
+                    echo "Requiere aprobación manual"
+                    // input message: "¿Proceder con la ${params.ACTION}?", ok: 'Continuar'
+                    echo "Aprobación manual simulada"
+                }
+            }
+        }
+        
+        stage('Execute Action') {
+            steps {
+                script {
+                    if (params.ACTION == 'apply') {
+                        echo "Ejecutando terraform apply..."
+                    } else {
+                        echo "Ejecutando terraform destroy..."
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            echo "Pipeline completado"
+        }
+        
+        success {
+            echo "Pipeline ejecutado exitosamente: ${params.ACTION}"
+        }
+        
+        failure {
+            echo "Pipeline falló durante: ${params.ACTION}"
+        }
+    }
+}

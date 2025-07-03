@@ -85,6 +85,8 @@ start-jenkins.bat
 3. Configurar repositorio Git
 4. Especificar ruta del Jenkinsfile: `ci-cd/Jenkinsfile`
 
+**💡 Tip**: Si es tu primera vez con Jenkins, puedes usar `ci-cd/Jenkinsfile-simple` para probar la configuración básica primero.
+
 ## 📋 Características del Pipeline
 
 ### Parámetros de Ejecución
@@ -150,6 +152,7 @@ El pipeline soporta múltiples workspaces:
 ci-cd/
 ├── Dockerfile              # Imagen de Jenkins personalizada
 ├── Jenkinsfile             # Definición del pipeline
+├── Jenkinsfile-simple      # Pipeline simplificado para pruebas
 ├── docker-compose.yml      # Orquestación de servicios
 ├── start-jenkins.sh        # Script de inicio (Linux/macOS)
 ├── start-jenkins.bat       # Script de inicio (Windows)

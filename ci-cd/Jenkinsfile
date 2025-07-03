@@ -110,7 +110,7 @@ pipeline {
         
         stage('Review Plan') {
             when {
-                not { params.AUTO_APPROVE }
+                equals expected: false, actual: params.AUTO_APPROVE
             }
             steps {
                 dir("${TERRAFORM_DIR}") {
