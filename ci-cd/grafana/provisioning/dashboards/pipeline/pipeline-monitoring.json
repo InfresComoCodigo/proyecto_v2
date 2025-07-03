@@ -1,0 +1,118 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Villa Alfredo - CI/CD Pipeline Monitoring",
+    "tags": ["cicd", "jenkins", "pipeline", "villa-alfredo"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Pipeline Execution Status",
+        "type": "stat",
+        "targets": [
+          {
+            "refId": "A",
+            "datasource": {
+              "type": "cloudwatch",
+              "uid": "cloudwatch-logs"
+            },
+            "expression": "fields @timestamp, @message | filter @message like /SUCCESS|FAILURE|ABORTED/ | stats count() by @message",
+            "region": "us-east-1",
+            "logGroups": ["/jenkins/pipeline-logs"]
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "thresholds": {
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "red", "value": 1}
+              ]
+            }
+          }
+        },
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Pipeline Duration Trends",
+        "type": "timeseries",
+        "targets": [
+          {
+            "refId": "A",
+            "datasource": {
+              "type": "cloudwatch",
+              "uid": "cloudwatch-logs"
+            },
+            "expression": "fields @timestamp, duration | filter @message like /Pipeline completed/ | sort @timestamp desc",
+            "region": "us-east-1",
+            "logGroups": ["/jenkins/pipeline-logs"]
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+      },
+      {
+        "id": 3,
+        "title": "Recent Pipeline Logs",
+        "type": "logs",
+        "targets": [
+          {
+            "refId": "A",
+            "datasource": {
+              "type": "cloudwatch",
+              "uid": "cloudwatch-logs"
+            },
+            "expression": "fields @timestamp, @message | sort @timestamp desc | limit 100",
+            "region": "us-east-1",
+            "logGroups": ["/jenkins/pipeline-logs"]
+          }
+        ],
+        "gridPos": {"h": 12, "w": 24, "x": 0, "y": 8}
+      },
+      {
+        "id": 4,
+        "title": "API Gateway Logs",
+        "type": "logs",
+        "targets": [
+          {
+            "refId": "A",
+            "datasource": {
+              "type": "cloudwatch",
+              "uid": "cloudwatch-logs"
+            },
+            "expression": "fields @timestamp, @message, status, responseTime | filter status >= 400 | sort @timestamp desc",
+            "region": "us-east-1",
+            "logGroups": ["/aws/apigateway/villa-alfredo"]
+          }
+        ],
+        "gridPos": {"h": 10, "w": 12, "x": 0, "y": 20}
+      },
+      {
+        "id": 5,
+        "title": "Backend Application Logs",
+        "type": "logs",
+        "targets": [
+          {
+            "refId": "A",
+            "datasource": {
+              "type": "cloudwatch",
+              "uid": "cloudwatch-logs"
+            },
+            "expression": "fields @timestamp, @message, level | filter level = \"ERROR\" | sort @timestamp desc",
+            "region": "us-east-1",
+            "logGroups": ["/ecs/villa-alfredo-backend"]
+          }
+        ],
+        "gridPos": {"h": 10, "w": 12, "x": 12, "y": 20}
+      }
+    ],
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "refresh": "30s"
+  }
+}

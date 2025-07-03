@@ -1,0 +1,192 @@
+services:
+  jenkins:
+    build:
+      context: ./jenkins
+      dockerfile: Dockerfile
+    container_name: jenkins-master
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./jenkins/jenkins-config:/usr/share/jenkins/ref/
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - JENKINS_OPTS=--httpPort=8080
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false -Xmx2g -Xms1g
+    networks:
+      - jenkins-network
+
+  # Agente especializado para Node.js/Backend
+  nodejs-agent:
+    build:
+      context: ./agents/nodejs-agent
+      dockerfile: Dockerfile
+    container_name: jenkins-nodejs-agent
+    restart: unless-stopped
+    environment:
+      - JENKINS_URL=http://jenkins:8080
+      - JENKINS_SECRET=${JENKINS_NODEJS_AGENT_SECRET}
+      - JENKINS_AGENT_NAME=nodejs-agent
+      - JENKINS_AGENT_WORKDIR=/home/jenkins/agent
+    volumes:
+      - nodejs_agent_workdir:/home/jenkins/agent
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - jenkins-network
+    depends_on:
+      - jenkins
+
+  # Agente especializado para Terraform/Infraestructura
+  terraform-agent:
+    build:
+      context: ./agents/terraform-agent
+      dockerfile: Dockerfile
+    container_name: jenkins-terraform-agent
+    restart: unless-stopped
+    environment:
+      - JENKINS_URL=http://jenkins:8080
+      - JENKINS_SECRET=${JENKINS_TERRAFORM_AGENT_SECRET}
+      - JENKINS_AGENT_NAME=terraform-agent
+      - JENKINS_AGENT_WORKDIR=/home/jenkins/agent
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+    volumes:
+      - terraform_agent_workdir:/home/jenkins/agent
+    networks:
+      - jenkins-network
+    depends_on:
+      - jenkins
+
+  # Agente especializado para Análisis de Seguridad
+  security-agent:
+    build:
+      context: ./agents/security-agent
+      dockerfile: Dockerfile
+    container_name: jenkins-security-agent
+    restart: unless-stopped
+    environment:
+      - JENKINS_URL=http://jenkins:8080
+      - JENKINS_SECRET=${JENKINS_SECURITY_AGENT_SECRET}
+      - JENKINS_AGENT_NAME=security-agent
+      - JENKINS_AGENT_WORKDIR=/home/jenkins/agent
+    volumes:
+      - security_agent_workdir:/home/jenkins/agent
+    networks:
+      - jenkins-network
+    depends_on:
+      - jenkins
+
+  # Agente especializado para Docker builds y despliegues
+  docker-agent:
+    build:
+      context: ./agents/docker-agent
+      dockerfile: Dockerfile
+    container_name: jenkins-docker-agent
+    restart: unless-stopped
+    privileged: true
+    environment:
+      - JENKINS_URL=http://jenkins:8080
+      - JENKINS_SECRET=${JENKINS_DOCKER_AGENT_SECRET}
+      - JENKINS_AGENT_NAME=docker-agent
+      - JENKINS_AGENT_WORKDIR=/home/jenkins/agent
+      - DOCKER_TLS_CERTDIR=/certs
+    volumes:
+      - docker_agent_workdir:/home/jenkins/agent
+      - docker_certs:/certs/client
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - jenkins-network
+    depends_on:
+      - jenkins
+
+  # Grafana para visualización y dashboards con CloudWatch
+  grafana:
+    image: grafana/grafana:10.2.0
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource,grafana-worldmap-panel
+      - GF_FEATURE_TOGGLES_ENABLE=cloudWatchCrossAccountQuerying
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_DEFAULT_REGION=us-east-1
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - jenkins-network
+
+  # Prometheus para métricas
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    networks:
+      - jenkins-network
+
+  # SonarQube para análisis de código
+  sonarqube:
+    image: sonarqube:community
+    container_name: sonarqube
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    environment:
+      - SONAR_JDBC_URL=jdbc:postgresql://sonarqube-db:5432/sonar
+      - SONAR_JDBC_USERNAME=sonar
+      - SONAR_JDBC_PASSWORD=sonar123
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+    networks:
+      - jenkins-network
+    depends_on:
+      - sonarqube-db
+
+  sonarqube-db:
+    image: postgres:13
+    container_name: sonarqube-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=sonar
+      - POSTGRES_PASSWORD=sonar123
+      - POSTGRES_DB=sonar
+    volumes:
+      - sonarqube_db:/var/lib/postgresql/data
+    networks:
+      - jenkins-network
+
+volumes:
+  jenkins_home:
+  nodejs_agent_workdir:
+  terraform_agent_workdir:
+  security_agent_workdir:
+  docker_agent_workdir:
+  docker_certs:
+  grafana_data:
+  prometheus_data:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+  sonarqube_db:
+
+networks:
+  jenkins-network:
+    driver: bridge

@@ -1,0 +1,36 @@
+apiVersion: 1
+
+datasources:
+  - name: CloudWatch
+    type: cloudwatch
+    access: proxy
+    uid: cloudwatch-logs
+    url: https://monitoring.us-east-1.amazonaws.com
+    jsonData:
+      authType: credentials
+      defaultRegion: us-east-1
+      customMetricsNamespaces: "AWS/Lambda,AWS/ApiGateway,AWS/RDS,AWS/ECS,AWS/ApplicationELB,CWAgent"
+      logGroups:
+        - name: "/aws/lambda/villa-alfredo-api"
+          arn: "arn:aws:logs:us-east-1:*:log-group:/aws/lambda/villa-alfredo-api:*"
+        - name: "/aws/apigateway/villa-alfredo"
+          arn: "arn:aws:logs:us-east-1:*:log-group:/aws/apigateway/villa-alfredo:*"
+        - name: "/aws/rds/villa-alfredo-db"
+          arn: "arn:aws:logs:us-east-1:*:log-group:/aws/rds/villa-alfredo-db:*"
+        - name: "/ecs/villa-alfredo-backend"
+          arn: "arn:aws:logs:us-east-1:*:log-group:/ecs/villa-alfredo-backend:*"
+        - name: "/jenkins/pipeline-logs"
+          arn: "arn:aws:logs:us-east-1:*:log-group:/jenkins/pipeline-logs:*"
+    secureJsonData:
+      accessKey: ${AWS_ACCESS_KEY_ID}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}
+    editable: true
+    isDefault: false
+
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    uid: prometheus
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true

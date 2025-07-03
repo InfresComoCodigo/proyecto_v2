@@ -1,0 +1,40 @@
+###################################################################
+# ARCHIVO DE EJEMPLO DE VARIABLES TERRAFORM
+# Copiar a terraform.tfvars y personalizar los valores
+###################################################################
+
+# Configuración general del proyecto
+aws_region   = "us-east-1"
+environment  = "dev"  # dev, staging, prod
+project_name = "aventuraxtremo"
+
+# Tags comunes para todos los recursos
+common_tags = {
+  Team        = "Infrastructure"
+  Project     = "AventuraXtremo"
+  ManagedBy   = "terraform"
+  Owner       = "DevOps Team"
+  CostCenter  = "IT"
+}
+
+# Configuración de seguridad
+key_pair_name = "my-keypair"  # Opcional: para acceso SSH a las instancias
+
+# Configuración de base de datos (REQUERIDO)
+# IMPORTANTE: Usar una contraseña segura de al menos 8 caracteres
+db_password = "MySecurePassword123!"
+
+###################################################################
+# NOTAS IMPORTANTES:
+###################################################################
+# 1. El archivo terraform.tfvars NO debe ser versionado en Git por seguridad
+# 2. Para producción, considerar usar AWS Secrets Manager o variables de entorno
+# 3. La contraseña de la base de datos debe cumplir con los requisitos de AWS RDS:
+#    - Al menos 8 caracteres
+#    - No puede ser "admin", "root", "user", "password", etc.
+#    - Debe contener al menos una letra mayúscula, una minúscula y un número
+# 4. Configuraciones por ambiente:
+#    - dev: Recursos mínimos, instancias pequeñas
+#    - staging: Configuración similar a producción pero con menos recursos
+#    - prod: Configuración completa con alta disponibilidad
+###################################################################

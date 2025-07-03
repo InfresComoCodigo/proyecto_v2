@@ -1,0 +1,22 @@
+# Lista de plugins esenciales para Jenkins - versiones compatibles
+blueocean:latest
+workflow-aggregator:latest
+git:latest
+github:latest
+docker-workflow:latest
+terraform:latest
+nodejs:latest
+warnings-ng:latest
+junit:latest
+jacoco:latest
+sonar:latest
+configuration-as-code:latest
+job-dsl:latest
+build-timeout:latest
+timestamper:latest
+ws-cleanup:latest
+ant:latest
+gradle:latest
+email-ext:latest
+slack:latest
+prometheus:latest

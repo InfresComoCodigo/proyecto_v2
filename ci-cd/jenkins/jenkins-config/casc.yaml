@@ -1,0 +1,63 @@
+jenkins:
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+       - id: "admin"
+         password: "admin123"
+  authorizationStrategy:
+    globalMatrix:
+      permissions:
+        - "Overall/Administer:admin"
+        - "Overall/Read:authenticated"
+  remotingSecurity:
+    enabled: true
+  
+tool:
+  git:
+    installations:
+    - home: "git"
+      name: "Default"
+  nodejs:
+    installations:
+    - name: "NodeJS 18"
+      properties:
+      - installSource:
+          installers:
+          - nodeJSInstaller:
+              id: "18.19.0"
+              npmPackagesRefreshHours: 72
+
+unclassified:
+  location:
+    adminAddress: "admin@villalfredo.com"
+    url: "http://localhost:8080/"
+  
+  prometheusConfiguration:
+    collectingMetricsPeriodInSeconds: 120
+    defaultNamespace: "jenkins"
+    jobAttributeName: "jenkins_job"
+    path: "prometheus"
+    useAuthenticatedEndpoint: false
+
+jobs:
+  - script: >
+      job('monitoring-test-pipeline') {
+        description('Pipeline de prueba para generar métricas')
+        definition {
+          cpsScm {
+            scm {
+              git {
+                remote {
+                  url('file:///var/jenkins_home/workspace/')
+                }
+                branch('main')
+              }
+            }
+            scriptPath('ci-cd/Jenkinsfile.monitoring')
+          }
+        }
+        triggers {
+          cron('H/5 * * * *')
+        }
+      }

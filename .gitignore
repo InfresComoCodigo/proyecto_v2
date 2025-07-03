@@ -123,4 +123,160 @@ credentials/
 local.properties
 .local
 
-app/
+# Docker files
+.dockerignore
+docker-compose.override.yml
+docker-compose.prod.yml
+.docker/
+
+# Docker volumes and data
+docker-data/
+volumes/
+
+# Jenkins specific
+jenkins_home/
+.jenkins/
+jenkins-data/
+jenkins-logs/
+
+# Prometheus & Grafana
+prometheus-data/
+grafana-data/
+alertmanager-data/
+*.db
+grafana.db
+
+# Testing
+coverage/
+test-results/
+.nyc_output/
+junit.xml
+*.lcov
+
+# TypeScript
+*.tsbuildinfo
+dist/
+build/
+
+# ESLint
+.eslintcache
+
+# Jest
+jest-coverage/
+
+# Package managers
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Local environment configurations
+.env.development
+.env.production
+.env.staging
+.env.test
+config/local.json
+config/production.json
+
+# SSL/TLS certificates
+ssl/
+certs/
+*.csr
+
+# AWS specific
+.aws-sam/
+samconfig.toml
+
+# Kubernetes
+*.kubeconfig
+kube-config
+k8s-secrets/
+
+# Monitoring and logs
+monitoring-data/
+logs/
+*.log.*
+access.log
+error.log
+application.log
+
+# Infrastructure specific
+.terraform.d/
+terraform.d/
+.terragrunt-cache/
+terragrunt-cache/
+
+# CI/CD artifacts
+artifacts/
+reports/
+build-artifacts/
+
+# Development tools
+.history/
+.devcontainer/
+
+# OS and Hardware specific (additional)
+*.lnk
+desktop.ini
+$RECYCLE.BIN/
+
+# JetBrains IDEs
+*.iml
+*.ipr
+*.iws
+
+# Visual Studio Code (additional)
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+.vscode/extensions.json
+.vscode/.ropeproject
+
+# Vim
+*.swp
+*.swo
+*~
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Database dumps and backups
+*.dump
+*.sql.gz
+*.sql.bz2
+dump.rdb
+
+# Application specific
+uploads/
+temp-uploads/
+public/uploads/
+storage/
+
+# API documentation
+api-docs/
+docs/build/
+
+# Miscellaneous
+*.pid
+*.seed
+*.pid.lock
+.grunt
+lib-cov
+pids
+*.tgz
+*.tar
+nohup.out
+.cache
+.parcel-cache
+
+# Local development
+local/
+dev/
+development/

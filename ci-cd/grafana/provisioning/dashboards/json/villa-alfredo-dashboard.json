@@ -1,0 +1,468 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Villa Alfredo - Project Dashboard",
+    "tags": ["villa-alfredo", "project", "overview"],
+    "timezone": "browser",
+    "refresh": "30s",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "panels": [
+      {
+        "id": 1,
+        "title": "🏗️ Build Success Rate",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "jenkins_builds_success_build_count{job=~\"villa-alfredo.*\"}",
+            "legendFormat": "Successful",
+            "refId": "A"
+          },
+          {
+            "expr": "jenkins_builds_failed_build_count{job=~\"villa-alfredo.*\"}",
+            "legendFormat": "Failed",
+            "refId": "B"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "displayMode": "list",
+              "orientation": "horizontal"
+            },
+            "mappings": [],
+            "thresholds": {
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 1
+                }
+              ]
+            }
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "id": 2,
+        "title": "⏱️ Average Build Time",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "avg(jenkins_builds_duration_milliseconds_summary{job=~\"villa-alfredo.*\"}) / 1000",
+            "legendFormat": "Avg Duration (s)",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 300
+                },
+                {
+                  "color": "red",
+                  "value": 600
+                }
+              ]
+            },
+            "unit": "s"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 8,
+          "y": 0
+        }
+      },
+      {
+        "id": 3,
+        "title": "🚀 Deployment Status",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "up{job=\"villa-alfredo-backend\"}",
+            "legendFormat": "Backend",
+            "refId": "A"
+          },
+          {
+            "expr": "up{job=\"villa-alfredo-frontend\"}",
+            "legendFormat": "Frontend",
+            "refId": "B"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [
+              {
+                "options": {
+                  "0": {
+                    "text": "DOWN",
+                    "color": "red"
+                  },
+                  "1": {
+                    "text": "UP",
+                    "color": "green"
+                  }
+                },
+                "type": "value"
+              }
+            ],
+            "thresholds": {
+              "steps": [
+                {
+                  "color": "red",
+                  "value": null
+                },
+                {
+                  "color": "green",
+                  "value": 1
+                }
+              ]
+            }
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 16,
+          "y": 0
+        }
+      },
+      {
+        "id": 4,
+        "title": "📊 Build Frequency (Last 24h)",
+        "type": "timeseries",
+        "targets": [
+          {
+            "expr": "increase(jenkins_builds_total{job=~\"villa-alfredo.*\"}[1h])",
+            "legendFormat": "Builds per Hour",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisLabel": "Builds",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "vis": false
+              },
+              "lineInterpolation": "linear",
+              "lineWidth": 2,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "auto",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 8
+        }
+      },
+      {
+        "id": 5,
+        "title": "🧪 Test Results Overview",
+        "type": "piechart",
+        "targets": [
+          {
+            "expr": "jenkins_tests_passed_total{job=~\"villa-alfredo.*\"}",
+            "legendFormat": "Passed",
+            "refId": "A"
+          },
+          {
+            "expr": "jenkins_tests_failed_total{job=~\"villa-alfredo.*\"}",
+            "legendFormat": "Failed",
+            "refId": "B"
+          },
+          {
+            "expr": "jenkins_tests_skipped_total{job=~\"villa-alfredo.*\"}",
+            "legendFormat": "Skipped",
+            "refId": "C"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "vis": false
+              }
+            },
+            "mappings": []
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 0,
+          "y": 16
+        }
+      },
+      {
+        "id": 6,
+        "title": "🔒 Security Scan Results",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "sonarqube_vulnerabilities_total{project=\"villa-alfredo\"}",
+            "legendFormat": "Vulnerabilities",
+            "refId": "A"
+          },
+          {
+            "expr": "sonarqube_bugs_total{project=\"villa-alfredo\"}",
+            "legendFormat": "Bugs",
+            "refId": "B"
+          },
+          {
+            "expr": "sonarqube_code_smells_total{project=\"villa-alfredo\"}",
+            "legendFormat": "Code Smells",
+            "refId": "C"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 5
+                },
+                {
+                  "color": "red",
+                  "value": 10
+                }
+              ]
+            }
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 8,
+          "y": 16
+        }
+      },
+      {
+        "id": 7,
+        "title": "📈 Code Quality Trend",
+        "type": "timeseries",
+        "targets": [
+          {
+            "expr": "sonarqube_quality_gate_status{project=\"villa-alfredo\"}",
+            "legendFormat": "Quality Gate",
+            "refId": "A"
+          },
+          {
+            "expr": "sonarqube_coverage_percent{project=\"villa-alfredo\"}",
+            "legendFormat": "Code Coverage %",
+            "refId": "B"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "vis": false
+              },
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "auto",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 16,
+          "y": 16
+        }
+      },
+      {
+        "id": 8,
+        "title": "🌐 Recent Deployments",
+        "type": "logs",
+        "targets": [
+          {
+            "expr": "{job=\"jenkins\"} |= \"villa-alfredo\" |= \"deploy\"",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 24
+        }
+      }
+    ],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "selected": false,
+            "text": "All",
+            "value": "$__all"
+          },
+          "hide": 0,
+          "includeAll": true,
+          "label": "Environment",
+          "multi": false,
+          "name": "environment",
+          "options": [],
+          "query": "label_values(up{job=~\"villa-alfredo.*\"}, environment)",
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
+          "type": "query"
+        }
+      ]
+    },
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": "Prometheus",
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        },
+        {
+          "datasource": "Prometheus",
+          "enable": true,
+          "expr": "changes(jenkins_builds_total{job=~\"villa-alfredo.*\"}[1m]) > 0",
+          "iconColor": "green",
+          "name": "New Builds",
+          "titleFormat": "Build Started",
+          "textFormat": "New build started for {{job}}"
+        }
+      ]
+    },
+    "schemaVersion": 27,
+    "version": 1,
+    "links": [
+      {
+        "icon": "external link",
+        "tags": [],
+        "title": "Jenkins",
+        "tooltip": "Go to Jenkins",
+        "type": "link",
+        "url": "http://localhost:8080"
+      },
+      {
+        "icon": "external link",
+        "tags": [],
+        "title": "SonarQube",
+        "tooltip": "Go to SonarQube",
+        "type": "link",
+        "url": "http://localhost:9000"
+      }
+    ]
+  }
+}

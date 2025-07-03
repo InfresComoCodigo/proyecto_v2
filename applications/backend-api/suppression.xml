@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+    <!-- 
+    Archivo de supresión para OWASP Dependency Check
+    Utilizado para suprimir falsos positivos conocidos
+    -->
+    
+    <!-- Ejemplo: Suprimir vulnerabilidades conocidas que no aplican -->
+    <!--
+    <suppress>
+        <notes><![CDATA[
+        CVE-2021-44228 (Log4j) - No aplicable ya que no usamos Log4j en este proyecto Node.js
+        ]]></notes>
+        <packageUrl regex="true">^pkg:npm/.*$</packageUrl>
+        <cve>CVE-2021-44228</cve>
+    </suppress>
+    -->
+    
+    <!-- Suprimir vulnerabilidades de desarrollo que no afectan producción -->
+    <suppress>
+        <notes><![CDATA[
+        Vulnerabilidades en dependencias de desarrollo que no se incluyen en producción
+        ]]></notes>
+        <packageUrl regex="true">^pkg:npm/(jest|@types/.*|eslint.*|typescript)@.*$</packageUrl>
+        <cvssBelow>7.0</cvssBelow>
+    </suppress>
+    
+</suppressions>

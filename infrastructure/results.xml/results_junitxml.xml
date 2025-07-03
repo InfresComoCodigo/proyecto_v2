@@ -1,0 +1,1557 @@
+<?xml version="1.0" ?>
+<testsuites disabled="0" errors="0" failures="62" tests="246" time="0.0">
+	<testsuite disabled="0" errors="0" failures="62" name="terraform scan" skipped="0" tests="246" time="0">
+		<properties>
+			<property name="directory" value="['/app']"/>
+			<property name="add_check" value="False"/>
+			<property name="list" value="False"/>
+			<property name="output" value="['junitxml']"/>
+			<property name="output_file_path" value="/app/results.xml"/>
+			<property name="output_bc_ids" value="False"/>
+			<property name="include_all_checkov_policies" value="True"/>
+			<property name="quiet" value="False"/>
+			<property name="compact" value="False"/>
+			<property name="framework" value="['all']"/>
+			<property name="skip_framework" value="[]"/>
+			<property name="run_all_external_checks" value="False"/>
+			<property name="soft_fail" value="False"/>
+			<property name="skip_results_upload" value="False"/>
+			<property name="repo_id" value="cli_repo/app"/>
+			<property name="branch" value="master"/>
+			<property name="skip_download" value="False"/>
+			<property name="use_enforcement_rules" value="False"/>
+			<property name="external_modules_download_path" value=".external_modules"/>
+			<property name="evaluate_variables" value="True"/>
+			<property name="no_cert_verify" value="False"/>
+			<property name="create_baseline" value="False"/>
+			<property name="output_baseline_as_skipped" value="False"/>
+			<property name="secrets_scan_file_type" value="[]"/>
+			<property name="enable_secret_scan_all_files" value="False"/>
+			<property name="block_list_secret_scan" value="[]"/>
+			<property name="summary_position" value="top"/>
+			<property name="skip_resources_without_violations" value="False"/>
+			<property name="deep_analysis" value="False"/>
+			<property name="no_fail_on_crash" value="False"/>
+			<property name="mask" value="defaultdict(&lt;class 'set'&gt;, {})"/>
+			<property name="scan_secrets_history" value="False"/>
+			<property name="secrets_history_timeout" value="12h"/>
+			<property name="custom_tool_name" value="Checkov"/>
+		</properties>
+		<testcase name="[NONE][CKV_AWS_93] Ensure S3 bucket policy does not lockout all but root user. (Prevent lockouts needing root account fixes)" classname="/main.tf.aws_s3_bucket_policy.cloudfront_update" file="/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_70] Ensure S3 bucket does not allow an action with any Principal" classname="/main.tf.aws_s3_bucket_policy.cloudfront_update" file="/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_158] Ensure that CloudWatch Log Group is encrypted by KMS" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_cloudwatch_log_group.api_gateway_logs" file="/modules/api_gateway/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_338] Ensure CloudWatch log groups retains logs for at least 1 year" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_cloudwatch_log_group.api_gateway_logs" file="/modules/api_gateway/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_66] Ensure that CloudWatch Log Group specifies retention days" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_cloudwatch_log_group.api_gateway_logs" file="/modules/api_gateway/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_70] Ensure API gateway method has authorization or API key set" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_api_gateway_method.proxy" file="/modules/api_gateway/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_59] Ensure there is no open access to back-end resources through API" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_api_gateway_method.proxy" file="/modules/api_gateway/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_70] Ensure API gateway method has authorization or API key set" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_api_gateway_method.root" file="/modules/api_gateway/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_59] Ensure there is no open access to back-end resources through API" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_api_gateway_method.root" file="/modules/api_gateway/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_217] Ensure Create before destroy for API deployments" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_api_gateway_deployment.main" file="/modules/api_gateway/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_76] Ensure API Gateway has Access Logging enabled" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_api_gateway_stage.main" file="/modules/api_gateway/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_308] Ensure API Gateway method setting caching is set to encrypted" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_api_gateway_method_settings.main" file="/modules/api_gateway/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_225] Ensure API Gateway method setting caching is enabled" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_api_gateway_method_settings.main" file="/modules/api_gateway/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_70] Ensure API gateway method has authorization or API key set" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_api_gateway_method.public_proxy" file="/modules/api_gateway/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_59] Ensure there is no open access to back-end resources through API" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_api_gateway_method.public_proxy" file="/modules/api_gateway/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_274] Disallow IAM roles, users, and groups from using the AWS AdministratorAccess policy" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_iam_role.api_gateway_cloudwatch" file="/modules/api_gateway/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_60] Ensure IAM role allows only specific services or principals to assume it" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_iam_role.api_gateway_cloudwatch" file="/modules/api_gateway/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_61] Ensure AWS IAM policy does not allow assume role permission across all services" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_iam_role.api_gateway_cloudwatch" file="/modules/api_gateway/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_274] Disallow IAM roles, users, and groups from using the AWS AdministratorAccess policy" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_iam_role_policy_attachment.api_gateway_cloudwatch" file="/modules/api_gateway/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_86] Ensure CloudFront distribution has Access Logging enabled" classname="/modules/cdn/main.tf.module.cdn.aws_cloudfront_distribution.main" file="/modules/cdn/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_216] Ensure CloudFront distribution is enabled" classname="/modules/cdn/main.tf.module.cdn.aws_cloudfront_distribution.main" file="/modules/cdn/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_174] Verify CloudFront Distribution Viewer Certificate is using TLS v1.2" classname="/modules/cdn/main.tf.module.cdn.aws_cloudfront_distribution.main" file="/modules/cdn/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_68] CloudFront Distribution should have WAF enabled" classname="/modules/cdn/main.tf.module.cdn.aws_cloudfront_distribution.main" file="/modules/cdn/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_305] Ensure CloudFront distribution has a default root object configured" classname="/modules/cdn/main.tf.module.cdn.aws_cloudfront_distribution.main" file="/modules/cdn/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_34] Ensure CloudFront distribution ViewerProtocolPolicy is set to HTTPS" classname="/modules/cdn/main.tf.module.cdn.aws_cloudfront_distribution.main" file="/modules/cdn/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_319] Ensure that CloudWatch alarm actions are enabled" classname="/modules/cdn/main.tf.module.cdn.aws_cloudwatch_metric_alarm.origin_latency" file="/modules/cdn/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_319] Ensure that CloudWatch alarm actions are enabled" classname="/modules/cdn/main.tf.module.cdn.aws_cloudwatch_metric_alarm.error_rate" file="/modules/cdn/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_46] Ensure no hard-coded secrets exist in EC2 user data" classname="/modules/compute/main.tf.module.compute.aws_instance.ec2_zone_a" file="/modules/compute/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_88] EC2 instance should not have public IP." classname="/modules/compute/main.tf.module.compute.aws_instance.ec2_zone_a" file="/modules/compute/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_46] Ensure no hard-coded secrets exist in EC2 user data" classname="/modules/compute/main.tf.module.compute.aws_instance.ec2_zone_b" file="/modules/compute/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_88] EC2 instance should not have public IP." classname="/modules/compute/main.tf.module.compute.aws_instance.ec2_zone_b" file="/modules/compute/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_46] Ensure no hard-coded secrets exist in EC2 user data" classname="/modules/compute/main.tf.module.compute.aws_launch_template.asg_launch_template" file="/modules/compute/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_341] Ensure Launch template should not have a metadata response hop limit greater than 1" classname="/modules/compute/main.tf.module.compute.aws_launch_template.asg_launch_template" file="/modules/compute/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_79] Ensure Instance Metadata Service Version 1 is not enabled" classname="/modules/compute/main.tf.module.compute.aws_launch_template.asg_launch_template" file="/modules/compute/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_88] EC2 instance should not have public IP." classname="/modules/compute/main.tf.module.compute.aws_launch_template.asg_launch_template" file="/modules/compute/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_153] Autoscaling groups should supply tags to launch configurations" classname="/modules/compute/main.tf.module.compute.aws_autoscaling_group.asg" file="/modules/compute/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_315] Ensure EC2 Auto Scaling groups use EC2 launch templates" classname="/modules/compute/main.tf.module.compute.aws_autoscaling_group.asg" file="/modules/compute/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_319] Ensure that CloudWatch alarm actions are enabled" classname="/modules/compute/main.tf.module.compute.aws_cloudwatch_metric_alarm.cpu_high" file="/modules/compute/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_319] Ensure that CloudWatch alarm actions are enabled" classname="/modules/compute/main.tf.module.compute.aws_cloudwatch_metric_alarm.cpu_low" file="/modules/compute/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_24] Ensure no security groups allow ingress from 0.0.0.0:0 to port 22" classname="/modules/database/main.tf.module.database.aws_security_group.rds" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_25] Ensure no security groups allow ingress from 0.0.0.0:0 to port 3389" classname="/modules/database/main.tf.module.database.aws_security_group.rds" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_277] Ensure no security groups allow ingress from 0.0.0.0:0 to port -1" classname="/modules/database/main.tf.module.database.aws_security_group.rds" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_260] Ensure no security groups allow ingress from 0.0.0.0:0 to port 80" classname="/modules/database/main.tf.module.database.aws_security_group.rds" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_23] Ensure every security group and rule has a description" classname="/modules/database/main.tf.module.database.aws_security_group.rds" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_382] Ensure no security groups allow egress from 0.0.0.0:0 to port -1" classname="/modules/database/main.tf.module.database.aws_security_group.rds" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_24] Ensure no security groups allow ingress from 0.0.0.0:0 to port 22" classname="/modules/database/main.tf.module.database.aws_security_group_rule.rds_mysql_ingress_from_cidrs" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_25] Ensure no security groups allow ingress from 0.0.0.0:0 to port 3389" classname="/modules/database/main.tf.module.database.aws_security_group_rule.rds_mysql_ingress_from_cidrs" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_277] Ensure no security groups allow ingress from 0.0.0.0:0 to port -1" classname="/modules/database/main.tf.module.database.aws_security_group_rule.rds_mysql_ingress_from_cidrs" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_260] Ensure no security groups allow ingress from 0.0.0.0:0 to port 80" classname="/modules/database/main.tf.module.database.aws_security_group_rule.rds_mysql_ingress_from_cidrs" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_23] Ensure every security group and rule has a description" classname="/modules/database/main.tf.module.database.aws_security_group_rule.rds_mysql_ingress_from_cidrs" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_24] Ensure no security groups allow ingress from 0.0.0.0:0 to port 22" classname="/modules/database/main.tf.module.database.aws_security_group_rule.rds_mysql_ingress_from_sgs[0]" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_25] Ensure no security groups allow ingress from 0.0.0.0:0 to port 3389" classname="/modules/database/main.tf.module.database.aws_security_group_rule.rds_mysql_ingress_from_sgs[0]" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_277] Ensure no security groups allow ingress from 0.0.0.0:0 to port -1" classname="/modules/database/main.tf.module.database.aws_security_group_rule.rds_mysql_ingress_from_sgs[0]" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_260] Ensure no security groups allow ingress from 0.0.0.0:0 to port 80" classname="/modules/database/main.tf.module.database.aws_security_group_rule.rds_mysql_ingress_from_sgs[0]" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_23] Ensure every security group and rule has a description" classname="/modules/database/main.tf.module.database.aws_security_group_rule.rds_mysql_ingress_from_sgs[0]" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_17] Ensure all data stored in RDS is not publicly accessible" classname="/modules/database/main.tf.module.database.aws_db_instance.main" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_157] Ensure that RDS instances have Multi-AZ enabled" classname="/modules/database/main.tf.module.database.aws_db_instance.main" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_211] Ensure RDS uses a modern CaCert" classname="/modules/database/main.tf.module.database.aws_db_instance.main" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_354] Ensure RDS Performance Insights are encrypted using KMS CMKs" classname="/modules/database/main.tf.module.database.aws_db_instance.main" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_388] Ensure AWS Aurora PostgreSQL is not exposed to local file read vulnerability" classname="/modules/database/main.tf.module.database.aws_db_instance.main" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_16] Ensure all data stored in the RDS is securely encrypted at rest" classname="/modules/database/main.tf.module.database.aws_db_instance.main" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_274] Disallow IAM roles, users, and groups from using the AWS AdministratorAccess policy" classname="/modules/database/main.tf.module.database.aws_iam_role.rds_enhanced_monitoring[0]" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_60] Ensure IAM role allows only specific services or principals to assume it" classname="/modules/database/main.tf.module.database.aws_iam_role.rds_enhanced_monitoring[0]" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_61] Ensure AWS IAM policy does not allow assume role permission across all services" classname="/modules/database/main.tf.module.database.aws_iam_role.rds_enhanced_monitoring[0]" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_274] Disallow IAM roles, users, and groups from using the AWS AdministratorAccess policy" classname="/modules/database/main.tf.module.database.aws_iam_role_policy_attachment.rds_enhanced_monitoring[0]" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_158] Ensure that CloudWatch Log Group is encrypted by KMS" classname="/modules/database/main.tf.module.database.aws_cloudwatch_log_group.mysql_error[0]" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_66] Ensure that CloudWatch Log Group specifies retention days" classname="/modules/database/main.tf.module.database.aws_cloudwatch_log_group.mysql_error[0]" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_158] Ensure that CloudWatch Log Group is encrypted by KMS" classname="/modules/database/main.tf.module.database.aws_cloudwatch_log_group.mysql_general[0]" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_66] Ensure that CloudWatch Log Group specifies retention days" classname="/modules/database/main.tf.module.database.aws_cloudwatch_log_group.mysql_general[0]" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_158] Ensure that CloudWatch Log Group is encrypted by KMS" classname="/modules/database/main.tf.module.database.aws_cloudwatch_log_group.mysql_slowquery[0]" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_66] Ensure that CloudWatch Log Group specifies retention days" classname="/modules/database/main.tf.module.database.aws_cloudwatch_log_group.mysql_slowquery[0]" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_91] Ensure the ELBv2 (Application/Network) has access logging enabled" classname="/modules/networking/alb/main.tf.module.alb.aws_lb.main" file="/modules/networking/alb/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_328] Ensure that ALB is configured with defensive or strictest desync mitigation mode" classname="/modules/networking/alb/main.tf.module.alb.aws_lb.main" file="/modules/networking/alb/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_261] Ensure HTTP HTTPS Target group defines Healthcheck" classname="/modules/networking/alb/main.tf.module.alb.aws_lb_target_group.ec2_targets" file="/modules/networking/alb/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_130] Ensure VPC subnets do not assign public IP by default" classname="/modules/networking/vpc/main.tf.module.vpc.aws_subnet.public[0]" file="/modules/networking/vpc/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_130] Ensure VPC subnets do not assign public IP by default" classname="/modules/networking/vpc/main.tf.module.vpc.aws_subnet.private[0]" file="/modules/networking/vpc/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_130] Ensure VPC subnets do not assign public IP by default" classname="/modules/networking/vpc/main.tf.module.vpc.aws_subnet.public[1]" file="/modules/networking/vpc/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_130] Ensure VPC subnets do not assign public IP by default" classname="/modules/networking/vpc/main.tf.module.vpc.aws_subnet.private[1]" file="/modules/networking/vpc/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_24] Ensure no security groups allow ingress from 0.0.0.0:0 to port 22" classname="/modules/security/alb_security.tf.module.security.aws_security_group.alb" file="/modules/security/alb_security.tf"/>
+		<testcase name="[NONE][CKV_AWS_25] Ensure no security groups allow ingress from 0.0.0.0:0 to port 3389" classname="/modules/security/alb_security.tf.module.security.aws_security_group.alb" file="/modules/security/alb_security.tf"/>
+		<testcase name="[NONE][CKV_AWS_277] Ensure no security groups allow ingress from 0.0.0.0:0 to port -1" classname="/modules/security/alb_security.tf.module.security.aws_security_group.alb" file="/modules/security/alb_security.tf"/>
+		<testcase name="[NONE][CKV_AWS_260] Ensure no security groups allow ingress from 0.0.0.0:0 to port 80" classname="/modules/security/alb_security.tf.module.security.aws_security_group.alb" file="/modules/security/alb_security.tf"/>
+		<testcase name="[NONE][CKV_AWS_23] Ensure every security group and rule has a description" classname="/modules/security/alb_security.tf.module.security.aws_security_group.alb" file="/modules/security/alb_security.tf"/>
+		<testcase name="[NONE][CKV_AWS_382] Ensure no security groups allow egress from 0.0.0.0:0 to port -1" classname="/modules/security/alb_security.tf.module.security.aws_security_group.alb" file="/modules/security/alb_security.tf"/>
+		<testcase name="[NONE][CKV_AWS_24] Ensure no security groups allow ingress from 0.0.0.0:0 to port 22" classname="/modules/security/alb_security.tf.module.security.aws_security_group_rule.alb_https_ingress" file="/modules/security/alb_security.tf"/>
+		<testcase name="[NONE][CKV_AWS_25] Ensure no security groups allow ingress from 0.0.0.0:0 to port 3389" classname="/modules/security/alb_security.tf.module.security.aws_security_group_rule.alb_https_ingress" file="/modules/security/alb_security.tf"/>
+		<testcase name="[NONE][CKV_AWS_277] Ensure no security groups allow ingress from 0.0.0.0:0 to port -1" classname="/modules/security/alb_security.tf.module.security.aws_security_group_rule.alb_https_ingress" file="/modules/security/alb_security.tf"/>
+		<testcase name="[NONE][CKV_AWS_260] Ensure no security groups allow ingress from 0.0.0.0:0 to port 80" classname="/modules/security/alb_security.tf.module.security.aws_security_group_rule.alb_https_ingress" file="/modules/security/alb_security.tf"/>
+		<testcase name="[NONE][CKV_AWS_23] Ensure every security group and rule has a description" classname="/modules/security/alb_security.tf.module.security.aws_security_group_rule.alb_https_ingress" file="/modules/security/alb_security.tf"/>
+		<testcase name="[NONE][CKV_AWS_23] Ensure every security group and rule has a description" classname="/modules/security/alb_security.tf.module.security.aws_security_group_rule.alb_http_egress" file="/modules/security/alb_security.tf"/>
+		<testcase name="[NONE][CKV_AWS_382] Ensure no security groups allow egress from 0.0.0.0:0 to port -1" classname="/modules/security/alb_security.tf.module.security.aws_security_group_rule.alb_http_egress" file="/modules/security/alb_security.tf"/>
+		<testcase name="[NONE][CKV_AWS_23] Ensure every security group and rule has a description" classname="/modules/security/alb_security.tf.module.security.aws_security_group_rule.alb_https_egress" file="/modules/security/alb_security.tf"/>
+		<testcase name="[NONE][CKV_AWS_382] Ensure no security groups allow egress from 0.0.0.0:0 to port -1" classname="/modules/security/alb_security.tf.module.security.aws_security_group_rule.alb_https_egress" file="/modules/security/alb_security.tf"/>
+		<testcase name="[NONE][CKV_AWS_24] Ensure no security groups allow ingress from 0.0.0.0:0 to port 22" classname="/modules/security/ec2_instances.tf.module.security.aws_security_group.ec2_instances" file="/modules/security/ec2_instances.tf"/>
+		<testcase name="[NONE][CKV_AWS_25] Ensure no security groups allow ingress from 0.0.0.0:0 to port 3389" classname="/modules/security/ec2_instances.tf.module.security.aws_security_group.ec2_instances" file="/modules/security/ec2_instances.tf"/>
+		<testcase name="[NONE][CKV_AWS_277] Ensure no security groups allow ingress from 0.0.0.0:0 to port -1" classname="/modules/security/ec2_instances.tf.module.security.aws_security_group.ec2_instances" file="/modules/security/ec2_instances.tf"/>
+		<testcase name="[NONE][CKV_AWS_260] Ensure no security groups allow ingress from 0.0.0.0:0 to port 80" classname="/modules/security/ec2_instances.tf.module.security.aws_security_group.ec2_instances" file="/modules/security/ec2_instances.tf"/>
+		<testcase name="[NONE][CKV_AWS_23] Ensure every security group and rule has a description" classname="/modules/security/ec2_instances.tf.module.security.aws_security_group.ec2_instances" file="/modules/security/ec2_instances.tf"/>
+		<testcase name="[NONE][CKV_AWS_382] Ensure no security groups allow egress from 0.0.0.0:0 to port -1" classname="/modules/security/ec2_instances.tf.module.security.aws_security_group.ec2_instances" file="/modules/security/ec2_instances.tf"/>
+		<testcase name="[NONE][CKV_AWS_24] Ensure no security groups allow ingress from 0.0.0.0:0 to port 22" classname="/modules/security/ec2_instances.tf.module.security.aws_security_group_rule.ec2_http_from_alb" file="/modules/security/ec2_instances.tf"/>
+		<testcase name="[NONE][CKV_AWS_25] Ensure no security groups allow ingress from 0.0.0.0:0 to port 3389" classname="/modules/security/ec2_instances.tf.module.security.aws_security_group_rule.ec2_http_from_alb" file="/modules/security/ec2_instances.tf"/>
+		<testcase name="[NONE][CKV_AWS_277] Ensure no security groups allow ingress from 0.0.0.0:0 to port -1" classname="/modules/security/ec2_instances.tf.module.security.aws_security_group_rule.ec2_http_from_alb" file="/modules/security/ec2_instances.tf"/>
+		<testcase name="[NONE][CKV_AWS_260] Ensure no security groups allow ingress from 0.0.0.0:0 to port 80" classname="/modules/security/ec2_instances.tf.module.security.aws_security_group_rule.ec2_http_from_alb" file="/modules/security/ec2_instances.tf"/>
+		<testcase name="[NONE][CKV_AWS_23] Ensure every security group and rule has a description" classname="/modules/security/ec2_instances.tf.module.security.aws_security_group_rule.ec2_http_from_alb" file="/modules/security/ec2_instances.tf"/>
+		<testcase name="[NONE][CKV_AWS_24] Ensure no security groups allow ingress from 0.0.0.0:0 to port 22" classname="/modules/security/ec2_instances.tf.module.security.aws_security_group_rule.ec2_https_from_alb" file="/modules/security/ec2_instances.tf"/>
+		<testcase name="[NONE][CKV_AWS_25] Ensure no security groups allow ingress from 0.0.0.0:0 to port 3389" classname="/modules/security/ec2_instances.tf.module.security.aws_security_group_rule.ec2_https_from_alb" file="/modules/security/ec2_instances.tf"/>
+		<testcase name="[NONE][CKV_AWS_277] Ensure no security groups allow ingress from 0.0.0.0:0 to port -1" classname="/modules/security/ec2_instances.tf.module.security.aws_security_group_rule.ec2_https_from_alb" file="/modules/security/ec2_instances.tf"/>
+		<testcase name="[NONE][CKV_AWS_260] Ensure no security groups allow ingress from 0.0.0.0:0 to port 80" classname="/modules/security/ec2_instances.tf.module.security.aws_security_group_rule.ec2_https_from_alb" file="/modules/security/ec2_instances.tf"/>
+		<testcase name="[NONE][CKV_AWS_23] Ensure every security group and rule has a description" classname="/modules/security/ec2_instances.tf.module.security.aws_security_group_rule.ec2_https_from_alb" file="/modules/security/ec2_instances.tf"/>
+		<testcase name="[NONE][CKV_AWS_23] Ensure every security group and rule has a description" classname="/modules/security/ec2_instances.tf.module.security.aws_security_group_rule.ec2_https_egress_vpc_endpoints" file="/modules/security/ec2_instances.tf"/>
+		<testcase name="[NONE][CKV_AWS_382] Ensure no security groups allow egress from 0.0.0.0:0 to port -1" classname="/modules/security/ec2_instances.tf.module.security.aws_security_group_rule.ec2_https_egress_vpc_endpoints" file="/modules/security/ec2_instances.tf"/>
+		<testcase name="[NONE][CKV_AWS_23] Ensure every security group and rule has a description" classname="/modules/security/ec2_instances.tf.module.security.aws_security_group_rule.ec2_mysql_egress" file="/modules/security/ec2_instances.tf"/>
+		<testcase name="[NONE][CKV_AWS_382] Ensure no security groups allow egress from 0.0.0.0:0 to port -1" classname="/modules/security/ec2_instances.tf.module.security.aws_security_group_rule.ec2_mysql_egress" file="/modules/security/ec2_instances.tf"/>
+		<testcase name="[NONE][CKV_AWS_23] Ensure every security group and rule has a description" classname="/modules/security/security_group_rules.tf.module.security.aws_security_group_rule.alb_to_ec2_http" file="/modules/security/security_group_rules.tf"/>
+		<testcase name="[NONE][CKV_AWS_382] Ensure no security groups allow egress from 0.0.0.0:0 to port -1" classname="/modules/security/security_group_rules.tf.module.security.aws_security_group_rule.alb_to_ec2_http" file="/modules/security/security_group_rules.tf"/>
+		<testcase name="[NONE][CKV_AWS_23] Ensure every security group and rule has a description" classname="/modules/security/security_group_rules.tf.module.security.aws_security_group_rule.alb_to_ec2_https" file="/modules/security/security_group_rules.tf"/>
+		<testcase name="[NONE][CKV_AWS_382] Ensure no security groups allow egress from 0.0.0.0:0 to port -1" classname="/modules/security/security_group_rules.tf.module.security.aws_security_group_rule.alb_to_ec2_https" file="/modules/security/security_group_rules.tf"/>
+		<testcase name="[NONE][CKV_AWS_24] Ensure no security groups allow ingress from 0.0.0.0:0 to port 22" classname="/modules/security/vpc_endpoints.tf.module.security.aws_security_group.vpc_endpoints" file="/modules/security/vpc_endpoints.tf"/>
+		<testcase name="[NONE][CKV_AWS_25] Ensure no security groups allow ingress from 0.0.0.0:0 to port 3389" classname="/modules/security/vpc_endpoints.tf.module.security.aws_security_group.vpc_endpoints" file="/modules/security/vpc_endpoints.tf"/>
+		<testcase name="[NONE][CKV_AWS_277] Ensure no security groups allow ingress from 0.0.0.0:0 to port -1" classname="/modules/security/vpc_endpoints.tf.module.security.aws_security_group.vpc_endpoints" file="/modules/security/vpc_endpoints.tf"/>
+		<testcase name="[NONE][CKV_AWS_260] Ensure no security groups allow ingress from 0.0.0.0:0 to port 80" classname="/modules/security/vpc_endpoints.tf.module.security.aws_security_group.vpc_endpoints" file="/modules/security/vpc_endpoints.tf"/>
+		<testcase name="[NONE][CKV_AWS_23] Ensure every security group and rule has a description" classname="/modules/security/vpc_endpoints.tf.module.security.aws_security_group.vpc_endpoints" file="/modules/security/vpc_endpoints.tf"/>
+		<testcase name="[NONE][CKV_AWS_382] Ensure no security groups allow egress from 0.0.0.0:0 to port -1" classname="/modules/security/vpc_endpoints.tf.module.security.aws_security_group.vpc_endpoints" file="/modules/security/vpc_endpoints.tf"/>
+		<testcase name="[NONE][CKV_AWS_24] Ensure no security groups allow ingress from 0.0.0.0:0 to port 22" classname="/modules/security/vpc_endpoints.tf.module.security.aws_security_group_rule.vpc_endpoints_https_ingress" file="/modules/security/vpc_endpoints.tf"/>
+		<testcase name="[NONE][CKV_AWS_25] Ensure no security groups allow ingress from 0.0.0.0:0 to port 3389" classname="/modules/security/vpc_endpoints.tf.module.security.aws_security_group_rule.vpc_endpoints_https_ingress" file="/modules/security/vpc_endpoints.tf"/>
+		<testcase name="[NONE][CKV_AWS_277] Ensure no security groups allow ingress from 0.0.0.0:0 to port -1" classname="/modules/security/vpc_endpoints.tf.module.security.aws_security_group_rule.vpc_endpoints_https_ingress" file="/modules/security/vpc_endpoints.tf"/>
+		<testcase name="[NONE][CKV_AWS_260] Ensure no security groups allow ingress from 0.0.0.0:0 to port 80" classname="/modules/security/vpc_endpoints.tf.module.security.aws_security_group_rule.vpc_endpoints_https_ingress" file="/modules/security/vpc_endpoints.tf"/>
+		<testcase name="[NONE][CKV_AWS_23] Ensure every security group and rule has a description" classname="/modules/security/vpc_endpoints.tf.module.security.aws_security_group_rule.vpc_endpoints_https_ingress" file="/modules/security/vpc_endpoints.tf"/>
+		<testcase name="[NONE][CKV_AWS_23] Ensure every security group and rule has a description" classname="/modules/security/vpc_endpoints.tf.module.security.aws_security_group_rule.vpc_endpoints_https_egress" file="/modules/security/vpc_endpoints.tf"/>
+		<testcase name="[NONE][CKV_AWS_382] Ensure no security groups allow egress from 0.0.0.0:0 to port -1" classname="/modules/security/vpc_endpoints.tf.module.security.aws_security_group_rule.vpc_endpoints_https_egress" file="/modules/security/vpc_endpoints.tf"/>
+		<testcase name="[NONE][CKV_AWS_111] Ensure IAM policies does not allow write access without constraints" classname="/modules/storage/main.tf.module.storage.aws_iam_policy_document.bucket_policy" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_356] Ensure no IAM policies documents allow &quot;*&quot; as a statement's resource for restrictable actions" classname="/modules/storage/main.tf.module.storage.aws_iam_policy_document.bucket_policy" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_49] Ensure no IAM policies documents allow &quot;*&quot; as a statement's actions" classname="/modules/storage/main.tf.module.storage.aws_iam_policy_document.bucket_policy" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_109] Ensure IAM policies does not allow permissions management / resource exposure without constraints" classname="/modules/storage/main.tf.module.storage.aws_iam_policy_document.bucket_policy" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_283] Ensure no IAM policies documents allow ALL or any AWS principal permissions to the resource" classname="/modules/storage/main.tf.module.storage.aws_iam_policy_document.bucket_policy" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_110] Ensure IAM policies does not allow privilege escalation" classname="/modules/storage/main.tf.module.storage.aws_iam_policy_document.bucket_policy" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_108] Ensure IAM policies does not allow data exfiltration" classname="/modules/storage/main.tf.module.storage.aws_iam_policy_document.bucket_policy" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_107] Ensure IAM policies does not allow credentials exposure" classname="/modules/storage/main.tf.module.storage.aws_iam_policy_document.bucket_policy" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_1] Ensure IAM policies that allow full &quot;*-*&quot; administrative privileges are not created" classname="/modules/storage/main.tf.module.storage.aws_iam_policy_document.bucket_policy" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_358] Ensure AWS GitHub Actions OIDC authorization policies only allow safe claims and claim order" classname="/modules/storage/main.tf.module.storage.aws_iam_policy_document.bucket_policy" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_93] Ensure S3 bucket policy does not lockout all but root user. (Prevent lockouts needing root account fixes)" classname="/modules/storage/main.tf.module.storage.aws_s3_bucket.main" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_55] Ensure S3 bucket has ignore public ACLs enabled" classname="/modules/storage/main.tf.module.storage.aws_s3_bucket_public_access_block.main" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_56] Ensure S3 bucket has 'restrict_public_buckets' enabled" classname="/modules/storage/main.tf.module.storage.aws_s3_bucket_public_access_block.main" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_54] Ensure S3 bucket has block public policy enabled" classname="/modules/storage/main.tf.module.storage.aws_s3_bucket_public_access_block.main" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_53] Ensure S3 bucket has block public ACLS enabled" classname="/modules/storage/main.tf.module.storage.aws_s3_bucket_public_access_block.main" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_93] Ensure S3 bucket policy does not lockout all but root user. (Prevent lockouts needing root account fixes)" classname="/modules/storage/main.tf.module.storage.aws_s3_bucket_policy.main" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_300] Ensure S3 lifecycle configuration sets period for aborting failed uploads" classname="/modules/storage/main.tf.module.storage.aws_s3_bucket_lifecycle_configuration.main" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_41] Ensure no hard coded AWS access key and secret key exists in provider" classname="/provider.tf.aws.default" file="/provider.tf"/>
+		<testcase name="[NONE][CKV_AWS_41] Ensure no hard coded AWS access key and secret key exists in provider" classname="/provider.tf.aws.us_east_1" file="/provider.tf"/>
+		<testcase name="[NONE][CKV2_AWS_5] Ensure that Security Groups are attached to another resource" classname="/modules/database/main.tf.module.database.aws_security_group.rds" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_77] Ensure AWS API Gateway Rest API attached WAFv2 WebACL is configured with AMR for Log4j Vulnerability" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_api_gateway_stage.main" file="/modules/api_gateway/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_76] Ensure AWS ALB attached WAFv2 WebACL is configured with AMR for Log4j Vulnerability" classname="/modules/networking/alb/main.tf.module.alb.aws_lb.main" file="/modules/networking/alb/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_19] Ensure all data stored in the S3 bucket is securely encrypted at rest" classname="/modules/cdn/main.tf.module.cdn.aws_s3_bucket.cloudfront_logs" file="/modules/cdn/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_19] Ensure all data stored in the S3 bucket is securely encrypted at rest" classname="/modules/networking/alb/main.tf.module.alb.aws_s3_bucket.alb_logs" file="/modules/networking/alb/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_19] Ensure all data stored in the S3 bucket is securely encrypted at rest" classname="/modules/storage/main.tf.module.storage.aws_s3_bucket.main" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_42] Ensure AWS CloudFront distribution uses custom SSL certificate" classname="/modules/cdn/main.tf.module.cdn.aws_cloudfront_distribution.main" file="/modules/cdn/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_56] Ensure AWS Managed IAMFullAccess IAM policy is not used." classname="/modules/api_gateway/main.tf.module.api_gateway.aws_iam_role.api_gateway_cloudwatch" file="/modules/api_gateway/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_56] Ensure AWS Managed IAMFullAccess IAM policy is not used." classname="/modules/api_gateway/main.tf.module.api_gateway.aws_iam_role_policy_attachment.api_gateway_cloudwatch" file="/modules/api_gateway/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_56] Ensure AWS Managed IAMFullAccess IAM policy is not used." classname="/modules/auth/main.tf.module.auth.aws_iam_role.authenticated" file="/modules/auth/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_56] Ensure AWS Managed IAMFullAccess IAM policy is not used." classname="/modules/auth/main.tf.module.auth.aws_iam_role.unauthenticated" file="/modules/auth/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_56] Ensure AWS Managed IAMFullAccess IAM policy is not used." classname="/modules/database/main.tf.module.database.aws_iam_role.rds_enhanced_monitoring[0]" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_56] Ensure AWS Managed IAMFullAccess IAM policy is not used." classname="/modules/database/main.tf.module.database.aws_iam_role_policy_attachment.rds_enhanced_monitoring[0]" file="/modules/database/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_74] Ensure AWS Load Balancers use strong ciphers" classname="/modules/networking/alb/main.tf.module.alb.aws_lb_listener.main" file="/modules/networking/alb/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_43] Ensure S3 Bucket does not allow access to all Authenticated users" classname="/modules/cdn/main.tf.module.cdn.aws_s3_bucket_acl.cloudfront_logs" file="/modules/cdn/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_40] Ensure AWS IAM policy does not allow full IAM privileges" classname="/modules/auth/main.tf.module.auth.aws_iam_role_policy.authenticated" file="/modules/auth/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_40] Ensure AWS IAM policy does not allow full IAM privileges" classname="/modules/storage/main.tf.module.storage.aws_iam_policy_document.bucket_policy" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_57] S3 Bucket has an ACL defined which allows public WRITE access." classname="/modules/cdn/main.tf.module.cdn.aws_s3_bucket.cloudfront_logs" file="/modules/cdn/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_57] S3 Bucket has an ACL defined which allows public WRITE access." classname="/modules/networking/alb/main.tf.module.alb.aws_s3_bucket.alb_logs" file="/modules/networking/alb/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_57] S3 Bucket has an ACL defined which allows public WRITE access." classname="/modules/storage/main.tf.module.storage.aws_s3_bucket.main" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_145] Ensure that S3 buckets are encrypted with KMS by default" classname="/modules/storage/main.tf.module.storage.aws_s3_bucket.main" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_44] Ensure AWS route table with VPC peering does not contain routes overly permissive to all traffic" classname="/modules/networking/vpc/main.tf.module.vpc.aws_route_table.public[0]" file="/modules/networking/vpc/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_44] Ensure AWS route table with VPC peering does not contain routes overly permissive to all traffic" classname="/modules/networking/vpc/main.tf.module.vpc.aws_route_table.private" file="/modules/networking/vpc/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_72] Ensure AWS CloudFront origin protocol policy enforces HTTPS-only" classname="/modules/cdn/main.tf.module.cdn.aws_cloudfront_distribution.main" file="/modules/cdn/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_54] Ensure AWS CloudFront distribution is using secure SSL protocols for HTTPS communication" classname="/modules/cdn/main.tf.module.cdn.aws_cloudfront_distribution.main" file="/modules/cdn/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_61] Ensure that an S3 bucket has a lifecycle configuration" classname="/modules/storage/main.tf.module.storage.aws_s3_bucket.main" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_20] S3 Bucket has an ACL defined which allows public READ access." classname="/modules/cdn/main.tf.module.cdn.aws_s3_bucket.cloudfront_logs" file="/modules/cdn/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_20] S3 Bucket has an ACL defined which allows public READ access." classname="/modules/networking/alb/main.tf.module.alb.aws_s3_bucket.alb_logs" file="/modules/networking/alb/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_20] S3 Bucket has an ACL defined which allows public READ access." classname="/modules/storage/main.tf.module.storage.aws_s3_bucket.main" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_19] Ensure that all EIP addresses allocated to a VPC are attached to EC2 instances" classname="/modules/networking/vpc/main.tf.module.vpc.aws_eip.nat" file="/modules/networking/vpc/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_46] Ensure AWS CloudFront Distribution with S3 have Origin Access set to enabled" classname="/modules/cdn/main.tf.module.cdn.aws_cloudfront_distribution.main" file="/modules/cdn/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_6] Ensure that S3 bucket has a Public Access block" classname="/modules/networking/alb/main.tf.module.alb.aws_s3_bucket.alb_logs" file="/modules/networking/alb/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_6] Ensure that S3 bucket has a Public Access block" classname="/modules/storage/main.tf.module.storage.aws_s3_bucket.main" file="/modules/storage/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_35] AWS NAT Gateways should be utilized for the default route" classname="/modules/networking/vpc/main.tf.module.vpc.aws_route_table.public[0]" file="/modules/networking/vpc/main.tf"/>
+		<testcase name="[NONE][CKV2_AWS_35] AWS NAT Gateways should be utilized for the default route" classname="/modules/networking/vpc/main.tf.module.vpc.aws_route_table.private" file="/modules/networking/vpc/main.tf"/>
+		<testcase name="[NONE][CKV_AWS_237] Ensure Create before destroy for API Gateway" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_api_gateway_rest_api.main" file="/modules/api_gateway/main.tf">
+			<failure type="failure" message="Ensure Create before destroy for API Gateway">
+Resource: module.api_gateway.aws_api_gateway_rest_api.main
+File: /modules/api_gateway/main.tf: 30-54
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-aws-api-gateway-enables-create-before-destroy
+
+		30 | resource &quot;aws_api_gateway_rest_api&quot; &quot;main&quot; {
+		31 |     name        = &quot;${var.project_name}-${var.environment}-api&quot;
+		32 |     description = &quot;API Gateway para ${var.project_name} en ambiente ${var.environment}&quot;
+		33 |     
+		34 |     endpoint_configuration {
+		35 |         types = [var.api_gateway_type]
+		36 |     }
+		37 |     
+		38 |     # Política de recursos (opcional)
+		39 |     policy = jsonencode({
+		40 |         Version = &quot;2012-10-17&quot;
+		41 |         Statement = [
+		42 |             {
+		43 |                 Effect = &quot;Allow&quot;
+		44 |                 Principal = &quot;*&quot;
+		45 |                 Action = &quot;execute-api:Invoke&quot;
+		46 |                 Resource = &quot;*&quot;
+		47 |             }
+		48 |         ]
+		49 |     })
+		50 |     
+		51 |     tags = merge(var.tags, {
+		52 |         Name = &quot;${var.project_name}-${var.environment}-api-gateway&quot;
+		53 |     })
+		54 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_120] Ensure API Gateway caching is enabled" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_api_gateway_stage.main" file="/modules/api_gateway/main.tf">
+			<failure type="failure" message="Ensure API Gateway caching is enabled">
+Resource: module.api_gateway.aws_api_gateway_stage.main
+File: /modules/api_gateway/main.tf: 142-177
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-api-gateway-caching-is-enabled
+
+		142 | resource &quot;aws_api_gateway_stage&quot; &quot;main&quot; {
+		143 |     deployment_id = aws_api_gateway_deployment.main.id
+		144 |     rest_api_id   = aws_api_gateway_rest_api.main.id
+		145 |     stage_name    = var.stage_name
+		146 |     
+		147 |     # Configuración de throttling se maneja en method_settings
+		148 |     
+		149 |     # Configuración de logging
+		150 |     dynamic &quot;access_log_settings&quot; {
+		151 |         for_each = var.enable_logging ? [1] : []
+		152 |         content {
+		153 |             destination_arn = aws_cloudwatch_log_group.api_gateway_logs.arn
+		154 |             format = jsonencode({
+		155 |                 requestId      = &quot;$context.requestId&quot;
+		156 |                 ip             = &quot;$context.identity.sourceIp&quot;
+		157 |                 caller         = &quot;$context.identity.caller&quot;
+		158 |                 user           = &quot;$context.identity.user&quot;
+		159 |                 requestTime    = &quot;$context.requestTime&quot;
+		160 |                 httpMethod     = &quot;$context.httpMethod&quot;
+		161 |                 resourcePath   = &quot;$context.resourcePath&quot;
+		162 |                 status         = &quot;$context.status&quot;
+		163 |                 protocol       = &quot;$context.protocol&quot;
+		164 |                 responseLength = &quot;$context.responseLength&quot;
+		165 |                 responseTime   = &quot;$context.responseTime&quot;
+		166 |                 error          = &quot;$context.error.message&quot;
+		167 |                 errorType      = &quot;$context.error.messageString&quot;
+		168 |             })
+		169 |         }
+		170 |     }
+		171 |     
+		172 |     tags = merge(var.tags, {
+		173 |         Name = &quot;${var.project_name}-${var.environment}-api-stage&quot;
+		174 |     })
+		175 |     
+		176 |     depends_on = [aws_cloudwatch_log_group.api_gateway_logs]
+		177 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_73] Ensure API Gateway has X-Ray Tracing enabled" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_api_gateway_stage.main" file="/modules/api_gateway/main.tf">
+			<failure type="failure" message="Ensure API Gateway has X-Ray Tracing enabled">
+Resource: module.api_gateway.aws_api_gateway_stage.main
+File: /modules/api_gateway/main.tf: 142-177
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/logging-15
+
+		142 | resource &quot;aws_api_gateway_stage&quot; &quot;main&quot; {
+		143 |     deployment_id = aws_api_gateway_deployment.main.id
+		144 |     rest_api_id   = aws_api_gateway_rest_api.main.id
+		145 |     stage_name    = var.stage_name
+		146 |     
+		147 |     # Configuración de throttling se maneja en method_settings
+		148 |     
+		149 |     # Configuración de logging
+		150 |     dynamic &quot;access_log_settings&quot; {
+		151 |         for_each = var.enable_logging ? [1] : []
+		152 |         content {
+		153 |             destination_arn = aws_cloudwatch_log_group.api_gateway_logs.arn
+		154 |             format = jsonencode({
+		155 |                 requestId      = &quot;$context.requestId&quot;
+		156 |                 ip             = &quot;$context.identity.sourceIp&quot;
+		157 |                 caller         = &quot;$context.identity.caller&quot;
+		158 |                 user           = &quot;$context.identity.user&quot;
+		159 |                 requestTime    = &quot;$context.requestTime&quot;
+		160 |                 httpMethod     = &quot;$context.httpMethod&quot;
+		161 |                 resourcePath   = &quot;$context.resourcePath&quot;
+		162 |                 status         = &quot;$context.status&quot;
+		163 |                 protocol       = &quot;$context.protocol&quot;
+		164 |                 responseLength = &quot;$context.responseLength&quot;
+		165 |                 responseTime   = &quot;$context.responseTime&quot;
+		166 |                 error          = &quot;$context.error.message&quot;
+		167 |                 errorType      = &quot;$context.error.messageString&quot;
+		168 |             })
+		169 |         }
+		170 |     }
+		171 |     
+		172 |     tags = merge(var.tags, {
+		173 |         Name = &quot;${var.project_name}-${var.environment}-api-stage&quot;
+		174 |     })
+		175 |     
+		176 |     depends_on = [aws_cloudwatch_log_group.api_gateway_logs]
+		177 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_276] Ensure Data Trace is not enabled in API Gateway Method Settings" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_api_gateway_method_settings.main" file="/modules/api_gateway/main.tf">
+			<failure type="failure" message="Ensure Data Trace is not enabled in API Gateway Method Settings">
+Resource: module.api_gateway.aws_api_gateway_method_settings.main
+File: /modules/api_gateway/main.tf: 180-197
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/bc-aws-276
+
+		180 | resource &quot;aws_api_gateway_method_settings&quot; &quot;main&quot; {
+		181 |     rest_api_id = aws_api_gateway_rest_api.main.id
+		182 |     stage_name  = aws_api_gateway_stage.main.stage_name
+		183 |     method_path = &quot;*/*&quot;
+		184 |     
+		185 |     settings {
+		186 |         metrics_enabled        = true
+		187 |         logging_level         = var.log_level
+		188 |         data_trace_enabled    = true
+		189 |         throttling_rate_limit = var.throttle_rate_limit
+		190 |         throttling_burst_limit = var.throttle_burst_limit
+		191 |         caching_enabled       = true
+		192 |         cache_ttl_in_seconds  = 300
+		193 |         cache_data_encrypted  = true  # Cifrado de cache para cumplir CKV_AWS_308
+		194 |     }
+		195 |     
+		196 |     depends_on = [aws_api_gateway_account.main]
+		197 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_310] Ensure CloudFront distributions should have origin failover configured" classname="/modules/cdn/main.tf.module.cdn.aws_cloudfront_distribution.main" file="/modules/cdn/main.tf">
+			<failure type="failure" message="Ensure CloudFront distributions should have origin failover configured">
+Resource: module.cdn.aws_cloudfront_distribution.main
+File: /modules/cdn/main.tf: 210-374
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-310
+
+		Code lines for this resource are too many. Please use IDE of your choice to review the file.</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_79] Ensure Instance Metadata Service Version 1 is not enabled" classname="/modules/compute/main.tf.module.compute.aws_instance.ec2_zone_a" file="/modules/compute/main.tf">
+			<failure type="failure" message="Ensure Instance Metadata Service Version 1 is not enabled">
+Resource: module.compute.aws_instance.ec2_zone_a
+File: /modules/compute/main.tf: 5-26
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-general-31
+
+		5  | resource &quot;aws_instance&quot; &quot;ec2_zone_a&quot; {
+		6  |     ami                    = var.ami_id
+		7  |     instance_type         = var.instance_type
+		8  |     key_name              = var.key_name != null &amp;&amp; var.key_name != &quot;&quot; ? var.key_name : null
+		9  |     subnet_id             = var.subnet_ids[0]  # Primera subnet privada (10.0.101.0/24)
+		10 |     vpc_security_group_ids = [var.security_group_id]
+		11 |     
+		12 |     # Script de inicialización
+		13 |     user_data = fileexists(var.user_data_file) ? file(var.user_data_file) : null
+		14 |     
+		15 |     # Monitoreo detallado
+		16 |     monitoring = var.enable_monitoring
+		17 |     
+		18 |     # Tags
+		19 |     tags = merge(var.tags, {
+		20 |         Name        = &quot;${var.project_name}-${var.environment}-ec2-zone-a&quot;
+		21 |         Environment = var.environment
+		22 |         Zone        = &quot;us-east-1a&quot;
+		23 |         Subnet      = &quot;10.0.101.0/24&quot;
+		24 |         Type        = &quot;Fixed&quot;
+		25 |     })
+		26 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_8] Ensure all data stored in the Launch configuration or instance Elastic Blocks Store is securely encrypted" classname="/modules/compute/main.tf.module.compute.aws_instance.ec2_zone_a" file="/modules/compute/main.tf">
+			<failure type="failure" message="Ensure all data stored in the Launch configuration or instance Elastic Blocks Store is securely encrypted">
+Resource: module.compute.aws_instance.ec2_zone_a
+File: /modules/compute/main.tf: 5-26
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/general-13
+
+		5  | resource &quot;aws_instance&quot; &quot;ec2_zone_a&quot; {
+		6  |     ami                    = var.ami_id
+		7  |     instance_type         = var.instance_type
+		8  |     key_name              = var.key_name != null &amp;&amp; var.key_name != &quot;&quot; ? var.key_name : null
+		9  |     subnet_id             = var.subnet_ids[0]  # Primera subnet privada (10.0.101.0/24)
+		10 |     vpc_security_group_ids = [var.security_group_id]
+		11 |     
+		12 |     # Script de inicialización
+		13 |     user_data = fileexists(var.user_data_file) ? file(var.user_data_file) : null
+		14 |     
+		15 |     # Monitoreo detallado
+		16 |     monitoring = var.enable_monitoring
+		17 |     
+		18 |     # Tags
+		19 |     tags = merge(var.tags, {
+		20 |         Name        = &quot;${var.project_name}-${var.environment}-ec2-zone-a&quot;
+		21 |         Environment = var.environment
+		22 |         Zone        = &quot;us-east-1a&quot;
+		23 |         Subnet      = &quot;10.0.101.0/24&quot;
+		24 |         Type        = &quot;Fixed&quot;
+		25 |     })
+		26 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_135] Ensure that EC2 is EBS optimized" classname="/modules/compute/main.tf.module.compute.aws_instance.ec2_zone_a" file="/modules/compute/main.tf">
+			<failure type="failure" message="Ensure that EC2 is EBS optimized">
+Resource: module.compute.aws_instance.ec2_zone_a
+File: /modules/compute/main.tf: 5-26
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-that-ec2-is-ebs-optimized
+
+		5  | resource &quot;aws_instance&quot; &quot;ec2_zone_a&quot; {
+		6  |     ami                    = var.ami_id
+		7  |     instance_type         = var.instance_type
+		8  |     key_name              = var.key_name != null &amp;&amp; var.key_name != &quot;&quot; ? var.key_name : null
+		9  |     subnet_id             = var.subnet_ids[0]  # Primera subnet privada (10.0.101.0/24)
+		10 |     vpc_security_group_ids = [var.security_group_id]
+		11 |     
+		12 |     # Script de inicialización
+		13 |     user_data = fileexists(var.user_data_file) ? file(var.user_data_file) : null
+		14 |     
+		15 |     # Monitoreo detallado
+		16 |     monitoring = var.enable_monitoring
+		17 |     
+		18 |     # Tags
+		19 |     tags = merge(var.tags, {
+		20 |         Name        = &quot;${var.project_name}-${var.environment}-ec2-zone-a&quot;
+		21 |         Environment = var.environment
+		22 |         Zone        = &quot;us-east-1a&quot;
+		23 |         Subnet      = &quot;10.0.101.0/24&quot;
+		24 |         Type        = &quot;Fixed&quot;
+		25 |     })
+		26 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_79] Ensure Instance Metadata Service Version 1 is not enabled" classname="/modules/compute/main.tf.module.compute.aws_instance.ec2_zone_b" file="/modules/compute/main.tf">
+			<failure type="failure" message="Ensure Instance Metadata Service Version 1 is not enabled">
+Resource: module.compute.aws_instance.ec2_zone_b
+File: /modules/compute/main.tf: 32-53
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-general-31
+
+		32 | resource &quot;aws_instance&quot; &quot;ec2_zone_b&quot; {
+		33 |     ami                    = var.ami_id
+		34 |     instance_type         = var.instance_type
+		35 |     key_name              = var.key_name != null &amp;&amp; var.key_name != &quot;&quot; ? var.key_name : null
+		36 |     subnet_id             = var.subnet_ids[1]  # Segunda subnet privada (10.0.102.0/24)
+		37 |     vpc_security_group_ids = [var.security_group_id]
+		38 |     
+		39 |     # Script de inicialización
+		40 |     user_data = fileexists(var.user_data_file) ? file(var.user_data_file) : null
+		41 |     
+		42 |     # Monitoreo detallado
+		43 |     monitoring = var.enable_monitoring
+		44 |     
+		45 |     # Tags
+		46 |     tags = merge(var.tags, {
+		47 |         Name        = &quot;${var.project_name}-${var.environment}-ec2-zone-b&quot;
+		48 |         Environment = var.environment
+		49 |         Zone        = &quot;us-east-1b&quot;
+		50 |         Subnet      = &quot;10.0.102.0/24&quot;
+		51 |         Type        = &quot;Fixed&quot;
+		52 |     })
+		53 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_8] Ensure all data stored in the Launch configuration or instance Elastic Blocks Store is securely encrypted" classname="/modules/compute/main.tf.module.compute.aws_instance.ec2_zone_b" file="/modules/compute/main.tf">
+			<failure type="failure" message="Ensure all data stored in the Launch configuration or instance Elastic Blocks Store is securely encrypted">
+Resource: module.compute.aws_instance.ec2_zone_b
+File: /modules/compute/main.tf: 32-53
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/general-13
+
+		32 | resource &quot;aws_instance&quot; &quot;ec2_zone_b&quot; {
+		33 |     ami                    = var.ami_id
+		34 |     instance_type         = var.instance_type
+		35 |     key_name              = var.key_name != null &amp;&amp; var.key_name != &quot;&quot; ? var.key_name : null
+		36 |     subnet_id             = var.subnet_ids[1]  # Segunda subnet privada (10.0.102.0/24)
+		37 |     vpc_security_group_ids = [var.security_group_id]
+		38 |     
+		39 |     # Script de inicialización
+		40 |     user_data = fileexists(var.user_data_file) ? file(var.user_data_file) : null
+		41 |     
+		42 |     # Monitoreo detallado
+		43 |     monitoring = var.enable_monitoring
+		44 |     
+		45 |     # Tags
+		46 |     tags = merge(var.tags, {
+		47 |         Name        = &quot;${var.project_name}-${var.environment}-ec2-zone-b&quot;
+		48 |         Environment = var.environment
+		49 |         Zone        = &quot;us-east-1b&quot;
+		50 |         Subnet      = &quot;10.0.102.0/24&quot;
+		51 |         Type        = &quot;Fixed&quot;
+		52 |     })
+		53 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_135] Ensure that EC2 is EBS optimized" classname="/modules/compute/main.tf.module.compute.aws_instance.ec2_zone_b" file="/modules/compute/main.tf">
+			<failure type="failure" message="Ensure that EC2 is EBS optimized">
+Resource: module.compute.aws_instance.ec2_zone_b
+File: /modules/compute/main.tf: 32-53
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-that-ec2-is-ebs-optimized
+
+		32 | resource &quot;aws_instance&quot; &quot;ec2_zone_b&quot; {
+		33 |     ami                    = var.ami_id
+		34 |     instance_type         = var.instance_type
+		35 |     key_name              = var.key_name != null &amp;&amp; var.key_name != &quot;&quot; ? var.key_name : null
+		36 |     subnet_id             = var.subnet_ids[1]  # Segunda subnet privada (10.0.102.0/24)
+		37 |     vpc_security_group_ids = [var.security_group_id]
+		38 |     
+		39 |     # Script de inicialización
+		40 |     user_data = fileexists(var.user_data_file) ? file(var.user_data_file) : null
+		41 |     
+		42 |     # Monitoreo detallado
+		43 |     monitoring = var.enable_monitoring
+		44 |     
+		45 |     # Tags
+		46 |     tags = merge(var.tags, {
+		47 |         Name        = &quot;${var.project_name}-${var.environment}-ec2-zone-b&quot;
+		48 |         Environment = var.environment
+		49 |         Zone        = &quot;us-east-1b&quot;
+		50 |         Subnet      = &quot;10.0.102.0/24&quot;
+		51 |         Type        = &quot;Fixed&quot;
+		52 |     })
+		53 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_293] Ensure that AWS database instances have deletion protection enabled" classname="/modules/database/main.tf.module.database.aws_db_instance.main" file="/modules/database/main.tf">
+			<failure type="failure" message="Ensure that AWS database instances have deletion protection enabled">
+Resource: module.database.aws_db_instance.main
+File: /modules/database/main.tf: 98-158
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-293
+
+		Code lines for this resource are too many. Please use IDE of your choice to review the file.</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_161] Ensure RDS database has IAM authentication enabled" classname="/modules/database/main.tf.module.database.aws_db_instance.main" file="/modules/database/main.tf">
+			<failure type="failure" message="Ensure RDS database has IAM authentication enabled">
+Resource: module.database.aws_db_instance.main
+File: /modules/database/main.tf: 98-158
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/ensure-rds-database-has-iam-authentication-enabled
+
+		Code lines for this resource are too many. Please use IDE of your choice to review the file.</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_226] Ensure DB instance gets all minor upgrades automatically" classname="/modules/database/main.tf.module.database.aws_db_instance.main" file="/modules/database/main.tf">
+			<failure type="failure" message="Ensure DB instance gets all minor upgrades automatically">
+Resource: module.database.aws_db_instance.main
+File: /modules/database/main.tf: 98-158
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-aws-db-instance-gets-all-minor-upgrades-automatically
+
+		Code lines for this resource are too many. Please use IDE of your choice to review the file.</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_118] Ensure that enhanced monitoring is enabled for Amazon RDS instances" classname="/modules/database/main.tf.module.database.aws_db_instance.main" file="/modules/database/main.tf">
+			<failure type="failure" message="Ensure that enhanced monitoring is enabled for Amazon RDS instances">
+Resource: module.database.aws_db_instance.main
+File: /modules/database/main.tf: 98-158
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/ensure-that-enhanced-monitoring-is-enabled-for-amazon-rds-instances
+
+		Code lines for this resource are too many. Please use IDE of your choice to review the file.</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_353] Ensure that RDS instances have performance insights enabled" classname="/modules/database/main.tf.module.database.aws_db_instance.main" file="/modules/database/main.tf">
+			<failure type="failure" message="Ensure that RDS instances have performance insights enabled">
+Resource: module.database.aws_db_instance.main
+File: /modules/database/main.tf: 98-158
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/bc-aws-353
+
+		Code lines for this resource are too many. Please use IDE of your choice to review the file.</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_129] Ensure that respective logs of Amazon Relational Database Service (Amazon RDS) are enabled" classname="/modules/database/main.tf.module.database.aws_db_instance.main" file="/modules/database/main.tf">
+			<failure type="failure" message="Ensure that respective logs of Amazon Relational Database Service (Amazon RDS) are enabled">
+Resource: module.database.aws_db_instance.main
+File: /modules/database/main.tf: 98-158
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/ensure-that-respective-logs-of-amazon-relational-database-service-amazon-rds-are-enabled
+
+		Code lines for this resource are too many. Please use IDE of your choice to review the file.</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_149] Ensure that Secrets Manager secret is encrypted using KMS CMK" classname="/modules/database/main.tf.module.database.aws_secretsmanager_secret.db_credentials[0]" file="/modules/database/main.tf">
+			<failure type="failure" message="Ensure that Secrets Manager secret is encrypted using KMS CMK">
+Resource: module.database.aws_secretsmanager_secret.db_credentials[0]
+File: /modules/database/main.tf: 192-201
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-that-secrets-manager-secret-is-encrypted-using-kms
+
+		192 | resource &quot;aws_secretsmanager_secret&quot; &quot;db_credentials&quot; {
+		193 |   count                   = var.create_secrets_manager ? 1 : 0
+		194 |   name                    = &quot;${var.project_name}/rds/mysql/credentials&quot;
+		195 |   description             = &quot;Credenciales para la base de datos MySQL&quot;
+		196 |   recovery_window_in_days = 0  # Permite recrear inmediatamente si existe uno programado para eliminación
+		197 | 
+		198 |   tags = merge(local.common_tags, {
+		199 |     Name = &quot;${var.project_name}-db-credentials&quot;
+		200 |   })
+		201 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_338] Ensure CloudWatch log groups retains logs for at least 1 year" classname="/modules/database/main.tf.module.database.aws_cloudwatch_log_group.mysql_error[0]" file="/modules/database/main.tf">
+			<failure type="failure" message="Ensure CloudWatch log groups retains logs for at least 1 year">
+Resource: module.database.aws_cloudwatch_log_group.mysql_error[0]
+File: /modules/database/main.tf: 219-228
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/bc-aws-338
+
+		219 | resource &quot;aws_cloudwatch_log_group&quot; &quot;mysql_error&quot; {
+		220 |   count             = var.enable_cloudwatch_logs ? 1 : 0
+		221 |   name              = &quot;/aws/rds/instance/${aws_db_instance.main.identifier}/error&quot;
+		222 |   retention_in_days = var.log_retention_days &gt; 0 ? var.log_retention_days : 365  # Mínimo 1 año
+		223 |   kms_key_id        = var.kms_key_id  # Cifrado con KMS
+		224 | 
+		225 |   tags = merge(local.common_tags, {
+		226 |     Name = &quot;${var.project_name}-mysql-error-logs&quot;
+		227 |   })
+		228 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_338] Ensure CloudWatch log groups retains logs for at least 1 year" classname="/modules/database/main.tf.module.database.aws_cloudwatch_log_group.mysql_general[0]" file="/modules/database/main.tf">
+			<failure type="failure" message="Ensure CloudWatch log groups retains logs for at least 1 year">
+Resource: module.database.aws_cloudwatch_log_group.mysql_general[0]
+File: /modules/database/main.tf: 230-239
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/bc-aws-338
+
+		230 | resource &quot;aws_cloudwatch_log_group&quot; &quot;mysql_general&quot; {
+		231 |   count             = var.enable_cloudwatch_logs ? 1 : 0
+		232 |   name              = &quot;/aws/rds/instance/${aws_db_instance.main.identifier}/general&quot;
+		233 |   retention_in_days = var.log_retention_days &gt; 0 ? var.log_retention_days : 365  # Mínimo 1 año
+		234 |   kms_key_id        = var.kms_key_id  # Cifrado con KMS
+		235 | 
+		236 |   tags = merge(local.common_tags, {
+		237 |     Name = &quot;${var.project_name}-mysql-general-logs&quot;
+		238 |   })
+		239 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_338] Ensure CloudWatch log groups retains logs for at least 1 year" classname="/modules/database/main.tf.module.database.aws_cloudwatch_log_group.mysql_slowquery[0]" file="/modules/database/main.tf">
+			<failure type="failure" message="Ensure CloudWatch log groups retains logs for at least 1 year">
+Resource: module.database.aws_cloudwatch_log_group.mysql_slowquery[0]
+File: /modules/database/main.tf: 241-250
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/bc-aws-338
+
+		241 | resource &quot;aws_cloudwatch_log_group&quot; &quot;mysql_slowquery&quot; {
+		242 |   count             = var.enable_cloudwatch_logs ? 1 : 0
+		243 |   name              = &quot;/aws/rds/instance/${aws_db_instance.main.identifier}/slowquery&quot;
+		244 |   retention_in_days = var.log_retention_days &gt; 0 ? var.log_retention_days : 365  # Mínimo 1 año
+		245 |   kms_key_id        = var.kms_key_id  # Cifrado con KMS
+		246 | 
+		247 |   tags = merge(local.common_tags, {
+		248 |     Name = &quot;${var.project_name}-mysql-slowquery-logs&quot;
+		249 |   })
+		250 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_131] Ensure that ALB drops HTTP headers" classname="/modules/networking/alb/main.tf.module.alb.aws_lb.main" file="/modules/networking/alb/main.tf">
+			<failure type="failure" message="Ensure that ALB drops HTTP headers">
+Resource: module.alb.aws_lb.main
+File: /modules/networking/alb/main.tf: 16-40
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/ensure-that-alb-drops-http-headers
+
+		16 | resource &quot;aws_lb&quot; &quot;main&quot; {
+		17 |   name               = &quot;${var.project_name}-${var.environment}-alb-${random_string.alb_suffix.result}&quot;
+		18 |   internal           = false
+		19 |   load_balancer_type = &quot;application&quot;
+		20 |   security_groups    = [var.security_group_id]
+		21 |   subnets            = var.public_subnet_ids
+		22 | 
+		23 |   enable_deletion_protection = false
+		24 |   
+		25 |   # Configuración de desync mitigation para cumplir CKV_AWS_328
+		26 |   desync_mitigation_mode = &quot;strictest&quot;
+		27 | 
+		28 |   # Habilitar logging de acceso para auditoria (CKV_AWS_91)
+		29 |   access_logs {
+		30 |     bucket  = var.access_logs_bucket != null ? var.access_logs_bucket : aws_s3_bucket.alb_logs[0].bucket
+		31 |     prefix  = var.access_logs_prefix
+		32 |     enabled = true  # Force enable access logs for compliance
+		33 |   }
+		34 | 
+		35 |   tags = merge(var.tags, {
+		36 |     Name        = &quot;${var.project_name}-${var.environment}-alb&quot;
+		37 |     Environment = var.environment
+		38 |     Type        = &quot;ApplicationLoadBalancer&quot;
+		39 |   })
+		40 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_150] Ensure that Load Balancer has deletion protection enabled" classname="/modules/networking/alb/main.tf.module.alb.aws_lb.main" file="/modules/networking/alb/main.tf">
+			<failure type="failure" message="Ensure that Load Balancer has deletion protection enabled">
+Resource: module.alb.aws_lb.main
+File: /modules/networking/alb/main.tf: 16-40
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-150
+
+		16 | resource &quot;aws_lb&quot; &quot;main&quot; {
+		17 |   name               = &quot;${var.project_name}-${var.environment}-alb-${random_string.alb_suffix.result}&quot;
+		18 |   internal           = false
+		19 |   load_balancer_type = &quot;application&quot;
+		20 |   security_groups    = [var.security_group_id]
+		21 |   subnets            = var.public_subnet_ids
+		22 | 
+		23 |   enable_deletion_protection = false
+		24 |   
+		25 |   # Configuración de desync mitigation para cumplir CKV_AWS_328
+		26 |   desync_mitigation_mode = &quot;strictest&quot;
+		27 | 
+		28 |   # Habilitar logging de acceso para auditoria (CKV_AWS_91)
+		29 |   access_logs {
+		30 |     bucket  = var.access_logs_bucket != null ? var.access_logs_bucket : aws_s3_bucket.alb_logs[0].bucket
+		31 |     prefix  = var.access_logs_prefix
+		32 |     enabled = true  # Force enable access logs for compliance
+		33 |   }
+		34 | 
+		35 |   tags = merge(var.tags, {
+		36 |     Name        = &quot;${var.project_name}-${var.environment}-alb&quot;
+		37 |     Environment = var.environment
+		38 |     Type        = &quot;ApplicationLoadBalancer&quot;
+		39 |   })
+		40 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_2] Ensure ALB protocol is HTTPS" classname="/modules/networking/alb/main.tf.module.alb.aws_lb_listener.main" file="/modules/networking/alb/main.tf">
+			<failure type="failure" message="Ensure ALB protocol is HTTPS">
+Resource: module.alb.aws_lb_listener.main
+File: /modules/networking/alb/main.tf: 85-101
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/networking-29
+
+		85  | resource &quot;aws_lb_listener&quot; &quot;main&quot; {
+		86  |   load_balancer_arn = aws_lb.main.arn
+		87  |   port              = var.alb_port
+		88  |   protocol          = var.alb_port == 443 ? &quot;HTTPS&quot; : &quot;HTTP&quot;
+		89  |   ssl_policy        = var.alb_port == 443 ? &quot;ELBSecurityPolicy-TLS-1-2-2017-01&quot; : null  # Política TLS segura para cumplir CKV2_AWS_74
+		90  |   certificate_arn   = var.alb_port == 443 ? var.ssl_certificate_arn : null
+		91  | 
+		92  |   default_action {
+		93  |     type             = &quot;forward&quot;
+		94  |     target_group_arn = aws_lb_target_group.ec2_targets.arn
+		95  |   }
+		96  | 
+		97  |   tags = merge(var.tags, {
+		98  |     Name        = &quot;${var.project_name}-${var.environment}-listener&quot;
+		99  |     Environment = var.environment
+		100 |   })
+		101 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_11] Ensure VPC flow logging is enabled in all VPCs" classname="/modules/networking/vpc/main.tf.module.vpc.aws_vpc.main" file="/modules/networking/vpc/main.tf">
+			<failure type="failure" message="Ensure VPC flow logging is enabled in all VPCs">
+Resource: module.vpc.aws_vpc.main
+File: /modules/networking/vpc/main.tf: 23-31
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/logging-9-enable-vpc-flow-logging
+
+		23 | resource &quot;aws_vpc&quot; &quot;main&quot; {
+		24 |     cidr_block           = var.vpc_cidr
+		25 |     enable_dns_support   = var.enable_dns_support
+		26 |     enable_dns_hostnames = var.enable_dns_hostnames
+		27 | 
+		28 |     tags = merge(local.common_tags, {
+		29 |         Name = &quot;${var.project_name}-vpc&quot;
+		30 |     })
+		31 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_5] Ensure that Security Groups are attached to another resource" classname="/modules/security/alb_security.tf.module.security.aws_security_group.alb" file="/modules/security/alb_security.tf">
+			<failure type="failure" message="Ensure that Security Groups are attached to another resource">
+Resource: module.security.aws_security_group.alb
+File: /modules/security/alb_security.tf: 2-16
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/ensure-that-security-groups-are-attached-to-ec2-instances-or-elastic-network-interfaces-enis
+
+		2  | resource &quot;aws_security_group&quot; &quot;alb&quot; {
+		3  |   name_prefix = &quot;${var.project_name}-alb-&quot;
+		4  |   description = &quot;Security group for Application Load Balancer with restricted access&quot;
+		5  |   vpc_id      = var.vpc_id
+		6  | 
+		7  |   tags = merge(var.tags, {
+		8  |     Name        = &quot;${var.project_name}-alb-sg&quot;
+		9  |     Environment = var.environment
+		10 |     Purpose     = &quot;ALB&quot;
+		11 |   })
+		12 | 
+		13 |   lifecycle {
+		14 |     create_before_destroy = true
+		15 |   }
+		16 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_5] Ensure that Security Groups are attached to another resource" classname="/modules/security/ec2_instances.tf.module.security.aws_security_group.ec2_instances" file="/modules/security/ec2_instances.tf">
+			<failure type="failure" message="Ensure that Security Groups are attached to another resource">
+Resource: module.security.aws_security_group.ec2_instances
+File: /modules/security/ec2_instances.tf: 2-16
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/ensure-that-security-groups-are-attached-to-ec2-instances-or-elastic-network-interfaces-enis
+
+		2  | resource &quot;aws_security_group&quot; &quot;ec2_instances&quot; {
+		3  |   name_prefix = &quot;${var.project_name}-ec2-&quot;
+		4  |   description = &quot;Security group for EC2 instances in Auto Scaling Group with restricted access&quot;
+		5  |   vpc_id      = var.vpc_id
+		6  | 
+		7  |   tags = merge(var.tags, {
+		8  |     Name        = &quot;${var.project_name}-ec2-instances-sg&quot;
+		9  |     Environment = var.environment
+		10 |     Purpose     = &quot;EC2 Instances&quot;
+		11 |   })
+		12 | 
+		13 |   lifecycle {
+		14 |     create_before_destroy = true
+		15 |   }
+		16 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_5] Ensure that Security Groups are attached to another resource" classname="/modules/security/vpc_endpoints.tf.module.security.aws_security_group.vpc_endpoints" file="/modules/security/vpc_endpoints.tf">
+			<failure type="failure" message="Ensure that Security Groups are attached to another resource">
+Resource: module.security.aws_security_group.vpc_endpoints
+File: /modules/security/vpc_endpoints.tf: 2-16
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/ensure-that-security-groups-are-attached-to-ec2-instances-or-elastic-network-interfaces-enis
+
+		2  | resource &quot;aws_security_group&quot; &quot;vpc_endpoints&quot; {
+		3  |   name_prefix = &quot;${var.project_name}-vpc-endpoints-&quot;
+		4  |   description = &quot;Security group for VPC endpoints with restricted access&quot;
+		5  |   vpc_id      = var.vpc_id
+		6  | 
+		7  |   tags = merge(var.tags, {
+		8  |     Name        = &quot;${var.project_name}-vpc-endpoints-sg&quot;
+		9  |     Environment = var.environment
+		10 |     Purpose     = &quot;VPC Endpoints&quot;
+		11 |   })
+		12 | 
+		13 |   lifecycle {
+		14 |     create_before_destroy = true
+		15 |   }
+		16 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_32] Ensure CloudFront distribution has a response headers policy attached" classname="/modules/cdn/main.tf.module.cdn.aws_cloudfront_distribution.main" file="/modules/cdn/main.tf">
+			<failure type="failure" message="Ensure CloudFront distribution has a response headers policy attached">
+Resource: module.cdn.aws_cloudfront_distribution.main
+File: /modules/cdn/main.tf: 210-374
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/bc-aws-networking-65
+
+		Code lines for this resource are too many. Please use IDE of your choice to review the file.</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_53] Ensure AWS API gateway request is validated" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_api_gateway_method.proxy" file="/modules/api_gateway/main.tf">
+			<failure type="failure" message="Ensure AWS API gateway request is validated">
+Resource: module.api_gateway.aws_api_gateway_method.proxy
+File: /modules/api_gateway/main.tf: 64-74
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-2-53
+
+		64 | resource &quot;aws_api_gateway_method&quot; &quot;proxy&quot; {
+		65 |     rest_api_id   = aws_api_gateway_rest_api.main.id
+		66 |     resource_id   = aws_api_gateway_resource.proxy.id
+		67 |     http_method   = &quot;ANY&quot;
+		68 |     authorization = &quot;AWS_IAM&quot;  # Force IAM authorization to fix CKV2_AWS_70 and CKV_AWS_59
+		69 |     api_key_required = true    # Require API key for additional security
+		70 |     
+		71 |     request_parameters = {
+		72 |         &quot;method.request.path.proxy&quot; = true
+		73 |     }
+		74 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_53] Ensure AWS API gateway request is validated" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_api_gateway_method.root" file="/modules/api_gateway/main.tf">
+			<failure type="failure" message="Ensure AWS API gateway request is validated">
+Resource: module.api_gateway.aws_api_gateway_method.root
+File: /modules/api_gateway/main.tf: 94-100
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-2-53
+
+		94  | resource &quot;aws_api_gateway_method&quot; &quot;root&quot; {
+		95  |     rest_api_id   = aws_api_gateway_rest_api.main.id
+		96  |     resource_id   = aws_api_gateway_rest_api.main.root_resource_id
+		97  |     http_method   = &quot;ANY&quot;
+		98  |     authorization = &quot;AWS_IAM&quot;  # Force IAM authorization to fix CKV2_AWS_70 and CKV_AWS_59
+		99  |     api_key_required = true    # Require API key for additional security
+		100 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_53] Ensure AWS API gateway request is validated" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_api_gateway_method.public_proxy" file="/modules/api_gateway/main.tf">
+			<failure type="failure" message="Ensure AWS API gateway request is validated">
+Resource: module.api_gateway.aws_api_gateway_method.public_proxy
+File: /modules/api_gateway/main.tf: 236-247
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-2-53
+
+		236 | resource &quot;aws_api_gateway_method&quot; &quot;public_proxy&quot; {
+		237 |   count         = var.create_public_endpoints ? 1 : 0
+		238 |   rest_api_id   = aws_api_gateway_rest_api.main.id
+		239 |   resource_id   = aws_api_gateway_resource.public_proxy[0].id
+		240 |   http_method   = &quot;ANY&quot;
+		241 |   authorization = &quot;AWS_IAM&quot;  # Fix CKV2_AWS_70 - require authorization
+		242 |   api_key_required = true    # Require API key for security
+		243 |   
+		244 |   request_parameters = {
+		245 |     &quot;method.request.path.proxy&quot; = true
+		246 |   }
+		247 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_65] Ensure access control lists for S3 buckets are disabled" classname="/modules/cdn/main.tf.module.cdn.aws_s3_bucket_ownership_controls.cloudfront_logs" file="/modules/cdn/main.tf">
+			<failure type="failure" message="Ensure access control lists for S3 buckets are disabled">
+Resource: module.cdn.aws_s3_bucket_ownership_controls.cloudfront_logs
+File: /modules/cdn/main.tf: 72-80
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-general-112
+
+		72 | resource &quot;aws_s3_bucket_ownership_controls&quot; &quot;cloudfront_logs&quot; {
+		73 |   count    = var.log_bucket_domain_name == null ? 1 : 0
+		74 |   provider = aws.us_east_1
+		75 |   bucket   = aws_s3_bucket.cloudfront_logs[0].id
+		76 | 
+		77 |   rule {
+		78 |     object_ownership = &quot;BucketOwnerPreferred&quot;
+		79 |   }
+		80 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_20] Ensure that ALB redirects HTTP requests into HTTPS ones" classname="/modules/networking/alb/main.tf.module.alb.aws_lb.main" file="/modules/networking/alb/main.tf">
+			<failure type="failure" message="Ensure that ALB redirects HTTP requests into HTTPS ones">
+Resource: module.alb.aws_lb.main
+File: /modules/networking/alb/main.tf: 16-40
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/ensure-that-alb-redirects-http-requests-into-https-ones
+
+		16 | resource &quot;aws_lb&quot; &quot;main&quot; {
+		17 |   name               = &quot;${var.project_name}-${var.environment}-alb-${random_string.alb_suffix.result}&quot;
+		18 |   internal           = false
+		19 |   load_balancer_type = &quot;application&quot;
+		20 |   security_groups    = [var.security_group_id]
+		21 |   subnets            = var.public_subnet_ids
+		22 | 
+		23 |   enable_deletion_protection = false
+		24 |   
+		25 |   # Configuración de desync mitigation para cumplir CKV_AWS_328
+		26 |   desync_mitigation_mode = &quot;strictest&quot;
+		27 | 
+		28 |   # Habilitar logging de acceso para auditoria (CKV_AWS_91)
+		29 |   access_logs {
+		30 |     bucket  = var.access_logs_bucket != null ? var.access_logs_bucket : aws_s3_bucket.alb_logs[0].bucket
+		31 |     prefix  = var.access_logs_prefix
+		32 |     enabled = true  # Force enable access logs for compliance
+		33 |   }
+		34 | 
+		35 |   tags = merge(var.tags, {
+		36 |     Name        = &quot;${var.project_name}-${var.environment}-alb&quot;
+		37 |     Environment = var.environment
+		38 |     Type        = &quot;ApplicationLoadBalancer&quot;
+		39 |   })
+		40 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_12] Ensure the default security group of every VPC restricts all traffic" classname="/modules/networking/vpc/main.tf.module.vpc.aws_vpc.main" file="/modules/networking/vpc/main.tf">
+			<failure type="failure" message="Ensure the default security group of every VPC restricts all traffic">
+Resource: module.vpc.aws_vpc.main
+File: /modules/networking/vpc/main.tf: 23-31
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/networking-4
+
+		23 | resource &quot;aws_vpc&quot; &quot;main&quot; {
+		24 |     cidr_block           = var.vpc_cidr
+		25 |     enable_dns_support   = var.enable_dns_support
+		26 |     enable_dns_hostnames = var.enable_dns_hostnames
+		27 | 
+		28 |     tags = merge(local.common_tags, {
+		29 |         Name = &quot;${var.project_name}-vpc&quot;
+		30 |     })
+		31 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_69] Ensure AWS RDS database instance configured with encryption in transit" classname="/modules/database/main.tf.module.database.aws_db_instance.main" file="/modules/database/main.tf">
+			<failure type="failure" message="Ensure AWS RDS database instance configured with encryption in transit">
+Resource: module.database.aws_db_instance.main
+File: /modules/database/main.tf: 98-158
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/bc-aws-2-69
+
+		Code lines for this resource are too many. Please use IDE of your choice to review the file.</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_103] Ensure that load balancer is using at least TLS 1.2" classname="/modules/networking/alb/main.tf.module.alb.aws_lb_listener.main" file="/modules/networking/alb/main.tf">
+			<failure type="failure" message="Ensure that load balancer is using at least TLS 1.2">
+Resource: module.alb.aws_lb_listener.main
+File: /modules/networking/alb/main.tf: 85-101
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-general-43
+
+		85  | resource &quot;aws_lb_listener&quot; &quot;main&quot; {
+		86  |   load_balancer_arn = aws_lb.main.arn
+		87  |   port              = var.alb_port
+		88  |   protocol          = var.alb_port == 443 ? &quot;HTTPS&quot; : &quot;HTTP&quot;
+		89  |   ssl_policy        = var.alb_port == 443 ? &quot;ELBSecurityPolicy-TLS-1-2-2017-01&quot; : null  # Política TLS segura para cumplir CKV2_AWS_74
+		90  |   certificate_arn   = var.alb_port == 443 ? var.ssl_certificate_arn : null
+		91  | 
+		92  |   default_action {
+		93  |     type             = &quot;forward&quot;
+		94  |     target_group_arn = aws_lb_target_group.ec2_targets.arn
+		95  |   }
+		96  | 
+		97  |   tags = merge(var.tags, {
+		98  |     Name        = &quot;${var.project_name}-${var.environment}-listener&quot;
+		99  |     Environment = var.environment
+		100 |   })
+		101 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_57] Ensure Secrets Manager secrets should have automatic rotation enabled" classname="/modules/database/main.tf.module.database.aws_secretsmanager_secret.db_credentials[0]" file="/modules/database/main.tf">
+			<failure type="failure" message="Ensure Secrets Manager secrets should have automatic rotation enabled">
+Resource: module.database.aws_secretsmanager_secret.db_credentials[0]
+File: /modules/database/main.tf: 192-201
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-2-57
+
+		192 | resource &quot;aws_secretsmanager_secret&quot; &quot;db_credentials&quot; {
+		193 |   count                   = var.create_secrets_manager ? 1 : 0
+		194 |   name                    = &quot;${var.project_name}/rds/mysql/credentials&quot;
+		195 |   description             = &quot;Credenciales para la base de datos MySQL&quot;
+		196 |   recovery_window_in_days = 0  # Permite recrear inmediatamente si existe uno programado para eliminación
+		197 | 
+		198 |   tags = merge(local.common_tags, {
+		199 |     Name = &quot;${var.project_name}-db-credentials&quot;
+		200 |   })
+		201 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_144] Ensure that S3 bucket has cross-region replication enabled" classname="/modules/cdn/main.tf.module.cdn.aws_s3_bucket.cloudfront_logs" file="/modules/cdn/main.tf">
+			<failure type="failure" message="Ensure that S3 bucket has cross-region replication enabled">
+Resource: module.cdn.aws_s3_bucket.cloudfront_logs
+File: /modules/cdn/main.tf: 6-16
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-that-s3-bucket-has-cross-region-replication-enabled
+
+		6  | resource &quot;aws_s3_bucket&quot; &quot;cloudfront_logs&quot; {
+		7  |   count    = var.log_bucket_domain_name == null ? 1 : 0
+		8  |   provider = aws.us_east_1
+		9  |   bucket   = &quot;${var.project_name}-${var.environment}-cloudfront-logs-${random_string.log_bucket_suffix[0].result}&quot;
+		10 |   
+		11 |   tags = merge(var.tags, {
+		12 |     Name        = &quot;${var.project_name}-${var.environment}-cloudfront-logs&quot;
+		13 |     Environment = var.environment
+		14 |     Purpose     = &quot;CloudFront Access Logs&quot;
+		15 |   })
+		16 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_144] Ensure that S3 bucket has cross-region replication enabled" classname="/modules/networking/alb/main.tf.module.alb.aws_s3_bucket.alb_logs" file="/modules/networking/alb/main.tf">
+			<failure type="failure" message="Ensure that S3 bucket has cross-region replication enabled">
+Resource: module.alb.aws_s3_bucket.alb_logs
+File: /modules/networking/alb/main.tf: 111-120
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-that-s3-bucket-has-cross-region-replication-enabled
+
+		111 | resource &quot;aws_s3_bucket&quot; &quot;alb_logs&quot; {
+		112 |   count  = var.access_logs_bucket == null ? 1 : 0
+		113 |   bucket = &quot;${var.project_name}-${var.environment}-alb-logs-${random_string.alb_suffix.result}&quot;
+		114 |   
+		115 |   tags = merge(var.tags, {
+		116 |     Name        = &quot;${var.project_name}-${var.environment}-alb-logs&quot;
+		117 |     Environment = var.environment
+		118 |     Purpose     = &quot;ALB Access Logs&quot;
+		119 |   })
+		120 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_144] Ensure that S3 bucket has cross-region replication enabled" classname="/modules/storage/main.tf.module.storage.aws_s3_bucket.main" file="/modules/storage/main.tf">
+			<failure type="failure" message="Ensure that S3 bucket has cross-region replication enabled">
+Resource: module.storage.aws_s3_bucket.main
+File: /modules/storage/main.tf: 42-50
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-that-s3-bucket-has-cross-region-replication-enabled
+
+		42 | resource &quot;aws_s3_bucket&quot; &quot;main&quot; {
+		43 |   bucket = local.bucket_name
+		44 | 
+		45 |   tags = merge(local.common_tags, var.tags, {
+		46 |     Name        = &quot;${var.project_name}-${var.environment}-main-bucket&quot;
+		47 |     Purpose     = &quot;Content storage and CloudFront origin&quot;
+		48 |     AccessType  = &quot;Private with CloudFront and VPC endpoint&quot;
+		49 |   })
+		50 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_60] Ensure RDS instance with copy tags to snapshots is enabled" classname="/modules/database/main.tf.module.database.aws_db_instance.main" file="/modules/database/main.tf">
+			<failure type="failure" message="Ensure RDS instance with copy tags to snapshots is enabled">
+Resource: module.database.aws_db_instance.main
+File: /modules/database/main.tf: 98-158
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-2-60
+
+		Code lines for this resource are too many. Please use IDE of your choice to review the file.</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_145] Ensure that S3 buckets are encrypted with KMS by default" classname="/modules/cdn/main.tf.module.cdn.aws_s3_bucket.cloudfront_logs" file="/modules/cdn/main.tf">
+			<failure type="failure" message="Ensure that S3 buckets are encrypted with KMS by default">
+Resource: module.cdn.aws_s3_bucket.cloudfront_logs
+File: /modules/cdn/main.tf: 6-16
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-that-s3-buckets-are-encrypted-with-kms-by-default
+
+		6  | resource &quot;aws_s3_bucket&quot; &quot;cloudfront_logs&quot; {
+		7  |   count    = var.log_bucket_domain_name == null ? 1 : 0
+		8  |   provider = aws.us_east_1
+		9  |   bucket   = &quot;${var.project_name}-${var.environment}-cloudfront-logs-${random_string.log_bucket_suffix[0].result}&quot;
+		10 |   
+		11 |   tags = merge(var.tags, {
+		12 |     Name        = &quot;${var.project_name}-${var.environment}-cloudfront-logs&quot;
+		13 |     Environment = var.environment
+		14 |     Purpose     = &quot;CloudFront Access Logs&quot;
+		15 |   })
+		16 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_145] Ensure that S3 buckets are encrypted with KMS by default" classname="/modules/networking/alb/main.tf.module.alb.aws_s3_bucket.alb_logs" file="/modules/networking/alb/main.tf">
+			<failure type="failure" message="Ensure that S3 buckets are encrypted with KMS by default">
+Resource: module.alb.aws_s3_bucket.alb_logs
+File: /modules/networking/alb/main.tf: 111-120
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-that-s3-buckets-are-encrypted-with-kms-by-default
+
+		111 | resource &quot;aws_s3_bucket&quot; &quot;alb_logs&quot; {
+		112 |   count  = var.access_logs_bucket == null ? 1 : 0
+		113 |   bucket = &quot;${var.project_name}-${var.environment}-alb-logs-${random_string.alb_suffix.result}&quot;
+		114 |   
+		115 |   tags = merge(var.tags, {
+		116 |     Name        = &quot;${var.project_name}-${var.environment}-alb-logs&quot;
+		117 |     Environment = var.environment
+		118 |     Purpose     = &quot;ALB Access Logs&quot;
+		119 |   })
+		120 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_18] Ensure the S3 bucket has access logging enabled" classname="/modules/cdn/main.tf.module.cdn.aws_s3_bucket.cloudfront_logs" file="/modules/cdn/main.tf">
+			<failure type="failure" message="Ensure the S3 bucket has access logging enabled">
+Resource: module.cdn.aws_s3_bucket.cloudfront_logs
+File: /modules/cdn/main.tf: 6-16
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-13-enable-logging
+
+		6  | resource &quot;aws_s3_bucket&quot; &quot;cloudfront_logs&quot; {
+		7  |   count    = var.log_bucket_domain_name == null ? 1 : 0
+		8  |   provider = aws.us_east_1
+		9  |   bucket   = &quot;${var.project_name}-${var.environment}-cloudfront-logs-${random_string.log_bucket_suffix[0].result}&quot;
+		10 |   
+		11 |   tags = merge(var.tags, {
+		12 |     Name        = &quot;${var.project_name}-${var.environment}-cloudfront-logs&quot;
+		13 |     Environment = var.environment
+		14 |     Purpose     = &quot;CloudFront Access Logs&quot;
+		15 |   })
+		16 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_18] Ensure the S3 bucket has access logging enabled" classname="/modules/networking/alb/main.tf.module.alb.aws_s3_bucket.alb_logs" file="/modules/networking/alb/main.tf">
+			<failure type="failure" message="Ensure the S3 bucket has access logging enabled">
+Resource: module.alb.aws_s3_bucket.alb_logs
+File: /modules/networking/alb/main.tf: 111-120
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-13-enable-logging
+
+		111 | resource &quot;aws_s3_bucket&quot; &quot;alb_logs&quot; {
+		112 |   count  = var.access_logs_bucket == null ? 1 : 0
+		113 |   bucket = &quot;${var.project_name}-${var.environment}-alb-logs-${random_string.alb_suffix.result}&quot;
+		114 |   
+		115 |   tags = merge(var.tags, {
+		116 |     Name        = &quot;${var.project_name}-${var.environment}-alb-logs&quot;
+		117 |     Environment = var.environment
+		118 |     Purpose     = &quot;ALB Access Logs&quot;
+		119 |   })
+		120 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_18] Ensure the S3 bucket has access logging enabled" classname="/modules/storage/main.tf.module.storage.aws_s3_bucket.main" file="/modules/storage/main.tf">
+			<failure type="failure" message="Ensure the S3 bucket has access logging enabled">
+Resource: module.storage.aws_s3_bucket.main
+File: /modules/storage/main.tf: 42-50
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-13-enable-logging
+
+		42 | resource &quot;aws_s3_bucket&quot; &quot;main&quot; {
+		43 |   bucket = local.bucket_name
+		44 | 
+		45 |   tags = merge(local.common_tags, var.tags, {
+		46 |     Name        = &quot;${var.project_name}-${var.environment}-main-bucket&quot;
+		47 |     Purpose     = &quot;Content storage and CloudFront origin&quot;
+		48 |     AccessType  = &quot;Private with CloudFront and VPC endpoint&quot;
+		49 |   })
+		50 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_47] Ensure AWS CloudFront attached WAFv2 WebACL is configured with AMR for Log4j Vulnerability" classname="/modules/cdn/main.tf.module.cdn.aws_cloudfront_distribution.main" file="/modules/cdn/main.tf">
+			<failure type="failure" message="Ensure AWS CloudFront attached WAFv2 WebACL is configured with AMR for Log4j Vulnerability">
+Resource: module.cdn.aws_cloudfront_distribution.main
+File: /modules/cdn/main.tf: 210-374
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-general-47
+
+		Code lines for this resource are too many. Please use IDE of your choice to review the file.</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_378] Ensure AWS Load Balancer doesn't use HTTP protocol" classname="/modules/networking/alb/main.tf.module.alb.aws_lb_target_group.ec2_targets" file="/modules/networking/alb/main.tf">
+			<failure type="failure" message="Ensure AWS Load Balancer doesn't use HTTP protocol">
+Resource: module.alb.aws_lb_target_group.ec2_targets
+File: /modules/networking/alb/main.tf: 46-68
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/bc-aws-378
+
+		46 | resource &quot;aws_lb_target_group&quot; &quot;ec2_targets&quot; {
+		47 |   name     = &quot;${var.project_name}-${var.environment}-tg-${random_string.alb_suffix.result}&quot;
+		48 |   port     = var.target_port
+		49 |   protocol = &quot;HTTP&quot;
+		50 |   vpc_id   = var.vpc_id
+		51 | 
+		52 |   health_check {
+		53 |     enabled             = true
+		54 |     healthy_threshold   = var.healthy_threshold
+		55 |     unhealthy_threshold = var.unhealthy_threshold
+		56 |     timeout             = var.health_check_timeout
+		57 |     interval            = var.health_check_interval
+		58 |     path                = var.health_check_path
+		59 |     matcher             = &quot;200,301,302&quot;  # Ampliar códigos de respuesta válidos para cumplir CKV_AWS_261
+		60 |     port                = &quot;traffic-port&quot;
+		61 |     protocol            = &quot;HTTP&quot;
+		62 |   }
+		63 | 
+		64 |   tags = merge(var.tags, {
+		65 |     Name        = &quot;${var.project_name}-${var.environment}-target-group&quot;
+		66 |     Environment = var.environment
+		67 |   })
+		68 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_61] Ensure that an S3 bucket has a lifecycle configuration" classname="/modules/cdn/main.tf.module.cdn.aws_s3_bucket.cloudfront_logs" file="/modules/cdn/main.tf">
+			<failure type="failure" message="Ensure that an S3 bucket has a lifecycle configuration">
+Resource: module.cdn.aws_s3_bucket.cloudfront_logs
+File: /modules/cdn/main.tf: 6-16
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/bc-aws-2-61
+
+		6  | resource &quot;aws_s3_bucket&quot; &quot;cloudfront_logs&quot; {
+		7  |   count    = var.log_bucket_domain_name == null ? 1 : 0
+		8  |   provider = aws.us_east_1
+		9  |   bucket   = &quot;${var.project_name}-${var.environment}-cloudfront-logs-${random_string.log_bucket_suffix[0].result}&quot;
+		10 |   
+		11 |   tags = merge(var.tags, {
+		12 |     Name        = &quot;${var.project_name}-${var.environment}-cloudfront-logs&quot;
+		13 |     Environment = var.environment
+		14 |     Purpose     = &quot;CloudFront Access Logs&quot;
+		15 |   })
+		16 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_61] Ensure that an S3 bucket has a lifecycle configuration" classname="/modules/networking/alb/main.tf.module.alb.aws_s3_bucket.alb_logs" file="/modules/networking/alb/main.tf">
+			<failure type="failure" message="Ensure that an S3 bucket has a lifecycle configuration">
+Resource: module.alb.aws_s3_bucket.alb_logs
+File: /modules/networking/alb/main.tf: 111-120
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/bc-aws-2-61
+
+		111 | resource &quot;aws_s3_bucket&quot; &quot;alb_logs&quot; {
+		112 |   count  = var.access_logs_bucket == null ? 1 : 0
+		113 |   bucket = &quot;${var.project_name}-${var.environment}-alb-logs-${random_string.alb_suffix.result}&quot;
+		114 |   
+		115 |   tags = merge(var.tags, {
+		116 |     Name        = &quot;${var.project_name}-${var.environment}-alb-logs&quot;
+		117 |     Environment = var.environment
+		118 |     Purpose     = &quot;ALB Access Logs&quot;
+		119 |   })
+		120 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_51] Ensure AWS API Gateway endpoints uses client certificate authentication" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_api_gateway_stage.main" file="/modules/api_gateway/main.tf">
+			<failure type="failure" message="Ensure AWS API Gateway endpoints uses client certificate authentication">
+Resource: module.api_gateway.aws_api_gateway_stage.main
+File: /modules/api_gateway/main.tf: 142-177
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-2-51
+
+		142 | resource &quot;aws_api_gateway_stage&quot; &quot;main&quot; {
+		143 |     deployment_id = aws_api_gateway_deployment.main.id
+		144 |     rest_api_id   = aws_api_gateway_rest_api.main.id
+		145 |     stage_name    = var.stage_name
+		146 |     
+		147 |     # Configuración de throttling se maneja en method_settings
+		148 |     
+		149 |     # Configuración de logging
+		150 |     dynamic &quot;access_log_settings&quot; {
+		151 |         for_each = var.enable_logging ? [1] : []
+		152 |         content {
+		153 |             destination_arn = aws_cloudwatch_log_group.api_gateway_logs.arn
+		154 |             format = jsonencode({
+		155 |                 requestId      = &quot;$context.requestId&quot;
+		156 |                 ip             = &quot;$context.identity.sourceIp&quot;
+		157 |                 caller         = &quot;$context.identity.caller&quot;
+		158 |                 user           = &quot;$context.identity.user&quot;
+		159 |                 requestTime    = &quot;$context.requestTime&quot;
+		160 |                 httpMethod     = &quot;$context.httpMethod&quot;
+		161 |                 resourcePath   = &quot;$context.resourcePath&quot;
+		162 |                 status         = &quot;$context.status&quot;
+		163 |                 protocol       = &quot;$context.protocol&quot;
+		164 |                 responseLength = &quot;$context.responseLength&quot;
+		165 |                 responseTime   = &quot;$context.responseTime&quot;
+		166 |                 error          = &quot;$context.error.message&quot;
+		167 |                 errorType      = &quot;$context.error.messageString&quot;
+		168 |             })
+		169 |         }
+		170 |     }
+		171 |     
+		172 |     tags = merge(var.tags, {
+		173 |         Name = &quot;${var.project_name}-${var.environment}-api-stage&quot;
+		174 |     })
+		175 |     
+		176 |     depends_on = [aws_cloudwatch_log_group.api_gateway_logs]
+		177 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_21] Ensure all data stored in the S3 bucket have versioning enabled" classname="/modules/cdn/main.tf.module.cdn.aws_s3_bucket.cloudfront_logs" file="/modules/cdn/main.tf">
+			<failure type="failure" message="Ensure all data stored in the S3 bucket have versioning enabled">
+Resource: module.cdn.aws_s3_bucket.cloudfront_logs
+File: /modules/cdn/main.tf: 6-16
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-16-enable-versioning
+
+		6  | resource &quot;aws_s3_bucket&quot; &quot;cloudfront_logs&quot; {
+		7  |   count    = var.log_bucket_domain_name == null ? 1 : 0
+		8  |   provider = aws.us_east_1
+		9  |   bucket   = &quot;${var.project_name}-${var.environment}-cloudfront-logs-${random_string.log_bucket_suffix[0].result}&quot;
+		10 |   
+		11 |   tags = merge(var.tags, {
+		12 |     Name        = &quot;${var.project_name}-${var.environment}-cloudfront-logs&quot;
+		13 |     Environment = var.environment
+		14 |     Purpose     = &quot;CloudFront Access Logs&quot;
+		15 |   })
+		16 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV_AWS_21] Ensure all data stored in the S3 bucket have versioning enabled" classname="/modules/networking/alb/main.tf.module.alb.aws_s3_bucket.alb_logs" file="/modules/networking/alb/main.tf">
+			<failure type="failure" message="Ensure all data stored in the S3 bucket have versioning enabled">
+Resource: module.alb.aws_s3_bucket.alb_logs
+File: /modules/networking/alb/main.tf: 111-120
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-16-enable-versioning
+
+		111 | resource &quot;aws_s3_bucket&quot; &quot;alb_logs&quot; {
+		112 |   count  = var.access_logs_bucket == null ? 1 : 0
+		113 |   bucket = &quot;${var.project_name}-${var.environment}-alb-logs-${random_string.alb_suffix.result}&quot;
+		114 |   
+		115 |   tags = merge(var.tags, {
+		116 |     Name        = &quot;${var.project_name}-${var.environment}-alb-logs&quot;
+		117 |     Environment = var.environment
+		118 |     Purpose     = &quot;ALB Access Logs&quot;
+		119 |   })
+		120 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_6] Ensure that S3 bucket has a Public Access block" classname="/modules/cdn/main.tf.module.cdn.aws_s3_bucket.cloudfront_logs" file="/modules/cdn/main.tf">
+			<failure type="failure" message="Ensure that S3 bucket has a Public Access block">
+Resource: module.cdn.aws_s3_bucket.cloudfront_logs
+File: /modules/cdn/main.tf: 6-16
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/s3-bucket-should-have-public-access-blocks-defaults-to-false-if-the-public-access-block-is-not-attached
+
+		6  | resource &quot;aws_s3_bucket&quot; &quot;cloudfront_logs&quot; {
+		7  |   count    = var.log_bucket_domain_name == null ? 1 : 0
+		8  |   provider = aws.us_east_1
+		9  |   bucket   = &quot;${var.project_name}-${var.environment}-cloudfront-logs-${random_string.log_bucket_suffix[0].result}&quot;
+		10 |   
+		11 |   tags = merge(var.tags, {
+		12 |     Name        = &quot;${var.project_name}-${var.environment}-cloudfront-logs&quot;
+		13 |     Environment = var.environment
+		14 |     Purpose     = &quot;CloudFront Access Logs&quot;
+		15 |   })
+		16 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_41] Ensure an IAM role is attached to EC2 instance" classname="/modules/compute/main.tf.module.compute.aws_instance.ec2_zone_a" file="/modules/compute/main.tf">
+			<failure type="failure" message="Ensure an IAM role is attached to EC2 instance">
+Resource: module.compute.aws_instance.ec2_zone_a
+File: /modules/compute/main.tf: 5-26
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/ensure-an-iam-role-is-attached-to-ec2-instance
+
+		5  | resource &quot;aws_instance&quot; &quot;ec2_zone_a&quot; {
+		6  |     ami                    = var.ami_id
+		7  |     instance_type         = var.instance_type
+		8  |     key_name              = var.key_name != null &amp;&amp; var.key_name != &quot;&quot; ? var.key_name : null
+		9  |     subnet_id             = var.subnet_ids[0]  # Primera subnet privada (10.0.101.0/24)
+		10 |     vpc_security_group_ids = [var.security_group_id]
+		11 |     
+		12 |     # Script de inicialización
+		13 |     user_data = fileexists(var.user_data_file) ? file(var.user_data_file) : null
+		14 |     
+		15 |     # Monitoreo detallado
+		16 |     monitoring = var.enable_monitoring
+		17 |     
+		18 |     # Tags
+		19 |     tags = merge(var.tags, {
+		20 |         Name        = &quot;${var.project_name}-${var.environment}-ec2-zone-a&quot;
+		21 |         Environment = var.environment
+		22 |         Zone        = &quot;us-east-1a&quot;
+		23 |         Subnet      = &quot;10.0.101.0/24&quot;
+		24 |         Type        = &quot;Fixed&quot;
+		25 |     })
+		26 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_41] Ensure an IAM role is attached to EC2 instance" classname="/modules/compute/main.tf.module.compute.aws_instance.ec2_zone_b" file="/modules/compute/main.tf">
+			<failure type="failure" message="Ensure an IAM role is attached to EC2 instance">
+Resource: module.compute.aws_instance.ec2_zone_b
+File: /modules/compute/main.tf: 32-53
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/ensure-an-iam-role-is-attached-to-ec2-instance
+
+		32 | resource &quot;aws_instance&quot; &quot;ec2_zone_b&quot; {
+		33 |     ami                    = var.ami_id
+		34 |     instance_type         = var.instance_type
+		35 |     key_name              = var.key_name != null &amp;&amp; var.key_name != &quot;&quot; ? var.key_name : null
+		36 |     subnet_id             = var.subnet_ids[1]  # Segunda subnet privada (10.0.102.0/24)
+		37 |     vpc_security_group_ids = [var.security_group_id]
+		38 |     
+		39 |     # Script de inicialización
+		40 |     user_data = fileexists(var.user_data_file) ? file(var.user_data_file) : null
+		41 |     
+		42 |     # Monitoreo detallado
+		43 |     monitoring = var.enable_monitoring
+		44 |     
+		45 |     # Tags
+		46 |     tags = merge(var.tags, {
+		47 |         Name        = &quot;${var.project_name}-${var.environment}-ec2-zone-b&quot;
+		48 |         Environment = var.environment
+		49 |         Zone        = &quot;us-east-1b&quot;
+		50 |         Subnet      = &quot;10.0.102.0/24&quot;
+		51 |         Type        = &quot;Fixed&quot;
+		52 |     })
+		53 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_62] Ensure S3 buckets should have event notifications enabled" classname="/modules/cdn/main.tf.module.cdn.aws_s3_bucket.cloudfront_logs" file="/modules/cdn/main.tf">
+			<failure type="failure" message="Ensure S3 buckets should have event notifications enabled">
+Resource: module.cdn.aws_s3_bucket.cloudfront_logs
+File: /modules/cdn/main.tf: 6-16
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/bc-aws-2-62
+
+		6  | resource &quot;aws_s3_bucket&quot; &quot;cloudfront_logs&quot; {
+		7  |   count    = var.log_bucket_domain_name == null ? 1 : 0
+		8  |   provider = aws.us_east_1
+		9  |   bucket   = &quot;${var.project_name}-${var.environment}-cloudfront-logs-${random_string.log_bucket_suffix[0].result}&quot;
+		10 |   
+		11 |   tags = merge(var.tags, {
+		12 |     Name        = &quot;${var.project_name}-${var.environment}-cloudfront-logs&quot;
+		13 |     Environment = var.environment
+		14 |     Purpose     = &quot;CloudFront Access Logs&quot;
+		15 |   })
+		16 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_62] Ensure S3 buckets should have event notifications enabled" classname="/modules/networking/alb/main.tf.module.alb.aws_s3_bucket.alb_logs" file="/modules/networking/alb/main.tf">
+			<failure type="failure" message="Ensure S3 buckets should have event notifications enabled">
+Resource: module.alb.aws_s3_bucket.alb_logs
+File: /modules/networking/alb/main.tf: 111-120
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/bc-aws-2-62
+
+		111 | resource &quot;aws_s3_bucket&quot; &quot;alb_logs&quot; {
+		112 |   count  = var.access_logs_bucket == null ? 1 : 0
+		113 |   bucket = &quot;${var.project_name}-${var.environment}-alb-logs-${random_string.alb_suffix.result}&quot;
+		114 |   
+		115 |   tags = merge(var.tags, {
+		116 |     Name        = &quot;${var.project_name}-${var.environment}-alb-logs&quot;
+		117 |     Environment = var.environment
+		118 |     Purpose     = &quot;ALB Access Logs&quot;
+		119 |   })
+		120 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_62] Ensure S3 buckets should have event notifications enabled" classname="/modules/storage/main.tf.module.storage.aws_s3_bucket.main" file="/modules/storage/main.tf">
+			<failure type="failure" message="Ensure S3 buckets should have event notifications enabled">
+Resource: module.storage.aws_s3_bucket.main
+File: /modules/storage/main.tf: 42-50
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/bc-aws-2-62
+
+		42 | resource &quot;aws_s3_bucket&quot; &quot;main&quot; {
+		43 |   bucket = local.bucket_name
+		44 | 
+		45 |   tags = merge(local.common_tags, var.tags, {
+		46 |     Name        = &quot;${var.project_name}-${var.environment}-main-bucket&quot;
+		47 |     Purpose     = &quot;Content storage and CloudFront origin&quot;
+		48 |     AccessType  = &quot;Private with CloudFront and VPC endpoint&quot;
+		49 |   })
+		50 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_29] Ensure public API gateway are protected by WAF" classname="/modules/api_gateway/main.tf.module.api_gateway.aws_api_gateway_stage.main" file="/modules/api_gateway/main.tf">
+			<failure type="failure" message="Ensure public API gateway are protected by WAF">
+Resource: module.api_gateway.aws_api_gateway_stage.main
+File: /modules/api_gateway/main.tf: 142-177
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/ensure-public-api-gateway-are-protected-by-waf
+
+		142 | resource &quot;aws_api_gateway_stage&quot; &quot;main&quot; {
+		143 |     deployment_id = aws_api_gateway_deployment.main.id
+		144 |     rest_api_id   = aws_api_gateway_rest_api.main.id
+		145 |     stage_name    = var.stage_name
+		146 |     
+		147 |     # Configuración de throttling se maneja en method_settings
+		148 |     
+		149 |     # Configuración de logging
+		150 |     dynamic &quot;access_log_settings&quot; {
+		151 |         for_each = var.enable_logging ? [1] : []
+		152 |         content {
+		153 |             destination_arn = aws_cloudwatch_log_group.api_gateway_logs.arn
+		154 |             format = jsonencode({
+		155 |                 requestId      = &quot;$context.requestId&quot;
+		156 |                 ip             = &quot;$context.identity.sourceIp&quot;
+		157 |                 caller         = &quot;$context.identity.caller&quot;
+		158 |                 user           = &quot;$context.identity.user&quot;
+		159 |                 requestTime    = &quot;$context.requestTime&quot;
+		160 |                 httpMethod     = &quot;$context.httpMethod&quot;
+		161 |                 resourcePath   = &quot;$context.resourcePath&quot;
+		162 |                 status         = &quot;$context.status&quot;
+		163 |                 protocol       = &quot;$context.protocol&quot;
+		164 |                 responseLength = &quot;$context.responseLength&quot;
+		165 |                 responseTime   = &quot;$context.responseTime&quot;
+		166 |                 error          = &quot;$context.error.message&quot;
+		167 |                 errorType      = &quot;$context.error.messageString&quot;
+		168 |             })
+		169 |         }
+		170 |     }
+		171 |     
+		172 |     tags = merge(var.tags, {
+		173 |         Name = &quot;${var.project_name}-${var.environment}-api-stage&quot;
+		174 |     })
+		175 |     
+		176 |     depends_on = [aws_cloudwatch_log_group.api_gateway_logs]
+		177 | }
+</failure>
+		</testcase>
+		<testcase name="[NONE][CKV2_AWS_28] Ensure public facing ALB are protected by WAF" classname="/modules/networking/alb/main.tf.module.alb.aws_lb.main" file="/modules/networking/alb/main.tf">
+			<failure type="failure" message="Ensure public facing ALB are protected by WAF">
+Resource: module.alb.aws_lb.main
+File: /modules/networking/alb/main.tf: 16-40
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/ensure-public-facing-alb-are-protected-by-waf
+
+		16 | resource &quot;aws_lb&quot; &quot;main&quot; {
+		17 |   name               = &quot;${var.project_name}-${var.environment}-alb-${random_string.alb_suffix.result}&quot;
+		18 |   internal           = false
+		19 |   load_balancer_type = &quot;application&quot;
+		20 |   security_groups    = [var.security_group_id]
+		21 |   subnets            = var.public_subnet_ids
+		22 | 
+		23 |   enable_deletion_protection = false
+		24 |   
+		25 |   # Configuración de desync mitigation para cumplir CKV_AWS_328
+		26 |   desync_mitigation_mode = &quot;strictest&quot;
+		27 | 
+		28 |   # Habilitar logging de acceso para auditoria (CKV_AWS_91)
+		29 |   access_logs {
+		30 |     bucket  = var.access_logs_bucket != null ? var.access_logs_bucket : aws_s3_bucket.alb_logs[0].bucket
+		31 |     prefix  = var.access_logs_prefix
+		32 |     enabled = true  # Force enable access logs for compliance
+		33 |   }
+		34 | 
+		35 |   tags = merge(var.tags, {
+		36 |     Name        = &quot;${var.project_name}-${var.environment}-alb&quot;
+		37 |     Environment = var.environment
+		38 |     Type        = &quot;ApplicationLoadBalancer&quot;
+		39 |   })
+		40 | }
+</failure>
+		</testcase>
+	</testsuite>
+</testsuites>
