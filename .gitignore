@@ -1,16 +1,4 @@
 # Terraform files
-*.tfstate
-*.tfstate.*
-*.tfvars
-!terraform.tfvars.example
-.terraform/
-.terraform.lock.hcl
-crash.log
-crash.*.log
-
-# Terraform plan files
-*.tfplan
-*.tfplan.*
 
 # Override files
 override.tf
@@ -257,7 +245,6 @@ dump.rdb
 uploads/
 temp-uploads/
 public/uploads/
-storage/
 
 # API documentation
 api-docs/

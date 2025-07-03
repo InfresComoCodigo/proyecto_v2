@@ -89,6 +89,30 @@ pipeline {
             }
         }
         
+        stage('Pre-Apply Validation') {
+            steps {
+                dir("${TERRAFORM_DIR}") {
+                    script {
+                        sh '''
+                            echo "🔍 Validando configuración pre-aplicación..."
+                            
+                            # Verificar conflictos de VPC endpoints
+                            echo "📍 Verificando VPC endpoints existentes..."
+                            terraform state list | grep vpc_endpoint || echo "No hay VPC endpoints en el estado"
+                            
+                            # Verificar rutas existentes en tablas de rutas
+                            echo "🛣️ Verificando rutas de tablas existentes..."
+                            terraform state list | grep route_table || echo "No hay tablas de rutas en el estado"
+                            
+                            # Refrescar estado para sincronizar con AWS
+                            echo "🔄 Refrescando estado de Terraform..."
+                            terraform refresh -var-file=terraform.tfvars
+                        '''
+                    }
+                }
+            }
+        }
+        
         stage('Terraform Plan') {
             steps {
                 dir("${TERRAFORM_DIR}") {
@@ -156,11 +180,63 @@ pipeline {
                     script {
                         sh '''
                             echo "🚀 Aplicando cambios de Terraform..."
-                            terraform apply -auto-approve tfplan
                             
-                            echo "📄 Mostrando outputs de infraestructura:"
+                            # Aplicar con manejo de errores
+                            if ! terraform apply -auto-approve tfplan; then
+                                echo "❌ Error durante terraform apply"
+                                echo "🔍 Analizando posibles conflictos..."
+                                
+                                # Verificar errores comunes
+                                if terraform show 2>&1 | grep -q "RouteAlreadyExists"; then
+                                    echo "⚠️  Detectado conflicto de rutas VPC"
+                                    echo "🔧 Intentando refrescar estado..."
+                                    terraform refresh -var-file=terraform.tfvars
+                                    
+                                    echo "🔄 Reintentando apply..."
+                                    terraform apply -auto-approve tfplan
+                                else
+                                    echo "� Error no manejado automáticamente"
+                                    exit 1
+                                fi
+                            fi
+                            
+                            echo "�📄 Mostrando outputs de infraestructura:"
                             terraform output -json > terraform-outputs.json
                             terraform output
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Handle Apply Conflicts') {
+            when {
+                // Solo ejecutar si el apply anterior falló
+                expression { currentBuild.result == 'FAILURE' }
+            }
+            steps {
+                dir("${TERRAFORM_DIR}") {
+                    script {
+                        sh '''
+                            echo "🛠️  Manejando conflictos de Terraform..."
+                            
+                            # Intentar importar recursos huérfanos
+                            echo "🔍 Verificando recursos huérfanos..."
+                            
+                            # Para VPC endpoints duplicados, intentar eliminarlos del estado
+                            if terraform state list | grep -q "aws_vpc_endpoint.s3"; then
+                                echo "⚠️  VPC Endpoint S3 encontrado en estado"
+                                echo "🗑️  Removiendo del estado para reimportar..."
+                                terraform state rm module.vpc_endpoints.aws_vpc_endpoint.s3 || true
+                            fi
+                            
+                            # Regenerar plan después de limpiar estado
+                            echo "🔄 Regenerando plan después de limpieza..."
+                            terraform plan -out=tfplan-recovery -var-file=terraform.tfvars
+                            
+                            # Aplicar plan de recuperación
+                            echo "🚀 Aplicando plan de recuperación..."
+                            terraform apply -auto-approve tfplan-recovery
                         '''
                     }
                 }

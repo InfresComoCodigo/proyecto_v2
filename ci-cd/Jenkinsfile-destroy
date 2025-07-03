@@ -187,6 +187,97 @@ pipeline {
             }
         }
         
+        stage('Empty S3 Buckets') {
+            steps {
+                dir("${TERRAFORM_DIR}") {
+                    script {
+                        sh '''
+                            echo "🪣 Identificando y vaciando buckets S3..."
+                            
+                            # Obtener lista de buckets de CloudFront logs desde el estado
+                            CLOUDFRONT_BUCKETS=$(terraform state list 2>/dev/null | grep "aws_s3_bucket" | grep -E "(cloudfront|logs)" || echo "")
+                            
+                            if [ -n "$CLOUDFRONT_BUCKETS" ]; then
+                                echo "📋 Buckets de CloudFront identificados:"
+                                echo "$CLOUDFRONT_BUCKETS"
+                                
+                                # Obtener los nombres reales de los buckets
+                                for bucket_resource in $CLOUDFRONT_BUCKETS; do
+                                    echo "🔍 Procesando: $bucket_resource"
+                                    
+                                    # Obtener el nombre del bucket
+                                    BUCKET_NAME=$(terraform state show "$bucket_resource" 2>/dev/null | grep -E "bucket.*=" | head -1 | sed 's/.*= "//' | sed 's/"//' || echo "")
+                                    
+                                    if [ -n "$BUCKET_NAME" ]; then
+                                        echo "🪣 Vaciando bucket: $BUCKET_NAME"
+                                        
+                                        # Verificar si el bucket existe
+                                        if aws s3api head-bucket --bucket "$BUCKET_NAME" 2>/dev/null; then
+                                            echo "✅ Bucket existe, procediendo a vaciarlo..."
+                                            
+                                            # Eliminar todas las versiones de objetos
+                                            aws s3api list-object-versions --bucket "$BUCKET_NAME" --output json --query 'Versions[].{Key:Key,VersionId:VersionId}' | \
+                                            jq -r '.[] | select(.Key != null) | "\\(.Key) \\(.VersionId)"' | \
+                                            while read key version; do
+                                                if [ -n "$key" ] && [ -n "$version" ]; then
+                                                    echo "🗑️  Eliminando versión: $key ($version)"
+                                                    aws s3api delete-object --bucket "$BUCKET_NAME" --key "$key" --version-id "$version" || true
+                                                fi
+                                            done
+                                            
+                                            # Eliminar marcadores de eliminación
+                                            aws s3api list-object-versions --bucket "$BUCKET_NAME" --output json --query 'DeleteMarkers[].{Key:Key,VersionId:VersionId}' | \
+                                            jq -r '.[] | select(.Key != null) | "\\(.Key) \\(.VersionId)"' | \
+                                            while read key version; do
+                                                if [ -n "$key" ] && [ -n "$version" ]; then
+                                                    echo "🗑️  Eliminando marcador: $key ($version)"
+                                                    aws s3api delete-object --bucket "$BUCKET_NAME" --key "$key" --version-id "$version" || true
+                                                fi
+                                            done
+                                            
+                                            # Eliminar objetos normales (sin versiones)
+                                            aws s3 rm "s3://$BUCKET_NAME" --recursive 2>/dev/null || true
+                                            
+                                            echo "✅ Bucket $BUCKET_NAME vaciado completamente"
+                                        else
+                                            echo "⚠️  Bucket $BUCKET_NAME no existe o no es accesible"
+                                        fi
+                                    else
+                                        echo "⚠️  No se pudo obtener el nombre del bucket para $bucket_resource"
+                                    fi
+                                done
+                            else
+                                echo "ℹ️  No se encontraron buckets de CloudFront para vaciar"
+                            fi
+                            
+                            # También intentar vaciar buckets por nombre directo si están en el error
+                            echo "🔍 Intentando vaciar buckets conocidos que causan problemas..."
+                            
+                            # Extraer nombre del bucket del error si existe
+                            PROBLEM_BUCKET="villa-alfredo-dev-cloudfront-logs-j2abxb"
+                            if aws s3api head-bucket --bucket "$PROBLEM_BUCKET" 2>/dev/null; then
+                                echo "🪣 Vaciando bucket problemático: $PROBLEM_BUCKET"
+                                aws s3 rm "s3://$PROBLEM_BUCKET" --recursive 2>/dev/null || true
+                                
+                                # Eliminar versiones si el bucket tiene versionado
+                                aws s3api list-object-versions --bucket "$PROBLEM_BUCKET" --output json --query 'Versions[].{Key:Key,VersionId:VersionId}' 2>/dev/null | \
+                                jq -r '.[] | select(.Key != null) | "\\(.Key) \\(.VersionId)"' | \
+                                while read key version; do
+                                    if [ -n "$key" ] && [ -n "$version" ]; then
+                                        aws s3api delete-object --bucket "$PROBLEM_BUCKET" --key "$key" --version-id "$version" || true
+                                    fi
+                                done
+                                
+                                echo "✅ Bucket problemático vaciado"
+                            fi
+                            
+                            echo "🏁 Proceso de vaciado de buckets completado"
+                        '''
+                    }
+                }
+            }
+        }
+        
         stage('Review Destroy Plan') {
             when {
                 equals expected: false, actual: params.AUTO_APPROVE
@@ -234,8 +325,58 @@ pipeline {
                             echo "💥 INICIANDO DESTRUCCIÓN DE INFRAESTRUCTURA..."
                             echo "⏰ Timestamp: $(date)"
                             
-                            # Aplicar el plan de destrucción
-                            terraform apply -auto-approve tfplan
+                            # Primer intento de destrucción
+                            if terraform apply -auto-approve tfplan; then
+                                echo "✅ Destrucción exitosa en primer intento"
+                            else
+                                echo "⚠️  Primer intento falló, posiblemente por buckets S3 no vacíos"
+                                echo "🔄 Intentando vaciar buckets S3 restantes..."
+                                
+                                # Obtener buckets S3 restantes del estado
+                                terraform state list | grep "aws_s3_bucket" | while read bucket_resource; do
+                                    echo "🪣 Procesando bucket: $bucket_resource"
+                                    
+                                    # Intentar obtener el nombre del bucket
+                                    BUCKET_NAME=$(terraform state show "$bucket_resource" 2>/dev/null | grep -E "bucket.*=" | head -1 | sed 's/.*= "//' | sed 's/"//' || echo "")
+                                    
+                                    if [ -n "$BUCKET_NAME" ] && aws s3api head-bucket --bucket "$BUCKET_NAME" 2>/dev/null; then
+                                        echo "🗑️  Forzando vaciado de bucket: $BUCKET_NAME"
+                                        
+                                        # Vaciar bucket más agresivamente
+                                        aws s3 rm "s3://$BUCKET_NAME" --recursive --quiet 2>/dev/null || true
+                                        
+                                        # Eliminar versiones específicas
+                                        aws s3api list-object-versions --bucket "$BUCKET_NAME" --output json 2>/dev/null | \
+                                        jq -r '.Versions[]?, .DeleteMarkers[]? | select(.Key != null) | "\\(.Key) \\(.VersionId)"' | \
+                                        while read key version; do
+                                            if [ -n "$key" ] && [ -n "$version" ]; then
+                                                aws s3api delete-object --bucket "$BUCKET_NAME" --key "$key" --version-id "$version" --quiet 2>/dev/null || true
+                                            fi
+                                        done
+                                        
+                                        echo "✅ Bucket $BUCKET_NAME procesado"
+                                    fi
+                                done
+                                
+                                echo "🔄 Reintentando destrucción después de limpiar buckets..."
+                                
+                                # Segundo intento
+                                if terraform apply -auto-approve tfplan; then
+                                    echo "✅ Destrucción exitosa en segundo intento"
+                                else
+                                    echo "⚠️  Segundo intento falló, ejecutando destrucción forzada por recursos..."
+                                    
+                                    # Intento de destrucción recurso por recurso
+                                    terraform state list | tac | while read resource; do
+                                        echo "🎯 Intentando destruir: $resource"
+                                        terraform destroy -target="$resource" -auto-approve -var-file=terraform.tfvars || {
+                                            echo "❌ Falló destrucción de: $resource"
+                                            # Remover del estado si no se puede destruir
+                                            terraform state rm "$resource" 2>/dev/null || true
+                                        }
+                                    done
+                                fi
+                            fi
                             
                             echo ""
                             echo "🔍 Verificando destrucción completa..."
@@ -246,6 +387,12 @@ pipeline {
                             else
                                 echo "⚠️  ADVERTENCIA: Quedan $REMAINING_RESOURCES recursos"
                                 terraform state list
+                                
+                                echo "🔍 Detalles de recursos restantes:"
+                                terraform state list | while read resource; do
+                                    echo "📋 $resource"
+                                    terraform state show "$resource" | head -10
+                                done
                             fi
                         '''
                     }
