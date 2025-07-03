@@ -1,0 +1,411 @@
+pipeline {
+    agent any
+    
+    parameters {
+        choice(
+            name: 'ACTION',
+            choices: ['deploy', 'update', 'restart', 'stop'],
+            description: 'Acción a realizar en el stack de monitoreo'
+        )
+        booleanParam(
+            name: 'CLEAN_VOLUMES',
+            defaultValue: false,
+            description: 'Limpiar volúmenes al detener (⚠️ Se perderán datos)'
+        )
+        booleanParam(
+            name: 'REBUILD_IMAGES',
+            defaultValue: false,
+            description: 'Reconstruir imágenes Docker'
+        )
+    }
+    
+    environment {
+        COMPOSE_FILE = 'docker-compose-monitoring.yml'
+        MONITORING_DIR = 'ci-cd'
+    }
+    
+    stages {
+        stage('Preparation') {
+            steps {
+                script {
+                    echo "🚀 Preparando despliegue del stack de monitoreo..."
+                    echo "📋 Acción seleccionada: ${params.ACTION}"
+                    
+                    // Verificar que Docker esté disponible
+                    sh '''
+                        echo "🔍 Verificando Docker..."
+                        docker --version
+                        docker-compose --version
+                        
+                        echo "📁 Verificando estructura de archivos..."
+                        ls -la ${MONITORING_DIR}/
+                    '''
+                }
+            }
+        }
+        
+        stage('Build Images') {
+            when {
+                anyOf {
+                    equals expected: 'deploy', actual: params.ACTION
+                    equals expected: true, actual: params.REBUILD_IMAGES
+                }
+            }
+            steps {
+                dir("${MONITORING_DIR}") {
+                    script {
+                        sh '''
+                            echo "🏗️  Construyendo imagen personalizada de Jenkins..."
+                            docker-compose -f ${COMPOSE_FILE} build jenkins
+                            
+                            echo "📦 Verificando imágenes construidas..."
+                            docker images | grep jenkins
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy Stack') {
+            when {
+                equals expected: 'deploy', actual: params.ACTION
+            }
+            steps {
+                dir("${MONITORING_DIR}") {
+                    script {
+                        sh '''
+                            echo "🚀 Desplegando stack de monitoreo..."
+                            
+                            # Crear directorios necesarios
+                            echo "📁 Creando directorios..."
+                            mkdir -p jenkins-logs
+                            mkdir -p prometheus/{rules,data}
+                            mkdir -p grafana/{dashboards,provisioning/{dashboards,datasources}}
+                            mkdir -p logstash/{pipeline,config}
+                            mkdir -p alertmanager
+                            mkdir -p traefik
+                            
+                            # Ajustar permisos
+                            chmod 777 jenkins-logs
+                            chmod 777 prometheus/data
+                            chmod 777 grafana
+                            
+                            # Desplegar servicios de infraestructura primero
+                            echo "🔄 Iniciando servicios de infraestructura..."
+                            docker-compose -f ${COMPOSE_FILE} up -d elasticsearch prometheus
+                            
+                            # Esperar a que Elasticsearch esté listo
+                            echo "⏳ Esperando Elasticsearch..."
+                            sleep 30
+                            
+                            # Desplegar servicios de logging
+                            echo "🔄 Iniciando servicios de logging..."
+                            docker-compose -f ${COMPOSE_FILE} up -d logstash kibana
+                            
+                            # Desplegar servicios de monitoreo
+                            echo "🔄 Iniciando servicios de monitoreo..."
+                            docker-compose -f ${COMPOSE_FILE} up -d grafana node-exporter cadvisor alertmanager
+                            
+                            # Esperar a que Grafana esté listo
+                            echo "⏳ Esperando Grafana..."
+                            sleep 30
+                            
+                            # Desplegar Jenkins
+                            echo "🔄 Iniciando Jenkins..."
+                            docker-compose -f ${COMPOSE_FILE} up -d jenkins
+                            
+                            # Desplegar proxy reverso
+                            echo "🔄 Iniciando Traefik..."
+                            docker-compose -f ${COMPOSE_FILE} up -d traefik
+                            
+                            echo "✅ Stack desplegado exitosamente"
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Update Stack') {
+            when {
+                equals expected: 'update', actual: params.ACTION
+            }
+            steps {
+                dir("${MONITORING_DIR}") {
+                    script {
+                        sh '''
+                            echo "🔄 Actualizando stack de monitoreo..."
+                            
+                            # Actualizar imágenes
+                            docker-compose -f ${COMPOSE_FILE} pull
+                            
+                            # Reconstruir servicios
+                            docker-compose -f ${COMPOSE_FILE} up -d --force-recreate
+                            
+                            echo "✅ Stack actualizado exitosamente"
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Restart Stack') {
+            when {
+                equals expected: 'restart', actual: params.ACTION
+            }
+            steps {
+                dir("${MONITORING_DIR}") {
+                    script {
+                        sh '''
+                            echo "🔄 Reiniciando stack de monitoreo..."
+                            
+                            # Reiniciar todos los servicios
+                            docker-compose -f ${COMPOSE_FILE} restart
+                            
+                            echo "✅ Stack reiniciado exitosamente"
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Stop Stack') {
+            when {
+                equals expected: 'stop', actual: params.ACTION
+            }
+            steps {
+                dir("${MONITORING_DIR}") {
+                    script {
+                        sh '''
+                            echo "🛑 Deteniendo stack de monitoreo..."
+                            
+                            if [ "${CLEAN_VOLUMES}" = "true" ]; then
+                                echo "🧹 Limpiando volúmenes..."
+                                docker-compose -f ${COMPOSE_FILE} down -v
+                            else
+                                docker-compose -f ${COMPOSE_FILE} down
+                            fi
+                            
+                            echo "✅ Stack detenido exitosamente"
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Health Check') {
+            when {
+                anyOf {
+                    equals expected: 'deploy', actual: params.ACTION
+                    equals expected: 'update', actual: params.ACTION
+                    equals expected: 'restart', actual: params.ACTION
+                }
+            }
+            steps {
+                dir("${MONITORING_DIR}") {
+                    script {
+                        sh '''
+                            echo "🔍 Verificando salud de servicios..."
+                            
+                            # Esperar a que los servicios estén listos
+                            sleep 60
+                            
+                            # Verificar servicios
+                            services=(
+                                "jenkins:8080:/login"
+                                "grafana:3000:/api/health"
+                                "prometheus:9090/-/healthy"
+                                "kibana:5601:/api/status"
+                                "elasticsearch:9200/_cluster/health"
+                                "traefik:8082:/api/overview"
+                            )
+                            
+                            for service in "${services[@]}"; do
+                                name=$(echo $service | cut -d: -f1)
+                                port=$(echo $service | cut -d: -f2)
+                                path=$(echo $service | cut -d: -f3)
+                                
+                                echo "🔍 Verificando $name..."
+                                
+                                if curl -s -f "http://localhost:$port$path" > /dev/null; then
+                                    echo "✅ $name está funcionando correctamente"
+                                else
+                                    echo "❌ $name no responde correctamente"
+                                fi
+                            done
+                            
+                            echo "📊 Estado de contenedores:"
+                            docker-compose -f ${COMPOSE_FILE} ps
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Generate Report') {
+            when {
+                anyOf {
+                    equals expected: 'deploy', actual: params.ACTION
+                    equals expected: 'update', actual: params.ACTION
+                }
+            }
+            steps {
+                dir("${MONITORING_DIR}") {
+                    script {
+                        sh '''
+                            echo "📊 Generando reporte de despliegue..."
+                            
+                            # Crear reporte HTML
+                            cat > monitoring-deployment-report.html << EOF
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Monitoring Stack Deployment Report</title>
+    <style>
+                                body { font-family: Arial, sans-serif; margin: 40px; }
+                                .success { color: green; }
+                                .info { color: blue; }
+                                .header { background-color: #e6f3ff; padding: 10px; border: 1px solid #0066cc; }
+                                pre { background-color: #f5f5f5; padding: 10px; overflow-x: auto; }
+                                table { border-collapse: collapse; width: 100%; }
+                                th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                                th { background-color: #f2f2f2; }
+                            </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 Monitoring Stack Deployment Report</h1>
+        <p class="info">Deployment Date: $(date)</p>
+        <p class="info">Action: ${ACTION}</p>
+        <p class="info">Build: ${BUILD_NUMBER}</p>
+    </div>
+    
+    <h2>🚀 Deployed Services</h2>
+    <table>
+        <tr>
+            <th>Service</th>
+            <th>Port</th>
+            <th>URL</th>
+            <th>Status</th>
+        </tr>
+        <tr>
+            <td>Jenkins</td>
+            <td>8080</td>
+            <td><a href="http://localhost:8080">http://localhost:8080</a></td>
+            <td class="success">✅ Running</td>
+        </tr>
+        <tr>
+            <td>Grafana</td>
+            <td>3000</td>
+            <td><a href="http://localhost:3000">http://localhost:3000</a></td>
+            <td class="success">✅ Running</td>
+        </tr>
+        <tr>
+            <td>Prometheus</td>
+            <td>9090</td>
+            <td><a href="http://localhost:9090">http://localhost:9090</a></td>
+            <td class="success">✅ Running</td>
+        </tr>
+        <tr>
+            <td>Kibana</td>
+            <td>5601</td>
+            <td><a href="http://localhost:5601">http://localhost:5601</a></td>
+            <td class="success">✅ Running</td>
+        </tr>
+        <tr>
+            <td>Traefik</td>
+            <td>8082</td>
+            <td><a href="http://localhost:8082">http://localhost:8082</a></td>
+            <td class="success">✅ Running</td>
+        </tr>
+    </table>
+    
+    <h2>📋 Container Status</h2>
+    <pre>$(docker-compose -f ${COMPOSE_FILE} ps)</pre>
+    
+    <h2>📊 Default Credentials</h2>
+    <table>
+        <tr>
+            <th>Service</th>
+            <th>Username</th>
+            <th>Password</th>
+        </tr>
+        <tr>
+            <td>Grafana</td>
+            <td>admin</td>
+            <td>admin123</td>
+        </tr>
+        <tr>
+            <td>Jenkins</td>
+            <td>admin</td>
+            <td>See initial admin password</td>
+        </tr>
+    </table>
+    
+    <h2>🔍 Next Steps</h2>
+    <ul>
+        <li>Access Grafana to view monitoring dashboards</li>
+        <li>Configure Jenkins jobs</li>
+        <li>Set up alerting rules</li>
+        <li>Configure log forwarding</li>
+        <li>Customize dashboards</li>
+    </ul>
+</body>
+</html>
+EOF
+                            
+                            echo "✅ Reporte generado: monitoring-deployment-report.html"
+                        '''
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            dir("${MONITORING_DIR}") {
+                script {
+                    // Archivar reportes
+                    archiveArtifacts artifacts: 'monitoring-deployment-report.html', allowEmptyArchive: true
+                    
+                    // Publicar reporte HTML
+                    publishHTML([
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: '.',
+                        reportFiles: 'monitoring-deployment-report.html',
+                        reportName: 'Monitoring Deployment Report'
+                    ])
+                }
+            }
+        }
+        
+        success {
+            echo "✅ Pipeline de monitoreo ejecutado exitosamente"
+            echo "🎯 Acción: ${params.ACTION}"
+            echo "📊 Accede a los servicios:"
+            echo "   - Jenkins: http://localhost:8080"
+            echo "   - Grafana: http://localhost:3000"
+            echo "   - Prometheus: http://localhost:9090"
+            echo "   - Kibana: http://localhost:5601"
+        }
+        
+        failure {
+            echo "❌ Pipeline de monitoreo falló"
+            echo "🔍 Revisar logs para diagnosticar problemas"
+            
+            dir("${MONITORING_DIR}") {
+                script {
+                    sh '''
+                        echo "📋 Estado actual de contenedores:"
+                        docker-compose -f ${COMPOSE_FILE} ps
+                        
+                        echo "🔍 Logs de servicios:"
+                        docker-compose -f ${COMPOSE_FILE} logs --tail=50
+                    '''
+                }
+            }
+        }
+    }
+}

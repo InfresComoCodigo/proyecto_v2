@@ -1,0 +1,76 @@
+groups:
+  - name: jenkins_alerts
+    rules:
+      - alert: JenkinsDown
+        expr: up{job="jenkins"} == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Jenkins is down"
+          description: "Jenkins has been down for more than 5 minutes."
+
+      - alert: JenkinsHighCPU
+        expr: rate(cpu_usage_total{job="jenkins"}[5m]) > 0.8
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Jenkins high CPU usage"
+          description: "Jenkins CPU usage is above 80% for more than 10 minutes."
+
+      - alert: JenkinsHighMemory
+        expr: (jenkins_vm_memory_used_bytes / jenkins_vm_memory_total_bytes) > 0.9
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Jenkins high memory usage"
+          description: "Jenkins memory usage is above 90% for more than 10 minutes."
+
+      - alert: JenkinsBuildFailure
+        expr: increase(jenkins_builds_failed_total[1h]) > 5
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Jenkins build failure rate"
+          description: "More than 5 builds have failed in the last hour."
+
+  - name: infrastructure_alerts
+    rules:
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage detected"
+          description: "CPU usage is above 80% for more than 10 minutes on {{ $labels.instance }}"
+
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100 < 10
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage detected"
+          description: "Memory usage is above 90% for more than 10 minutes on {{ $labels.instance }}"
+
+      - alert: DiskSpaceLow
+        expr: ((node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100) < 10
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Low disk space"
+          description: "Disk space is below 10% on {{ $labels.instance }}"
+
+      - alert: ServiceDown
+        expr: up == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Service is down"
+          description: "{{ $labels.job }} service is down for more than 5 minutes."

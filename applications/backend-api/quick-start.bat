@@ -17,7 +17,7 @@ call npm test
 
 echo.
 echo 4. Iniciando servidor...
-echo    El servidor se iniciará en http://localhost:3000
+echo    El servidor se iniciará en http://localhost:4000
 echo    Presiona Ctrl+C para detener
 echo.
 
